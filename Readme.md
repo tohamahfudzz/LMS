@@ -1,10 +1,26 @@
 halo
-ini adalah repository aplikasi LSM berbasis web
+ini adalah repository aplikasi LMS berbasis web
 
 spesifikasi aplikasi sebagai berikut:
+aplikasi berbentuk web
+menggunakan html dan css serta javascript sebagai frontend
+menggunakan php sebagai backend
+menggunakan mysql
 
 _______________
 fitur aplikasinya sebagai berikut:
+Aplikasi memiliki 3 role untuk user
+admin
+pengajar
+siswa
+
+~admin bisa membuat kelas untuk setiap mata pelajaran dan juga bisa memasukkan pengajar dan siswa kedalam kelas tersebut.
+~pengajar bisa membuka absensi,mengirim materi pelajaran yang bisa berupa video dengan durasi tertentu,atau berbentuk teks ,dan atau juga file.
+pengajar juga bisa membuat tempat tugas yang berisi file atau teks soal dari tugas yang diupload oleh pengajar.
+pengajar bisa menentukan dateline tugas.
+pengajar juga bisa menutup atau membuka pengumpulan tugas.
+
+
 
 ______________
 isi repository ada sebagai berikut:
