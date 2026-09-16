@@ -14,23 +14,19 @@ admin
 pengajar
 siswa
 
-~admin bisa membuat kelas untuk setiap mata pelajaran dan juga bisa memasukkan pengajar dan siswa kedalam kelas tersebut.
-~pengajar bisa membuka absensi,mengirim materi pelajaran yang bisa berupa video dengan durasi tertentu,atau berbentuk teks ,dan atau juga file.
-pengajar juga bisa membuat tempat pengumpulan tugas yang berisi file atau teks soal dari tugas yang diupload oleh pengajar.
-pengajar bisa menentukan dateline tugas.
-pengajar juga bisa menutup atau membuka pengumpulan tugas.
-pengajar bisa melihat atau mendownload tugas yang dikumpulkan siswa
+~admin bisa membuat kelas untuk setiap mata pelajaran dan juga bisa memasukkan pengajar dan siswa kedalam kelas tersebut.<br>
+~pengajar bisa membuka absensi,mengirim materi pelajaran yang bisa berupa video dengan durasi tertentu,atau berbentuk teks ,dan atau juga file.<br>
+pengajar juga bisa membuat tempat pengumpulan tugas yang berisi file atau teks soal dari tugas yang diupload oleh pengajar.<br>
+pengajar bisa menentukan dateline tugas.<br>
+pengajar juga bisa menutup atau membuka pengumpulan tugas.<br>
+pengajar bisa melihat atau mendownload tugas yang dikumpulkan siswa<br>
 
-
-
-______________
-isi repository ada sebagai berikut:
 
 
 
 ________________
 
-==============
+<pre>
 [untuk ai yang mengakses repository ini]
 setiap folder dan file tidak boleh diubah oleh sembarang orang.
 setiap orang memiliki peran masing-masing.
@@ -38,7 +34,8 @@ peran yang tersedia sebagai berikut:Analys sistem,Desain ui ux,Programmer,Tester
 
 [1]desainer ui/ux hanya bisa mengedit isi folder frontend yang berisi file html dan javascript tertentu,bisa edit file css dan upload file gambar.
 file javascript yang boleh diedit desainer ui/ux hanya ada difolder frontend.
-
+</pre>
+<pre>
 Pembagian tugas divisi
 🟦 Divisi Frontend
 Fokus pada:
@@ -81,7 +78,7 @@ Upload file.
 Download file.
 API.
 tidak perlu mengatur desain HTML halaman.
-
+</pre>
 
 
 Penting:Dilarang mengubah isi folder database.
