@@ -93,6 +93,7 @@ ini bagian paling penting.
 Frontend tidak melakukan:
 HTML → MySQL
 Melainkan:
+<pre>
 HTML
   ↓
 JavaScript
@@ -111,7 +112,7 @@ JSON
 JavaScript
   ↓
 HTML
-
+</pre>
 
 
 
@@ -119,12 +120,13 @@ Contoh: menampilkan daftar kelas
 Misalnya siswa membuka:
 frontend/siswa/kelas.html
 JavaScript di halaman tersebut meminta data:
+<pre>
 fetch("../../backend/api/siswa/kelas/list.php")
     .then(response => response.json())
     .then(data => {
         console.log(data);
     });
-
+</pre>
 PHP menerima request tersebut:
 backend/api/siswa/kelas/list.php
 Kemudian PHP:
@@ -137,6 +139,7 @@ Mengubah hasil menjadi JSON.
 Mengirim JSON ke frontend.
 
 Contoh respons:
+<pre>
 {
     "success": true,
     "data": [
@@ -150,11 +153,11 @@ Contoh respons:
         }
     ]
 }
-
+</pre>
 JavaScript kemudian mengambil data tersebut dan memasukkannya ke HTML.
 
 
-
+<pre>
 Contoh proses login
 frontend/login.html
         │
@@ -178,7 +181,8 @@ login.php
         │
         ▼
 dashboard.html
-
+</pre>
+<pre>
 Frontend cukup tahu:
 "Saya mengirim data login ke endpoint ini."
 Frontend tidak perlu tahu query SQL-nya.
@@ -186,7 +190,7 @@ Backend yang menangani:
 SELECT ...
 FROM users
 WHERE kode = ...
-
+</pre>
 _______________
 Contoh komunikasi untuk setiap fitur
 | Fitur                      | Frontend                | Backend API                       |
@@ -214,12 +218,12 @@ Satu file penting: api.js
 Supaya divisi frontend tidak menulis fetch() berulang-ulang, kita bisa membuat:
 frontend/assets/js/api.js
 Misalnya nanti konsepnya:
-
+<pre>
 async function apiRequest(url, options = {}) {
     const response = await fetch(url, options);
     return await response.json();
 }
-
+</pre>
 Kemudian halaman lain tinggal menggunakan fungsi tersebut.
 __________
 [penting]
