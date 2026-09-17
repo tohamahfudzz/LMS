@@ -64,7 +64,6 @@ tidak perlu menulis SQL.
 Fokus pada:
 mengerjakan:
 PHP.
-Database.
 Login.
 Session.
 Validasi.
