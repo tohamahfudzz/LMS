@@ -483,6 +483,7 @@ Setiap kode yang dibuat oleh divisi Programmer harus mengutamakan:
 5. Kemudahan pemeliharaan.
 6. Kesesuaian dengan struktur database.
 7. Komunikasi yang baik dengan frontend.
+8. folder backend/uploads berisi tempat penyimpanan file yang diupload pengguna.database hanya mengingat alamatnya.didalam folder itu boleh dibuat folder baru untuk merapikan penyimpanan file.folder boleh dibuat oleh programmer.
 
 Penggunaan class dan OOP dianjurkan apabila membantu menghasilkan kode yang lebih rapi, mudah digunakan kembali, dan mudah dikembangkan.
 
