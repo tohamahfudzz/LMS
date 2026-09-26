@@ -3,14 +3,16 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 17 Sep 2026 pada 04.51
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.1.17
+-- Generation Time: Sep 26, 2026 at 04:42 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.1.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+
+CREATE DATABASE IF NOT EXISTS `lmsdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `lmsdb`;
 START TRANSACTION;
 SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,7 +26,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `absensi`
+-- Table structure for table `absensi`
 --
 
 CREATE TABLE `absensi` (
@@ -37,10 +39,11 @@ CREATE TABLE `absensi` (
   `status` varchar(20) NOT NULL DEFAULT 'terbuka'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `admin`
+-- Table structure for table `admin`
 --
 
 CREATE TABLE `admin` (
@@ -50,10 +53,11 @@ CREATE TABLE `admin` (
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kehadiran`
+-- Table structure for table `kehadiran`
 --
 
 CREATE TABLE `kehadiran` (
@@ -64,10 +68,11 @@ CREATE TABLE `kehadiran` (
   `status` varchar(20) NOT NULL DEFAULT 'hadir'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kelas`
+-- Table structure for table `kelas`
 --
 
 CREATE TABLE `kelas` (
@@ -75,10 +80,11 @@ CREATE TABLE `kelas` (
   `nama_kelas` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kelas_pengajar`
+-- Table structure for table `kelas_pengajar`
 --
 
 CREATE TABLE `kelas_pengajar` (
@@ -87,10 +93,11 @@ CREATE TABLE `kelas_pengajar` (
   `id_pengajar` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kelas_siswa`
+-- Table structure for table `kelas_siswa`
 --
 
 CREATE TABLE `kelas_siswa` (
@@ -99,10 +106,11 @@ CREATE TABLE `kelas_siswa` (
   `id_siswa` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `materi`
+-- Table structure for table `materi`
 --
 
 CREATE TABLE `materi` (
@@ -116,10 +124,11 @@ CREATE TABLE `materi` (
   `waktu_upload` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pengajar`
+-- Table structure for table `pengajar`
 --
 
 CREATE TABLE `pengajar` (
@@ -129,10 +138,11 @@ CREATE TABLE `pengajar` (
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pengumpulan_tugas`
+-- Table structure for table `pengumpulan_tugas`
 --
 
 CREATE TABLE `pengumpulan_tugas` (
@@ -145,10 +155,11 @@ CREATE TABLE `pengumpulan_tugas` (
   `waktu_pengumpulan` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `siswa`
+-- Table structure for table `siswa`
 --
 
 CREATE TABLE `siswa` (
@@ -158,10 +169,11 @@ CREATE TABLE `siswa` (
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tugas`
+-- Table structure for table `tugas`
 --
 
 CREATE TABLE `tugas` (
@@ -172,16 +184,27 @@ CREATE TABLE `tugas` (
   `deskripsi` text DEFAULT NULL,
   `file` varchar(255) DEFAULT NULL,
   `deadline` datetime NOT NULL,
+  `waktu_mulai` datetime NOT NULL,
   `status` varchar(20) NOT NULL DEFAULT 'terbuka',
   `waktu_dibuat` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+
+INSERT INTO `admin` (`id_admin`, `kode_admin`, `nama`, `password`) VALUES
+(1, '7777', 'admin', '$2y$10$95rXXCoDfPYP0XHAS6jbQOnU3QP7C5U04iE0vR4NrWy0egybJZsZu');
+
+INSERT INTO `pengajar` (`id_pengajar`, `kode_pengajar`, `nama`, `password`) VALUES
+(1, '4444', 'pengajar', '$2y$10$CoZqpErUuL3S9hiMVZFzneDQIorrgoJ.FXPYQRXY8QmZzrdObx2ku');
+
+INSERT INTO `siswa` (`id_siswa`, `kode_siswa`, `nama`, `password`) VALUES
+(1, '3333', 'siswa', '$2y$10$X776iIDDe8UCcqR5.B8VqO7TSXa8LFfN.KuPLE2vm1fN2k4x/lFrm');
+
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `absensi`
+-- Indexes for table `absensi`
 --
 ALTER TABLE `absensi`
   ADD PRIMARY KEY (`id_absensi`),
@@ -189,14 +212,14 @@ ALTER TABLE `absensi`
   ADD KEY `fk_absensi_pengajar` (`id_pengajar`);
 
 --
--- Indeks untuk tabel `admin`
+-- Indexes for table `admin`
 --
 ALTER TABLE `admin`
   ADD PRIMARY KEY (`id_admin`),
   ADD UNIQUE KEY `kode_admin` (`kode_admin`);
 
 --
--- Indeks untuk tabel `kehadiran`
+-- Indexes for table `kehadiran`
 --
 ALTER TABLE `kehadiran`
   ADD PRIMARY KEY (`id_kehadiran`),
@@ -204,13 +227,13 @@ ALTER TABLE `kehadiran`
   ADD KEY `fk_kehadiran_siswa` (`id_siswa`);
 
 --
--- Indeks untuk tabel `kelas`
+-- Indexes for table `kelas`
 --
 ALTER TABLE `kelas`
   ADD PRIMARY KEY (`id_kelas`);
 
 --
--- Indeks untuk tabel `kelas_pengajar`
+-- Indexes for table `kelas_pengajar`
 --
 ALTER TABLE `kelas_pengajar`
   ADD PRIMARY KEY (`id_kelas_pengajar`),
@@ -218,7 +241,7 @@ ALTER TABLE `kelas_pengajar`
   ADD KEY `fk_kelas_pengajar_pengajar` (`id_pengajar`);
 
 --
--- Indeks untuk tabel `kelas_siswa`
+-- Indexes for table `kelas_siswa`
 --
 ALTER TABLE `kelas_siswa`
   ADD PRIMARY KEY (`id_kelas_siswa`),
@@ -226,7 +249,7 @@ ALTER TABLE `kelas_siswa`
   ADD KEY `fk_kelas_siswa_siswa` (`id_siswa`);
 
 --
--- Indeks untuk tabel `materi`
+-- Indexes for table `materi`
 --
 ALTER TABLE `materi`
   ADD PRIMARY KEY (`id_materi`),
@@ -234,14 +257,14 @@ ALTER TABLE `materi`
   ADD KEY `fk_materi_pengajar` (`id_pengajar`);
 
 --
--- Indeks untuk tabel `pengajar`
+-- Indexes for table `pengajar`
 --
 ALTER TABLE `pengajar`
   ADD PRIMARY KEY (`id_pengajar`),
   ADD UNIQUE KEY `kode_pengajar` (`kode_pengajar`);
 
 --
--- Indeks untuk tabel `pengumpulan_tugas`
+-- Indexes for table `pengumpulan_tugas`
 --
 ALTER TABLE `pengumpulan_tugas`
   ADD PRIMARY KEY (`id_pengumpulan`),
@@ -249,14 +272,14 @@ ALTER TABLE `pengumpulan_tugas`
   ADD KEY `fk_pengumpulan_siswa` (`id_siswa`);
 
 --
--- Indeks untuk tabel `siswa`
+-- Indexes for table `siswa`
 --
 ALTER TABLE `siswa`
   ADD PRIMARY KEY (`id_siswa`),
   ADD UNIQUE KEY `kode_siswa` (`kode_siswa`);
 
 --
--- Indeks untuk tabel `tugas`
+-- Indexes for table `tugas`
 --
 ALTER TABLE `tugas`
   ADD PRIMARY KEY (`id_tugas`),
@@ -264,123 +287,123 @@ ALTER TABLE `tugas`
   ADD KEY `fk_tugas_pengajar` (`id_pengajar`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `absensi`
+-- AUTO_INCREMENT for table `absensi`
 --
 ALTER TABLE `absensi`
   MODIFY `id_absensi` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `admin`
+-- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
   MODIFY `id_admin` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `kehadiran`
+-- AUTO_INCREMENT for table `kehadiran`
 --
 ALTER TABLE `kehadiran`
   MODIFY `id_kehadiran` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `kelas`
+-- AUTO_INCREMENT for table `kelas`
 --
 ALTER TABLE `kelas`
   MODIFY `id_kelas` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `kelas_pengajar`
+-- AUTO_INCREMENT for table `kelas_pengajar`
 --
 ALTER TABLE `kelas_pengajar`
   MODIFY `id_kelas_pengajar` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `kelas_siswa`
+-- AUTO_INCREMENT for table `kelas_siswa`
 --
 ALTER TABLE `kelas_siswa`
   MODIFY `id_kelas_siswa` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `materi`
+-- AUTO_INCREMENT for table `materi`
 --
 ALTER TABLE `materi`
   MODIFY `id_materi` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `pengajar`
+-- AUTO_INCREMENT for table `pengajar`
 --
 ALTER TABLE `pengajar`
   MODIFY `id_pengajar` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `pengumpulan_tugas`
+-- AUTO_INCREMENT for table `pengumpulan_tugas`
 --
 ALTER TABLE `pengumpulan_tugas`
   MODIFY `id_pengumpulan` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `siswa`
+-- AUTO_INCREMENT for table `siswa`
 --
 ALTER TABLE `siswa`
   MODIFY `id_siswa` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `tugas`
+-- AUTO_INCREMENT for table `tugas`
 --
 ALTER TABLE `tugas`
   MODIFY `id_tugas` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `absensi`
+-- Constraints for table `absensi`
 --
 ALTER TABLE `absensi`
   ADD CONSTRAINT `fk_absensi_kelas` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_absensi_pengajar` FOREIGN KEY (`id_pengajar`) REFERENCES `pengajar` (`id_pengajar`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `kehadiran`
+-- Constraints for table `kehadiran`
 --
 ALTER TABLE `kehadiran`
   ADD CONSTRAINT `fk_kehadiran_absensi` FOREIGN KEY (`id_absensi`) REFERENCES `absensi` (`id_absensi`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_kehadiran_siswa` FOREIGN KEY (`id_siswa`) REFERENCES `siswa` (`id_siswa`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `kelas_pengajar`
+-- Constraints for table `kelas_pengajar`
 --
 ALTER TABLE `kelas_pengajar`
   ADD CONSTRAINT `fk_kelas_pengajar_kelas` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_kelas_pengajar_pengajar` FOREIGN KEY (`id_pengajar`) REFERENCES `pengajar` (`id_pengajar`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `kelas_siswa`
+-- Constraints for table `kelas_siswa`
 --
 ALTER TABLE `kelas_siswa`
   ADD CONSTRAINT `fk_kelas_siswa_kelas` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_kelas_siswa_siswa` FOREIGN KEY (`id_siswa`) REFERENCES `siswa` (`id_siswa`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `materi`
+-- Constraints for table `materi`
 --
 ALTER TABLE `materi`
   ADD CONSTRAINT `fk_materi_kelas` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_materi_pengajar` FOREIGN KEY (`id_pengajar`) REFERENCES `pengajar` (`id_pengajar`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `pengumpulan_tugas`
+-- Constraints for table `pengumpulan_tugas`
 --
 ALTER TABLE `pengumpulan_tugas`
   ADD CONSTRAINT `fk_pengumpulan_siswa` FOREIGN KEY (`id_siswa`) REFERENCES `siswa` (`id_siswa`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_pengumpulan_tugas` FOREIGN KEY (`id_tugas`) REFERENCES `tugas` (`id_tugas`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `tugas`
+-- Constraints for table `tugas`
 --
 ALTER TABLE `tugas`
   ADD CONSTRAINT `fk_tugas_kelas` FOREIGN KEY (`id_kelas`) REFERENCES `kelas` (`id_kelas`) ON DELETE CASCADE ON UPDATE CASCADE,
