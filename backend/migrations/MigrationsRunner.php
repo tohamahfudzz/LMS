@@ -8,7 +8,7 @@
  * yang belum tercatat di tabel migrations.
  */
 
-declare(strict_types=1);
+//declare(strict_types=1);
 
 // ========================================
 // 1. KONFIGURASI DATABASE
