@@ -4,13 +4,20 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 
 require_once "../../config/database.php";
+require_once "../../functions/auth.php";
+
+$session = requireRole('siswa');
 
 $database = new Database();
 $db = $database->getConnection();
 $data = json_decode(file_get_contents("php://input"));
 
-if (!empty($data->id_absensi) && !empty($data->id_siswa)) {
+if (!empty($data->id_absensi)) {
     try {
+        // ID siswa diambil dari session, bukan dari input pengguna,
+        // agar siswa tidak dapat mengisi absensi atas nama siswa lain.
+        $idSiswa = $session['id'];
+
         $queryAbsen = "SELECT id_kelas, status FROM absensi WHERE id_absensi = :id_absensi LIMIT 1";
         $stmtAbsen = $db->prepare($queryAbsen);
         $stmtAbsen->execute([":id_absensi" => $data->id_absensi]);
@@ -30,7 +37,7 @@ if (!empty($data->id_absensi) && !empty($data->id_siswa)) {
 
         $querySiswa = "SELECT * FROM kelas_siswa WHERE id_kelas = :id_kelas AND id_siswa = :id_siswa LIMIT 1";
         $stmtSiswa = $db->prepare($querySiswa);
-        $stmtSiswa->execute([":id_kelas" => $absensi['id_kelas'], ":id_siswa" => $data->id_siswa]);
+        $stmtSiswa->execute([":id_kelas" => $absensi['id_kelas'], ":id_siswa" => $idSiswa]);
 
         if ($stmtSiswa->rowCount() === 0) {
             http_response_code(403);
@@ -43,7 +50,7 @@ if (!empty($data->id_absensi) && !empty($data->id_siswa)) {
         $stmtHadir = $db->prepare($queryHadir);
         $executed = $stmtHadir->execute([
             ":id_absensi" => $data->id_absensi,
-            ":id_siswa" => $data->id_siswa
+            ":id_siswa" => $idSiswa
         ]);
 
         if ($executed) {
@@ -65,5 +72,5 @@ if (!empty($data->id_absensi) && !empty($data->id_siswa)) {
     }
 } else {
     http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Data tidak lengkap. ID absensi dan ID siswa wajib diisi."]);
+    echo json_encode(["success" => false, "message" => "Data tidak lengkap. ID absensi wajib diisi."]);
 }

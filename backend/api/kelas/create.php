@@ -4,6 +4,9 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 
 require_once "../../config/database.php";
+require_once "../../functions/auth.php";
+
+requireRole('admin');
 
 $database = new Database();
 $db = $database->getConnection();

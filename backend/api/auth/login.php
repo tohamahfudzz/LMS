@@ -4,6 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 
 require_once "../../config/database.php";
+require_once "../../functions/auth.php";
 
 $database = new Database();
 $db = $database->getConnection();
@@ -43,6 +44,13 @@ if (!empty($data->kode) && !empty($data->password) && !empty($data->role)) {
 
         // Verifikasi keberadaan user dan kecocokan password hash
         if ($user && password_verify($data->password, $user['password'])) {
+            // Menyimpan session di backend agar setiap request berikutnya
+            // dapat diverifikasi tanpa mempercayai data dari frontend.
+            session_regenerate_id(true);
+            $_SESSION['id'] = $user[$id_column];
+            $_SESSION['role'] = $role;
+            $_SESSION['nama'] = $user['nama'];
+
             http_response_code(200);
             echo json_encode([
                 "success" => true,
