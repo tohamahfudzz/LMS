@@ -5,24 +5,33 @@ header("Access-Control-Allow-Methods: POST");
 
 require_once "../../config/database.php";
 require_once "../../functions/auth.php";
+require_once "../../functions/upload.php";
 
 $session = requireRole('pengajar');
 
 $database = new Database();
 $db = $database->getConnection();
-$data = json_decode(file_get_contents("php://input"));
 
-if (!empty($data->id_kelas) && !empty($data->judul) && !empty($data->waktu_mulai) && !empty($data->deadline)) {
-    $waktuMulai = strtotime($data->waktu_mulai);
-    $deadline = strtotime($data->deadline);
+// Catatan untuk frontend: endpoint ini menerima file, jadi data dikirim
+// sebagai multipart/form-data (FormData), BUKAN JSON.
+// Field: id_kelas, judul, deskripsi (opsional), waktu_mulai, deadline, file (opsional).
+$id_kelas = $_POST['id_kelas'] ?? null;
+$judul = $_POST['judul'] ?? null;
+$deskripsi = $_POST['deskripsi'] ?? null;
+$waktu_mulai = $_POST['waktu_mulai'] ?? null;
+$deadline = $_POST['deadline'] ?? null;
 
-    if ($waktuMulai === false || $deadline === false) {
+if (!empty($id_kelas) && !empty($judul) && !empty($waktu_mulai) && !empty($deadline)) {
+    $waktuMulaiTs = strtotime($waktu_mulai);
+    $deadlineTs = strtotime($deadline);
+
+    if ($waktuMulaiTs === false || $deadlineTs === false) {
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "Format waktu mulai atau deadline tidak valid."]);
         exit;
     }
 
-    if ($waktuMulai >= $deadline) {
+    if ($waktuMulaiTs >= $deadlineTs) {
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "Waktu mulai harus lebih awal dari deadline."]);
         exit;
@@ -34,7 +43,7 @@ if (!empty($data->id_kelas) && !empty($data->judul) && !empty($data->waktu_mulai
                               WHERE id_kelas = :id_kelas AND id_pengajar = :id_pengajar LIMIT 1";
         $stmtCekPengajar = $db->prepare($queryCekPengajar);
         $stmtCekPengajar->execute([
-            ":id_kelas" => $data->id_kelas,
+            ":id_kelas" => $id_kelas,
             ":id_pengajar" => $session['id']
         ]);
 
@@ -44,18 +53,25 @@ if (!empty($data->id_kelas) && !empty($data->judul) && !empty($data->waktu_mulai
             exit;
         }
 
+        // Upload lampiran tugas (opsional). Disimpan di backend/uploads/tugas/.
+        $namaFile = handleFileUpload(
+            'file',
+            'tugas',
+            ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'zip', 'jpg', 'jpeg', 'png']
+        );
+
         $query = "INSERT INTO tugas (id_kelas, id_pengajar, judul, deskripsi, file, waktu_mulai, deadline, status, waktu_dibuat) 
                   VALUES (:id_kelas, :id_pengajar, :judul, :deskripsi, :file, :waktu_mulai, :deadline, 'terbuka', NOW())";
         
         $stmt = $db->prepare($query);
         $executed = $stmt->execute([
-            ":id_kelas" => $data->id_kelas,
+            ":id_kelas" => $id_kelas,
             ":id_pengajar" => $session['id'],
-            ":judul" => $data->judul,
-            ":deskripsi" => isset($data->deskripsi) ? $data->deskripsi : null,
-            ":file" => isset($data->file) ? $data->file : null,
-            ":waktu_mulai" => $data->waktu_mulai,
-            ":deadline" => $data->deadline
+            ":judul" => $judul,
+            ":deskripsi" => empty($deskripsi) ? null : $deskripsi,
+            ":file" => $namaFile,
+            ":waktu_mulai" => $waktu_mulai,
+            ":deadline" => $deadline
         ]);
 
         if ($executed) {

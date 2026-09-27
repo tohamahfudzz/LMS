@@ -5,21 +5,29 @@ header("Access-Control-Allow-Methods: POST");
 
 require_once "../../config/database.php";
 require_once "../../functions/auth.php";
+require_once "../../functions/upload.php";
 
 $session = requireRole('pengajar');
 
 $database = new Database();
 $db = $database->getConnection();
-$data = json_decode(file_get_contents("php://input"));
 
-if (!empty($data->id_kelas) && !empty($data->judul) && !empty($data->tipe)) {
+// Catatan untuk frontend: endpoint ini menerima file, jadi data dikirim
+// sebagai multipart/form-data (FormData), BUKAN JSON.
+// Field: id_kelas, judul, tipe, link (opsional), file (opsional, input file).
+$id_kelas = $_POST['id_kelas'] ?? null;
+$judul = $_POST['judul'] ?? null;
+$tipe = $_POST['tipe'] ?? null;
+$link = $_POST['link'] ?? null;
+
+if (!empty($id_kelas) && !empty($judul) && !empty($tipe)) {
     try {
         // Memastikan pengajar yang login benar-benar mengajar di kelas ini
         $queryCekPengajar = "SELECT id_kelas_pengajar FROM kelas_pengajar 
                               WHERE id_kelas = :id_kelas AND id_pengajar = :id_pengajar LIMIT 1";
         $stmtCekPengajar = $db->prepare($queryCekPengajar);
         $stmtCekPengajar->execute([
-            ":id_kelas" => $data->id_kelas,
+            ":id_kelas" => $id_kelas,
             ":id_pengajar" => $session['id']
         ]);
 
@@ -29,17 +37,30 @@ if (!empty($data->id_kelas) && !empty($data->judul) && !empty($data->tipe)) {
             exit;
         }
 
+        // Upload file materi (opsional). Disimpan di backend/uploads/materi/.
+        $namaFile = handleFileUpload(
+            'file',
+            'materi',
+            ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'zip', 'jpg', 'jpeg', 'png', 'gif', 'mp4']
+        );
+
+        if (empty($namaFile) && empty($link)) {
+            http_response_code(400);
+            echo json_encode(["success" => false, "message" => "Materi harus memiliki file atau link."]);
+            exit;
+        }
+
         $query = "INSERT INTO materi (id_kelas, id_pengajar, judul, tipe, file, link, waktu_upload) 
                   VALUES (:id_kelas, :id_pengajar, :judul, :tipe, :file, :link, NOW())";
         
         $stmt = $db->prepare($query);
         $executed = $stmt->execute([
-            ":id_kelas" => $data->id_kelas,
+            ":id_kelas" => $id_kelas,
             ":id_pengajar" => $session['id'],
-            ":judul" => $data->judul,
-            ":tipe" => $data->tipe,
-            ":file" => isset($data->file) ? $data->file : null,
-            ":link" => isset($data->link) ? $data->link : null
+            ":judul" => $judul,
+            ":tipe" => $tipe,
+            ":file" => $namaFile,
+            ":link" => empty($link) ? null : $link
         ]);
 
         if ($executed) {
