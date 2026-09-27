@@ -4,7 +4,7 @@ class Database
     private string $host = "127.0.0.1";
     private string $db_name = "lmsdb";
     private string $username = "root"; 
-    private string $password = "AkbarGanteng1.";     
+    private string $password = "";     
     public ?PDO $conn = null;
 
     public function getConnection(): ?PDO
