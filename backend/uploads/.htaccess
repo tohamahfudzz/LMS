@@ -1,0 +1,17 @@
+# Letakkan file ini di: backend/uploads/.htaccess
+#
+# Tujuan: folder ini HANYA untuk menyimpan file statis (pdf, gambar, dokumen, dll).
+# File di sini tidak boleh bisa dieksekusi sebagai script apapun,
+# supaya kalau ada orang berhasil upload file .php (menyamar sebagai .pdf misalnya),
+# file itu tetap tidak bisa dijalankan oleh Apache.
+
+# Blokir eksekusi PHP dan variannya
+<FilesMatch "\.(php|php\d|phtml|pht|phar)$">
+    Require all denied
+</FilesMatch>
+
+# Cegah listing isi folder saat diakses langsung lewat browser
+Options -Indexes
+
+# Nonaktifkan eksekusi CGI/script lain juga (jaga-jaga)
+RemoveHandler .cgi .pl .py .sh

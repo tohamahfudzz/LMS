@@ -1,0 +1,13 @@
+nama:admin
+password:admin
+kode:7777
+
+
+nama:pengajar
+password:pengajar
+kode:4444
+
+
+nama:siswa
+password:siswa
+kode:3333
