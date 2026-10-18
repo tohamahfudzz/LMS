@@ -1,0 +1,50 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/siswa/kuis-kerjakan.html
+GUNA FILE   : Halaman mengerjakan kuis (soal + timer + kumpulkan).
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Kerjakan Kuis - Siswa LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1 id="kuisJudul">Kerjakan Kuis</h1>
+        <p id="welcomeText">Memuat...</p>
+        <p id="kuisTimer">Sisa waktu: -</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="kuis.html">Kembali ke daftar kuis</a>
+    </nav>
+
+    <main>
+        <div id="kuisMessage" role="alert" aria-live="polite" hidden
+             style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+        <form id="kuisForm" novalidate>
+            <div id="soalContainer">
+                <p>Memuat soal...</p>
+            </div>
+            <br>
+            <button type="submit" id="submitKuisButton">Kumpulkan Jawaban</button>
+        </form>
+    </main>
+
+    <!-- id_percobaan disimpan di sini setelah mulai/lanjut -->
+    <input type="hidden" id="idPercobaan" value="">
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/siswa-common.js"></script>
+    <script src="../assets/js/siswa-kuis-mulai.js"></script>
+    <script src="../assets/js/siswa-kuis-submit.js"></script>
+</body>
+</html>

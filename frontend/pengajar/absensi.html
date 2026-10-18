@@ -1,0 +1,125 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/pengajar/absensi.html
+GUNA FILE   : Halaman pengajar untuk absensi.
+              - Buka sesi absensi (POST absensi/open.php)
+              - Tutup sesi (POST absensi/close.php)
+              - Lihat kehadiran (GET pengajar/absensi/attendance.php?id_absensi=)
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Absensi - Pengajar LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1>Kelola Absensi</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="kuis.html">Kuis</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="materi.html">Materi</a>
+        <a href="tugas.html">Tugas</a>
+        <a href="absensi.html">Absensi</a>
+    </nav>
+
+    <main>
+        <!-- Buka absensi -->
+        <section>
+            <h2>Buka Sesi Absensi</h2>
+            <div id="openAbsensiMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <form id="openAbsensiForm" novalidate>
+                <div>
+                    <label for="absensiKelas">Kelas</label><br>
+                    <select id="absensiKelas" required>
+                        <option value="">-- Memuat kelas --</option>
+                    </select>
+                </div>
+                <br>
+                <div>
+                    <label for="absensiTanggal">Tanggal</label><br>
+                    <input type="date" id="absensiTanggal" required>
+                </div>
+                <br>
+                <button type="submit" id="openAbsensiButton">Buka Absensi</button>
+            </form>
+            <p><small>Setelah dibuka, catat <strong>ID absensi</strong> dari database/phpMyAdmin bila perlu untuk tutup atau lihat kehadiran (API open saat ini tidak mengembalikan id_absensi).</small></p>
+        </section>
+
+        <hr>
+
+        <!-- Tutup absensi -->
+        <section>
+            <h2>Tutup Sesi Absensi</h2>
+            <div id="closeAbsensiMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <form id="closeAbsensiForm" novalidate>
+                <div>
+                    <label for="closeIdAbsensi">ID Absensi</label><br>
+                    <input type="number" id="closeIdAbsensi" min="1" required placeholder="Contoh: 1">
+                </div>
+                <br>
+                <button type="submit" id="closeAbsensiButton">Tutup Absensi</button>
+            </form>
+        </section>
+
+        <hr>
+
+        <!-- Lihat kehadiran -->
+        <section>
+            <h2>Lihat Kehadiran</h2>
+            <div id="attendanceMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <form id="attendanceForm" novalidate>
+                <div>
+                    <label for="viewIdAbsensi">ID Absensi</label><br>
+                    <input type="number" id="viewIdAbsensi" min="1" required placeholder="Contoh: 1">
+                </div>
+                <br>
+                <button type="submit" id="viewAttendanceButton">Tampilkan Kehadiran</button>
+            </form>
+
+            <div id="attendanceInfo" hidden style="margin-top: 12px;">
+                <h3>Info Sesi</h3>
+                <p id="attendanceMeta">-</p>
+                <h3>Statistik</h3>
+                <p id="attendanceStat">-</p>
+            </div>
+
+            <table border="1" cellpadding="6" cellspacing="0" style="margin-top: 12px;">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kode Siswa</th>
+                        <th>Nama</th>
+                        <th>Status</th>
+                        <th>Waktu Absen</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceTableBody">
+                    <tr>
+                        <td colspan="5">Masukkan ID absensi lalu klik Tampilkan.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/pengajar-common.js"></script>
+    <script src="../assets/js/pengajar-absensi.js"></script>
+</body>
+</html>

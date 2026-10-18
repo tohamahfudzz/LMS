@@ -1,0 +1,57 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/pengajar/dashboard.html
+GUNA FILE   : Halaman utama setelah pengajar login.
+              - Sambutan + logout
+              - Daftar kelas yang diajar (pengajar/kelas/list.php)
+              - Tombol "Buka Kelas" menuju kelas-detail.html; materi, tugas, kuis,
+                dan absensi dikelola di dalam halaman kelas tersebut.
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Dashboard Pengajar - LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1>Dashboard Pengajar</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+    </nav>
+
+    <main>
+        <section>
+            <h2>Kelas yang Anda Ajar</h2>
+            <table border="1" cellpadding="6" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Kelas</th>
+                        <th>Jumlah Siswa</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="kelasTableBody">
+                    <tr>
+                        <td colspan="4">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/pengajar-common.js"></script>
+    <script src="../assets/js/pengajar-dashboard.js"></script>
+</body>
+</html>

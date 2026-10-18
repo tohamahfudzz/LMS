@@ -1,0 +1,85 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/login.html
+GUNA FILE   : Halaman login. Menampilkan pesan error/sukses dari backend
+              langsung di halaman agar user paham (bukan hanya di Network).
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Login - LMS</title>
+</head>
+<body>
+
+    <main>
+        <section>
+            <h1>LMS — Login</h1>
+            <p>Masukkan kode, password, dan pilih role.</p>
+
+            <!-- Area pesan untuk user (error / sukses) -->
+            <div
+                id="loginMessage"
+                role="alert"
+                aria-live="polite"
+                hidden
+                style="margin: 12px 0; padding: 12px; border: 1px solid #ccc; background: #f8f8f8;"
+            ></div>
+
+            <form id="loginForm" novalidate>
+                <div>
+                    <label for="kode">Kode</label><br>
+                    <input
+                        type="text"
+                        id="kode"
+                        name="kode"
+                        autocomplete="username"
+                        required
+                        maxlength="20"
+                        placeholder="Contoh: 7777"
+                    >
+                </div>
+                <br>
+                <div>
+                    <label for="password">Password</label><br>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        autocomplete="current-password"
+                        required
+                        minlength="4"
+                        maxlength="100"
+                    >
+                </div>
+                <br>
+                <div>
+                    <label for="role">Role</label><br>
+                    <select id="role" name="role" required>
+                        <option value="" disabled selected>Pilih role</option>
+                        <option value="admin">Admin</option>
+                        <option value="pengajar">Pengajar</option>
+                        <option value="siswa">Siswa</option>
+                    </select>
+                </div>
+                <br>
+                <button type="submit" id="loginButton">Masuk</button>
+            </form>
+
+            <hr>
+            <p><small>
+                Contoh akun:<br>
+                Admin — kode <strong>7777</strong>, password <strong>admin</strong><br>
+                Pengajar — kode <strong>4444</strong>, password <strong>pengajar</strong><br>
+                Siswa — kode <strong>3333</strong>, password <strong>siswa</strong>
+            </small></p>
+        </section>
+    </main>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/pengajar/kuis.html
+GUNA FILE   : Daftar kuis pengajar + form buat kuis + publish.
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Kuis - Pengajar LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1>Kelola Kuis</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="materi.html">Materi</a>
+        <a href="tugas.html">Tugas</a>
+        <a href="absensi.html">Absensi</a>
+        <a href="kuis.html">Kuis</a>
+    </nav>
+
+    <main>
+        <section>
+            <h2>Buat Kuis Baru</h2>
+            <div id="createKuisMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <form id="createKuisForm" novalidate>
+                <div>
+                    <label for="kuisKelas">Kelas</label><br>
+                    <select id="kuisKelas" required>
+                        <option value="">-- Memuat kelas --</option>
+                    </select>
+                </div>
+                <br>
+                <div>
+                    <label for="kuisJudul">Judul</label><br>
+                    <input type="text" id="kuisJudul" required maxlength="200" autocomplete="off">
+                </div>
+                <br>
+                <div>
+                    <label for="kuisDeskripsi">Deskripsi (opsional)</label><br>
+                    <textarea id="kuisDeskripsi" rows="2" maxlength="5000"></textarea>
+                </div>
+                <br>
+                <div>
+                    <label for="kuisDurasi">Durasi (menit)</label><br>
+                    <input type="number" id="kuisDurasi" required min="1" max="600" value="30">
+                </div>
+                <br>
+                <div>
+                    <label for="kuisWaktuMulai">Waktu mulai (opsional)</label><br>
+                    <input type="datetime-local" id="kuisWaktuMulai">
+                </div>
+                <br>
+                <div>
+                    <label for="kuisWaktuSelesai">Waktu selesai (opsional)</label><br>
+                    <input type="datetime-local" id="kuisWaktuSelesai">
+                </div>
+                <br>
+                <button type="submit" id="createKuisButton">Simpan sebagai Draft</button>
+            </form>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>Daftar Kuis</h2>
+            <div id="kuisListMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <div>
+                <label for="filterKelasKuis">Filter Kelas</label>
+                <select id="filterKelasKuis">
+                    <option value="">Semua kelas</option>
+                </select>
+            </div>
+            <br>
+
+            <table border="1" cellpadding="6" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Judul</th>
+                        <th>Kelas</th>
+                        <th>Durasi</th>
+                        <th>Status</th>
+                        <th>Soal</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="kuisTableBody">
+                    <tr>
+                        <td colspan="7">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/pengajar-common.js"></script>
+    <script src="../assets/js/pengajar-kuis-list.js"></script>
+    <script src="../assets/js/pengajar-kuis-create.js"></script>
+    <script src="../assets/js/pengajar-kuis-publish.js"></script>
+</body>
+</html>

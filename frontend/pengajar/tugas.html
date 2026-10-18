@@ -1,0 +1,119 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/pengajar/tugas.html
+GUNA FILE   : Halaman pengajar untuk mengelola tugas.
+              - Form buat tugas (POST multipart → tugas/create.php)
+              - Daftar tugas (GET pengajar/tugas/list.php)
+              - Tombol tutup pengumpulan (POST JSON → tugas/close.php)
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Tugas - Pengajar LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1>Kelola Tugas</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="kuis.html">Kuis</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="materi.html">Materi</a>
+        <a href="tugas.html">Tugas</a>
+        <a href="absensi.html">Absensi</a>
+    </nav>
+
+    <main>
+        <!-- Form buat tugas -->
+        <section>
+            <h2>Buat Tugas Baru</h2>
+            <div id="tugasMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <form id="createTugasForm" enctype="multipart/form-data" novalidate>
+                <div>
+                    <label for="tugasKelas">Kelas</label><br>
+                    <select id="tugasKelas" name="id_kelas" required>
+                        <option value="">-- Memuat kelas --</option>
+                    </select>
+                </div>
+                <br>
+                <div>
+                    <label for="tugasJudul">Judul</label><br>
+                    <input type="text" id="tugasJudul" name="judul" required maxlength="200" autocomplete="off">
+                </div>
+                <br>
+                <div>
+                    <label for="tugasDeskripsi">Deskripsi (opsional)</label><br>
+                    <textarea id="tugasDeskripsi" name="deskripsi" rows="3" maxlength="2000"></textarea>
+                </div>
+                <br>
+                <div>
+                    <label for="tugasWaktuMulai">Waktu mulai</label><br>
+                    <input type="datetime-local" id="tugasWaktuMulai" name="waktu_mulai" required>
+                </div>
+                <br>
+                <div>
+                    <label for="tugasDeadline">Deadline</label><br>
+                    <input type="datetime-local" id="tugasDeadline" name="deadline" required>
+                </div>
+                <br>
+                <div>
+                    <label for="tugasFile">File lampiran (opsional)</label><br>
+                    <input type="file" id="tugasFile" name="file"
+                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png">
+                </div>
+                <br>
+                <button type="submit" id="createTugasButton">Simpan Tugas</button>
+            </form>
+        </section>
+
+        <!-- Filter + daftar -->
+        <section>
+            <h2>Daftar Tugas</h2>
+            <div>
+                <label for="filterKelasTugas">Filter Kelas</label>
+                <select id="filterKelasTugas">
+                    <option value="">Semua kelas</option>
+                </select>
+            </div>
+            <br>
+
+            <div id="tugasListMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <table border="1" cellpadding="6" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Judul</th>
+                        <th>Kelas</th>
+                        <th>Mulai</th>
+                        <th>Deadline</th>
+                        <th>Status</th>
+                        <th>Pengumpulan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tugasTableBody">
+                    <tr>
+                        <td colspan="8">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/pengajar-common.js"></script>
+<script src="../assets/js/pengajar-tugas.js"></script></body>
+</html>

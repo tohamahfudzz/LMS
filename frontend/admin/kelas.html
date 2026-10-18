@@ -1,47 +1,77 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/admin/kelas.html
+GUNA FILE   : Halaman admin kelola kelas.
+              - Form buat kelas
+              - Tabel daftar kelas (dari admin/kelas/list.php)
+              - Link ke anggota-kelas
+================================================================================
+-->
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelas - Admin LMS</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>Kelola Kelas - Admin LMS</title>
 </head>
 <body>
 
     <header>
-        <h1>Data Kelas</h1>
-        <p>Halaman pengelolaan data kelas.</p>
+        <h1>Kelola Kelas</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
     </header>
 
     <nav>
         <a href="dashboard.html">Dashboard</a>
         <a href="kelas.html">Kelas</a>
         <a href="pengguna.html">Pengguna</a>
+        <a href="anggota-kelas.html">Anggota Kelas</a>
     </nav>
 
     <main>
         <section>
+            <h2>Buat Kelas Baru</h2>
+            <div id="kelasMessage" role="alert" aria-live="polite" hidden></div>
+
+            <form id="createKelasForm" novalidate>
+                <div>
+                    <label for="namaKelas">Nama Kelas</label>
+                    <input
+                        type="text"
+                        id="namaKelas"
+                        required
+                        maxlength="100"
+                        placeholder="Contoh: Pemrograman Web"
+                        autocomplete="off"
+                    >
+                </div>
+                <button type="submit" id="createKelasButton">Simpan Kelas</button>
+            </form>
+        </section>
+
+        <section>
             <h2>Daftar Kelas</h2>
-
-            <p>Data kelas akan ditampilkan di halaman ini.</p>
-
-            <table border="1">
+            <table>
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Nama Kelas</th>
-                        <th>Pengajar</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
-
-                <tbody>
+                <tbody id="kelasTableBody">
                     <tr>
-                        <td colspan="4">Belum ada data kelas.</td>
+                        <td colspan="3">Memuat data...</td>
                     </tr>
                 </tbody>
             </table>
         </section>
     </main>
 
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/admin.js"></script>
 </body>
 </html>

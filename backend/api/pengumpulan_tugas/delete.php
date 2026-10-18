@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 require_once "../../config/database.php";
-require_once "../../config/auth.php";
+require_once "../../functions/auth.php";
 
 /**
  * Mengirim respons JSON lalu menghentikan proses.

@@ -1,0 +1,130 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/pengajar/kuis-soal.html
+GUNA FILE   : Kelola soal satu kuis (list + tambah + hapus). Halaman sendiri.
+              Dibuka dari tab Kuis di kelas-detail.html:
+                  kuis-soal.html?id_kuis=1&id_kelas=2
+              id_kelas hanya dipakai agar tombol kembali mengarah ke kelas asalnya
+              (diatur oleh assets/js/pengajar-kuis-soal-nav.js).
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Soal Kuis - Pengajar LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1>Kelola Soal Kuis</h1>
+        <p id="welcomeText">Memuat...</p>
+        <p>ID Kuis: <strong id="labelIdKuis">-</strong></p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="dashboard.html" id="backToKelasLink">Kembali ke dashboard</a>
+    </nav>
+
+    <main>
+        <section>
+            <h2>Tambah Soal</h2>
+            <div id="createSoalMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <form id="createSoalForm" novalidate>
+                <div>
+                    <label for="tipeSoal">Tipe soal</label><br>
+                    <select id="tipeSoal" required>
+                        <option value="pilihan_ganda">Pilihan ganda</option>
+                        <option value="isian">Isian</option>
+                    </select>
+                </div>
+                <br>
+                <div>
+                    <label for="teksSoal">Teks soal</label><br>
+                    <textarea id="teksSoal" required rows="3" maxlength="5000"></textarea>
+                </div>
+                <br>
+                <div>
+                    <label for="poinSoal">Poin</label><br>
+                    <input type="number" id="poinSoal" min="0.01" step="0.01" value="1">
+                </div>
+                <br>
+
+                <div id="blokPilihanGanda">
+                    <div>
+                        <label for="pilihanA">Pilihan A</label><br>
+                        <input type="text" id="pilihanA" maxlength="500">
+                    </div>
+                    <br>
+                    <div>
+                        <label for="pilihanB">Pilihan B</label><br>
+                        <input type="text" id="pilihanB" maxlength="500">
+                    </div>
+                    <br>
+                    <div>
+                        <label for="pilihanC">Pilihan C</label><br>
+                        <input type="text" id="pilihanC" maxlength="500">
+                    </div>
+                    <br>
+                    <div>
+                        <label for="pilihanD">Pilihan D</label><br>
+                        <input type="text" id="pilihanD" maxlength="500">
+                    </div>
+                    <br>
+                    <div>
+                        <label for="kunciJawaban">Kunci jawaban</label><br>
+                        <select id="kunciJawaban">
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+                    <br>
+                </div>
+
+                <button type="submit" id="createSoalButton">Tambah Soal</button>
+            </form>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>Daftar Soal</h2>
+            <div id="soalListMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <table border="1" cellpadding="6" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Urutan</th>
+                        <th>Tipe</th>
+                        <th>Soal</th>
+                        <th>Poin</th>
+                        <th>Kunci</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="soalTableBody">
+                    <tr>
+                        <td colspan="6">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/pengajar-common.js"></script>
+    <script src="../assets/js/pengajar-kuis-soal-list.js"></script>
+    <script src="../assets/js/pengajar-kuis-soal-create.js"></script>
+    <script src="../assets/js/pengajar-kuis-soal-delete.js"></script>
+    <script src="../assets/js/pengajar-kuis-soal-nav.js"></script>
+</body>
+</html>

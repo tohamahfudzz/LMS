@@ -1,15 +1,26 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/admin/dashboard.html
+GUNA FILE   : Halaman utama setelah admin berhasil login.
+              Menampilkan sambutan, menu navigasi (Kelas, Pengguna),
+              dan tombol logout. Melakukan pengecekan role di sisi UI
+              (proteksi sesungguhnya tetap di backend via session PHP).
+================================================================================
+-->
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
     <title>Dashboard Admin - LMS</title>
 </head>
 <body>
 
     <header>
         <h1>Dashboard Admin</h1>
-        <p>Selamat datang di halaman admin LMS.</p>
+        <p id="welcomeText">Memuat data pengguna...</p>
+        <button type="button" id="logoutButton">Keluar</button>
     </header>
 
     <nav>
@@ -22,19 +33,46 @@
         <section>
             <h2>Menu Admin</h2>
 
-            <div>
+            <article>
                 <h3>Kelola Kelas</h3>
-                <p>Admin dapat mengelola data kelas.</p>
-                <a href="kelas.html">Buka Kelas</a>
-            </div>
+                <p>Buat kelas baru dan atur anggota (pengajar &amp; siswa).</p>
+                <a href="kelas.html">Buka Halaman Kelas</a>
+            </article>
 
-            <div>
+            <article>
                 <h3>Kelola Pengguna</h3>
-                <p>Admin dapat melihat dan mengelola pengguna.</p>
-                <a href="pengguna.html">Buka Pengguna</a>
-            </div>
+                <p>Lihat dan tambah data pengajar serta siswa.</p>
+                <a href="pengguna.html">Buka Halaman Pengguna</a>
+            </article>
         </section>
     </main>
 
+    <!-- Path relatif dari folder admin/ ke assets/ -->
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script>
+        (function () {
+            "use strict";
+
+            // Proteksi UI: hanya role admin yang boleh berada di halaman ini.
+            // Auth sesungguhnya dicek ulang di setiap request API backend.
+            const user = requireAuth("admin");
+            if (!user) return;
+
+            // Tampilkan nama admin
+            const welcomeEl = document.getElementById("welcomeText");
+            if (welcomeEl) {
+                welcomeEl.textContent = "Selamat datang, " + (user.nama || "Admin") + ".";
+            }
+
+            // Tombol logout
+            const logoutBtn = document.getElementById("logoutButton");
+            if (logoutBtn) {
+                logoutBtn.addEventListener("click", function () {
+                    logout();
+                });
+            }
+        })();
+    </script>
 </body>
 </html>

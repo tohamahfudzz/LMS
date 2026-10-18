@@ -1,0 +1,72 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/siswa/materi.html
+GUNA FILE   : Halaman siswa melihat daftar materi pelajaran.
+              Filter opsional per kelas. Tidak berisi upload/absensi/tugas.
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Materi - Siswa LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1>Materi Pelajaran</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="kelas.html">Kelas</a>
+        <a href="materi.html">Materi</a>
+        <a href="tugas.html">Tugas</a>
+        <a href="absensi.html">Absensi</a>
+    </nav>
+
+    <main>
+        <section>
+            <h2>Daftar Materi</h2>
+
+            <div id="materiMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <div>
+                <label for="filterKelasMateri">Filter Kelas</label>
+                <select id="filterKelasMateri">
+                    <option value="">Semua kelas</option>
+                </select>
+            </div>
+            <br>
+
+            <table border="1" cellpadding="6" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Judul</th>
+                        <th>Kelas</th>
+                        <th>Tipe</th>
+                        <th>Link / File</th>
+                        <th>Waktu Upload</th>
+                    </tr>
+                </thead>
+                <tbody id="materiTableBody">
+                    <tr>
+                        <td colspan="6">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/siswa-common.js"></script>
+    <script src="../assets/js/siswa-materi-list.js"></script>
+</body>
+</html>

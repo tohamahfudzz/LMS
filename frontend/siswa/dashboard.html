@@ -1,0 +1,48 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/siswa/dashboard.html
+GUNA FILE   : Beranda siswa setelah login — navigasi menu saja.
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Dashboard Siswa - LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1>Dashboard Siswa</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="kelas.html">Kelas</a>
+        <a href="materi.html">Materi</a>
+        <a href="tugas.html">Tugas</a>
+        <a href="absensi.html">Absensi</a>
+    </nav>
+
+    <main>
+        <section>
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="kelas.html">Kelas saya</a></li>
+                <li><a href="materi.html">Materi pelajaran</a></li>
+                <li><a href="tugas.html">Tugas</a></li>
+                <li><a href="absensi.html">Absensi (presensi)</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/siswa-common.js"></script>
+    <script src="../assets/js/siswa-dashboard.js"></script>
+</body>
+</html>

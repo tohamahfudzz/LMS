@@ -1,0 +1,84 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/admin/anggota-kelas.html
+GUNA FILE   : Halaman admin untuk memasukkan pengajar dan siswa ke kelas.
+              - Dropdown kelas (dari admin/kelas/list.php)
+              - Dropdown pengajar (dari admin/pengajar/list.php)
+              - Dropdown siswa (dari admin/siswa/list.php)
+              - Assign lewat admin/pengajar/assign.php & admin/siswa/assign.php
+              - id_kelas dari query string (?id_kelas=...) otomatis terpilih
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Anggota Kelas - Admin LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1>Anggota Kelas</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="kelas.html">Kelas</a>
+        <a href="pengguna.html">Pengguna</a>
+        <a href="anggota-kelas.html">Anggota Kelas</a>
+    </nav>
+
+    <main>
+        <!-- Pilih kelas -->
+        <section>
+            <h2>Pilih Kelas</h2>
+            <div>
+                <label for="idKelas">Kelas</label>
+                <select id="idKelas" required>
+                    <option value="">-- Memuat daftar kelas --</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Assign pengajar -->
+        <section>
+            <h2>Masukkan Pengajar ke Kelas</h2>
+            <div id="assignPengajarMessage" role="alert" aria-live="polite" hidden></div>
+
+            <form id="assignPengajarForm" novalidate>
+                <div>
+                    <label for="idPengajar">Pengajar</label>
+                    <select id="idPengajar" required>
+                        <option value="">-- Memuat daftar pengajar --</option>
+                    </select>
+                </div>
+                <button type="submit" id="assignPengajarButton">Assign Pengajar</button>
+            </form>
+        </section>
+
+        <!-- Assign siswa -->
+        <section>
+            <h2>Masukkan Siswa ke Kelas</h2>
+            <div id="assignSiswaMessage" role="alert" aria-live="polite" hidden></div>
+
+            <form id="assignSiswaForm" novalidate>
+                <div>
+                    <label for="idSiswa">Siswa</label>
+                    <select id="idSiswa" required>
+                        <option value="">-- Memuat daftar siswa --</option>
+                    </select>
+                </div>
+                <button type="submit" id="assignSiswaButton">Assign Siswa</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/admin.js"></script>
+</body>
+</html>

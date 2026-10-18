@@ -1,0 +1,59 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/siswa/kelas.html
+GUNA FILE   : Menampilkan daftar kelas yang diikuti siswa.
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Kelas Saya - Siswa LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1>Kelas Saya</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="kelas.html">Kelas</a>
+        <a href="materi.html">Materi</a>
+        <a href="tugas.html">Tugas</a>
+        <a href="absensi.html">Absensi</a>
+    </nav>
+
+    <main>
+        <section>
+            <h2>Daftar Kelas</h2>
+            <div id="kelasMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <table border="1" cellpadding="6" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Kelas</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="kelasTableBody">
+                    <tr>
+                        <td colspan="3">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/siswa-common.js"></script>
+    <script src="../assets/js/siswa-kelas-list.js"></script>
+</body>
+</html>

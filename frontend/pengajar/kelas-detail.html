@@ -1,0 +1,303 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/pengajar/kelas-detail.html
+GUNA FILE   : Halaman satu kelas untuk pengajar. Materi, tugas, kuis, dan absensi
+              dikelompokkan di dalam kelas (empat tab), sehingga pengajar tidak
+              perlu memilih kelas lagi atau mengetik ID secara manual.
+              Dibuka dari dashboard.html dengan format:
+                  kelas-detail.html?id_kelas=1
+              Parameter opsional &tab=materi|tugas|kuis|absensi.
+              - Header kelas : GET pengajar/kelas/detail.php (sekaligus cek hak akses)
+              - Tab Materi   : assets/js/pengajar-kelas-materi.js
+              - Tab Tugas    : assets/js/pengajar-kelas-tugas.js
+              - Tab Kuis     : assets/js/pengajar-kelas-kuis.js
+                               (soal kuis tetap dibuka di halaman sendiri: kuis-soal.html)
+              - Tab Absensi  : assets/js/pengajar-kelas-absensi.js
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Kelas - Pengajar LMS</title>
+    <link rel="stylesheet" href="../assets/css/kelas-detail.css">
+</head>
+<body>
+
+    <header>
+        <h1 id="kelasTitle">Memuat kelas...</h1>
+        <p id="kelasSummary"></p>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="dashboard.html">Kembali ke dashboard</a>
+    </nav>
+
+    <main>
+        <div id="kelasMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+        <div id="kelasTabs" class="kelas-tabs" role="tablist" aria-label="Menu kelas">
+            <button type="button" role="tab" id="tab-materi" class="kelas-tabs__button"
+                    data-tab="materi" aria-controls="panel-materi" aria-selected="false">Materi</button>
+            <button type="button" role="tab" id="tab-tugas" class="kelas-tabs__button"
+                    data-tab="tugas" aria-controls="panel-tugas" aria-selected="false">Tugas</button>
+            <button type="button" role="tab" id="tab-kuis" class="kelas-tabs__button"
+                    data-tab="kuis" aria-controls="panel-kuis" aria-selected="false">Kuis</button>
+            <button type="button" role="tab" id="tab-absensi" class="kelas-tabs__button"
+                    data-tab="absensi" aria-controls="panel-absensi" aria-selected="false">Absensi</button>
+        </div>
+
+        <!-- ===================== TAB MATERI ===================== -->
+        <section role="tabpanel" id="panel-materi" class="kelas-panel" aria-labelledby="tab-materi" hidden>
+            <section class="kelas-panel__section">
+                <h2>Unggah Materi Baru</h2>
+                <div id="materiMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+                <form id="createMateriForm" enctype="multipart/form-data" novalidate>
+                    <div class="form-field">
+                        <label for="materiJudul">Judul</label>
+                        <input type="text" id="materiJudul" name="judul" required maxlength="200" autocomplete="off">
+                    </div>
+                    <div class="form-field">
+                        <label for="materiTipe">Tipe</label>
+                        <select id="materiTipe" name="tipe" required>
+                            <option value="file">File</option>
+                            <option value="link">Link / Video</option>
+                            <option value="teks">Teks</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="materiLink">Link (opsional, untuk tipe link/video)</label>
+                        <input type="url" id="materiLink" name="link" maxlength="500" placeholder="https://...">
+                    </div>
+                    <div class="form-field">
+                        <label for="materiFile">File (opsional)</label>
+                        <input type="file" id="materiFile" name="file"
+                            accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png,.gif,.mp4">
+                    </div>
+                    <button type="submit" id="createMateriButton">Simpan Materi</button>
+                </form>
+            </section>
+
+            <section class="kelas-panel__section">
+                <h2>Daftar Materi</h2>
+                <div class="table-scroll">
+                    <table border="1" cellpadding="6" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Judul</th>
+                                <th>Tipe</th>
+                                <th>Waktu Upload</th>
+                            </tr>
+                        </thead>
+                        <tbody id="materiTableBody">
+                            <tr>
+                                <td colspan="4">Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+
+        <!-- ===================== TAB TUGAS ===================== -->
+        <section role="tabpanel" id="panel-tugas" class="kelas-panel" aria-labelledby="tab-tugas" hidden>
+            <section class="kelas-panel__section">
+                <h2>Buat Tugas Baru</h2>
+                <div id="tugasMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+                <form id="createTugasForm" enctype="multipart/form-data" novalidate>
+                    <div class="form-field">
+                        <label for="tugasJudul">Judul</label>
+                        <input type="text" id="tugasJudul" name="judul" required maxlength="200" autocomplete="off">
+                    </div>
+                    <div class="form-field">
+                        <label for="tugasDeskripsi">Deskripsi (opsional)</label>
+                        <textarea id="tugasDeskripsi" name="deskripsi" rows="3" maxlength="2000"></textarea>
+                    </div>
+                    <div class="form-field">
+                        <label for="tugasWaktuMulai">Waktu mulai</label>
+                        <input type="datetime-local" id="tugasWaktuMulai" name="waktu_mulai" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="tugasDeadline">Deadline</label>
+                        <input type="datetime-local" id="tugasDeadline" name="deadline" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="tugasFile">File lampiran (opsional)</label>
+                        <input type="file" id="tugasFile" name="file"
+                            accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png">
+                    </div>
+                    <button type="submit" id="createTugasButton">Simpan Tugas</button>
+                </form>
+            </section>
+
+            <section class="kelas-panel__section">
+                <h2>Daftar Tugas</h2>
+                <div id="tugasListMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+                <div class="table-scroll">
+                    <table border="1" cellpadding="6" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Judul</th>
+                                <th>Mulai</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                                <th>Pengumpulan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tugasTableBody">
+                            <tr>
+                                <td colspan="7">Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+
+        <!-- ===================== TAB KUIS ===================== -->
+        <section role="tabpanel" id="panel-kuis" class="kelas-panel" aria-labelledby="tab-kuis" hidden>
+            <section class="kelas-panel__section">
+                <h2>Buat Kuis Baru</h2>
+                <div id="createKuisMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+                <form id="createKuisForm" novalidate>
+                    <div class="form-field">
+                        <label for="kuisJudul">Judul</label>
+                        <input type="text" id="kuisJudul" required maxlength="200" autocomplete="off">
+                    </div>
+                    <div class="form-field">
+                        <label for="kuisDeskripsi">Deskripsi (opsional)</label>
+                        <textarea id="kuisDeskripsi" rows="2" maxlength="5000"></textarea>
+                    </div>
+                    <div class="form-field">
+                        <label for="kuisDurasi">Durasi (menit)</label>
+                        <input type="number" id="kuisDurasi" required min="1" max="600" value="30">
+                    </div>
+                    <div class="form-field">
+                        <label for="kuisWaktuMulai">Waktu mulai (opsional)</label>
+                        <input type="datetime-local" id="kuisWaktuMulai">
+                    </div>
+                    <div class="form-field">
+                        <label for="kuisWaktuSelesai">Waktu selesai (opsional)</label>
+                        <input type="datetime-local" id="kuisWaktuSelesai">
+                    </div>
+                    <button type="submit" id="createKuisButton">Simpan sebagai Draft</button>
+                </form>
+            </section>
+
+            <section class="kelas-panel__section">
+                <h2>Daftar Kuis</h2>
+                <p>Klik "Kelola soal" untuk membuka halaman kuis.</p>
+                <div id="kuisListMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+                <div class="table-scroll">
+                    <table border="1" cellpadding="6" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Judul</th>
+                                <th>Durasi</th>
+                                <th>Status</th>
+                                <th>Soal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kuisTableBody">
+                            <tr>
+                                <td colspan="6">Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+
+        <!-- ===================== TAB ABSENSI ===================== -->
+        <section role="tabpanel" id="panel-absensi" class="kelas-panel" aria-labelledby="tab-absensi" hidden>
+            <section class="kelas-panel__section">
+                <h2>Buka Sesi Absensi</h2>
+                <div id="openAbsensiMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+                <form id="openAbsensiForm" novalidate>
+                    <div class="form-field">
+                        <label for="absensiTanggal">Tanggal</label>
+                        <input type="date" id="absensiTanggal" required>
+                    </div>
+                    <button type="submit" id="openAbsensiButton">Buka Absensi</button>
+                </form>
+            </section>
+
+            <section class="kelas-panel__section">
+                <h2>Daftar Sesi Absensi</h2>
+                <div id="absensiListMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+                <div class="table-scroll">
+                    <table border="1" cellpadding="6" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Tanggal</th>
+                                <th>Dibuka</th>
+                                <th>Ditutup</th>
+                                <th>Status</th>
+                                <th>Hadir</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="absensiTableBody">
+                            <tr>
+                                <td colspan="7">Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="attendanceSection" class="kelas-panel__section" hidden>
+                <h2>Kehadiran Siswa</h2>
+                <div id="attendanceMessage" class="message" role="alert" aria-live="polite" hidden></div>
+                <p id="attendanceMeta">-</p>
+                <p id="attendanceStat">-</p>
+
+                <div class="table-scroll">
+                    <table border="1" cellpadding="6" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kode Siswa</th>
+                                <th>Nama</th>
+                                <th>Status</th>
+                                <th>Waktu Absen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceTableBody">
+                            <tr>
+                                <td colspan="5">Pilih sesi di atas untuk melihat kehadiran.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/pengajar-common.js"></script>
+    <script src="../assets/js/pengajar-kelas-detail.js"></script>
+    <script src="../assets/js/pengajar-kelas-materi.js"></script>
+    <script src="../assets/js/pengajar-kelas-tugas.js"></script>
+    <script src="../assets/js/pengajar-kelas-kuis.js"></script>
+    <script src="../assets/js/pengajar-kelas-absensi.js"></script>
+</body>
+</html>

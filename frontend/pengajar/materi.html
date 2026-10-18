@@ -1,0 +1,105 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/pengajar/materi.html
+GUNA FILE   : Halaman pengajar untuk melihat dan mengunggah materi.
+              - Filter per kelas (opsional)
+              - Tabel daftar materi (pengajar/materi/list.php)
+              - Form upload materi (materi/create.php — multipart/form-data)
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Materi - Pengajar LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1>Kelola Materi</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="kuis.html">Kuis</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="materi.html">Materi</a>
+        <a href="tugas.html">Tugas</a>
+        <a href="absensi.html">Absensi</a>
+    </nav>
+
+    <main>
+        <!-- Form upload materi -->
+        <section>
+            <h2>Unggah Materi Baru</h2>
+            <div id="materiMessage" role="alert" aria-live="polite" hidden></div>
+
+            <form id="createMateriForm" enctype="multipart/form-data" novalidate>
+                <div>
+                    <label for="materiKelas">Kelas</label>
+                    <select id="materiKelas" name="id_kelas" required>
+                        <option value="">-- Memuat kelas --</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="materiJudul">Judul</label>
+                    <input type="text" id="materiJudul" name="judul" required maxlength="200" autocomplete="off">
+                </div>
+                <div>
+                    <label for="materiTipe">Tipe</label>
+                    <select id="materiTipe" name="tipe" required>
+                        <option value="file">File</option>
+                        <option value="link">Link / Video</option>
+                        <option value="teks">Teks</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="materiLink">Link (opsional, untuk tipe link/video)</label>
+                    <input type="url" id="materiLink" name="link" maxlength="500" placeholder="https://...">
+                </div>
+                <div>
+                    <label for="materiFile">File (opsional)</label>
+                    <input type="file" id="materiFile" name="file"
+                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png,.gif,.mp4">
+                </div>
+                <button type="submit" id="createMateriButton">Simpan Materi</button>
+            </form>
+        </section>
+
+        <!-- Filter + daftar -->
+        <section>
+            <h2>Daftar Materi</h2>
+            <div>
+                <label for="filterKelasMateri">Filter Kelas</label>
+                <select id="filterKelasMateri">
+                    <option value="">Semua kelas</option>
+                </select>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Judul</th>
+                        <th>Kelas</th>
+                        <th>Tipe</th>
+                        <th>Waktu Upload</th>
+                    </tr>
+                </thead>
+                <tbody id="materiTableBody">
+                    <tr>
+                        <td colspan="5">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/pengajar-common.js"></script>
+<script src="../assets/js/pengajar-materi.js"></script></body>
+</html>

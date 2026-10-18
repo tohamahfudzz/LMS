@@ -1,0 +1,106 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/siswa/tugas.html
+GUNA FILE   : Halaman tugas siswa.
+              - Daftar tugas (siswa-tugas-list.js)
+              - Form kumpul tugas (siswa-tugas-upload.js)
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Tugas - Siswa LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1>Tugas</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="kelas.html">Kelas</a>
+        <a href="materi.html">Materi</a>
+        <a href="tugas.html">Tugas</a>
+        <a href="absensi.html">Absensi</a>
+    </nav>
+
+    <main>
+        <!-- Form kumpul (satu tugas: upload) -->
+        <section>
+            <h2>Kumpulkan Tugas</h2>
+            <div id="uploadMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <form id="uploadTugasForm" enctype="multipart/form-data" novalidate>
+                <div>
+                    <label for="uploadIdTugas">ID Tugas</label><br>
+                    <input type="number" id="uploadIdTugas" name="id_tugas" min="1" required placeholder="Pilih dari tabel atau isi ID">
+                </div>
+                <br>
+                <div>
+                    <label for="uploadTeks">Jawaban teks (opsional)</label><br>
+                    <textarea id="uploadTeks" name="teks" rows="3" maxlength="5000"></textarea>
+                </div>
+                <br>
+                <div>
+                    <label for="uploadFile">File (opsional)</label><br>
+                    <input type="file" id="uploadFile" name="file"
+                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png">
+                </div>
+                <br>
+                <button type="submit" id="uploadTugasButton">Kirim Pengumpulan</button>
+            </form>
+            <p><small>Minimal isi teks atau unggah file. ID tugas bisa diisi otomatis lewat tombol di tabel.</small></p>
+        </section>
+
+        <hr>
+
+        <!-- Daftar tugas (satu tugas: list) -->
+        <section>
+            <h2>Daftar Tugas</h2>
+            <div id="tugasListMessage" role="alert" aria-live="polite" hidden
+                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <div>
+                <label for="filterKelasTugas">Filter Kelas</label>
+                <select id="filterKelasTugas">
+                    <option value="">Semua kelas</option>
+                </select>
+            </div>
+            <br>
+
+            <table border="1" cellpadding="6" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Judul</th>
+                        <th>Kelas</th>
+                        <th>Deadline</th>
+                        <th>Status Tugas</th>
+                        <th>Pengumpulan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tugasTableBody">
+                    <tr>
+                        <td colspan="7">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/siswa-common.js"></script>
+<script src="../assets/js/siswa-tugas-list.js"></script>
+<script src="../assets/js/siswa-tugas-upload.js"></script>
+<script src="../assets/js/siswa-tugas-delete.js"></script>
+</body>
+</html>

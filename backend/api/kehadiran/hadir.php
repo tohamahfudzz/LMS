@@ -1,4 +1,18 @@
 <?php
+/*
+================================================================================
+LOKASI FILE : backend/api/kehadiran/hadir.php
+GUNA FILE   : Siswa menandai kehadiran (hadir) pada sesi absensi yang dibuka pengajar.
+              Method : POST
+              Body   : { "id_absensi": 1 }
+              Role   : siswa (id siswa diambil dari session, bukan dari input)
+              Syarat : sesi berstatus 'terbuka', waktu_buka sudah tercapai, dan siswa
+                       terdaftar di kelas sesi tersebut. Satu siswa hanya bisa mengisi
+                       satu kali per sesi.
+              Perubahan: menolak absensi sebelum waktu_buka, dan detail error database
+                         tidak lagi dikirim ke pengguna.
+================================================================================
+*/
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
@@ -18,7 +32,8 @@ if (!empty($data->id_absensi)) {
         // agar siswa tidak dapat mengisi absensi atas nama siswa lain.
         $idSiswa = $session['id'];
 
-        $queryAbsen = "SELECT id_kelas, status FROM absensi WHERE id_absensi = :id_absensi LIMIT 1";
+        $queryAbsen = "SELECT id_kelas, status, waktu_buka, (waktu_buka > NOW()) AS belum_dibuka
+                       FROM absensi WHERE id_absensi = :id_absensi LIMIT 1";
         $stmtAbsen = $db->prepare($queryAbsen);
         $stmtAbsen->execute([":id_absensi" => $data->id_absensi]);
         $absensi = $stmtAbsen->fetch(PDO::FETCH_ASSOC);
@@ -32,6 +47,16 @@ if (!empty($data->id_absensi)) {
         if ($absensi['status'] !== 'terbuka') {
             http_response_code(400);
             echo json_encode(["success" => false, "message" => "Presensi ditolak. Sesi absensi sudah ditutup oleh pengajar."]);
+            exit;
+        }
+
+        // Sesi yang dijadwalkan untuk jam tertentu belum bisa diisi sebelum waktunya.
+        if ((int) $absensi['belum_dibuka'] === 1) {
+            http_response_code(400);
+            echo json_encode([
+                "success" => false,
+                "message" => "Presensi belum dibuka. Sesi dimulai pukul " . date('H:i', strtotime($absensi['waktu_buka'])) . "."
+            ]);
             exit;
         }
 
@@ -66,8 +91,9 @@ if (!empty($data->id_absensi)) {
             http_response_code(400);
             echo json_encode(["success" => false, "message" => "Presensi ditolak. Anda sudah melakukan absensi pada sesi ini."]);
         } else {
+            error_log("[LMS][kehadiran/hadir] " . $e->getMessage());
             http_response_code(500);
-            echo json_encode(["success" => false, "message" => "Terjadi kesalahan database: " . $e->getMessage()]);
+            echo json_encode(["success" => false, "message" => "Terjadi kesalahan pada server."]);
         }
     }
 } else {
