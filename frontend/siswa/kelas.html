@@ -1,7 +1,9 @@
 <!--
 ================================================================================
 LOKASI FILE : frontend/siswa/kelas.html
-GUNA FILE   : Menampilkan daftar kelas yang diikuti siswa.
+GUNA FILE   : Daftar kelas yang diikuti siswa. Tombol "Buka Kelas" menuju
+              kelas-detail.html; materi, tugas, kuis, dan absensi dikelola
+              di dalam halaman kelas tersebut.
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -11,6 +13,7 @@ GUNA FILE   : Menampilkan daftar kelas yang diikuti siswa.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Kelas Saya - Siswa LMS</title>
+    <link rel="stylesheet" href="../assets/css/kelas-detail.css">
 </head>
 <body>
 
@@ -23,16 +26,13 @@ GUNA FILE   : Menampilkan daftar kelas yang diikuti siswa.
     <nav>
         <a href="dashboard.html">Dashboard</a>
         <a href="kelas.html">Kelas</a>
-        <a href="materi.html">Materi</a>
-        <a href="tugas.html">Tugas</a>
-        <a href="absensi.html">Absensi</a>
     </nav>
 
     <main>
         <section>
             <h2>Daftar Kelas</h2>
-            <div id="kelasMessage" role="alert" aria-live="polite" hidden
-                 style="margin: 8px 0; padding: 10px; border: 1px solid #ccc;"></div>
+
+            <div id="kelasMessage" class="message" role="alert" aria-live="polite" hidden></div>
 
             <table border="1" cellpadding="6" cellspacing="0">
                 <thead>

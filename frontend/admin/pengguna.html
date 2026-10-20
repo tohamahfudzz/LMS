@@ -31,70 +31,65 @@ GUNA FILE   : Halaman admin kelola pengguna.
     </nav>
 
     <main>
-        <!-- Form pengajar -->
-        <section>
-            <h2>Tambah Pengajar</h2>
-            <div id="pengajarMessage" role="alert" aria-live="polite" hidden></div>
+       <!-- Form pengajar -->
+<section>
+    <h2>Tambah Pengajar</h2>
+    <div id="pengajarMessage" role="alert" aria-live="polite" hidden></div>
 
-            <form id="createPengajarForm" novalidate>
-                <div>
-                    <label for="kodePengajar">Kode Pengajar</label>
-                    <input type="text" id="kodePengajar" required maxlength="20" autocomplete="off" placeholder="Contoh: P001">
-                </div>
-                <div>
-                    <label for="namaPengajar">Nama</label>
-                    <input type="text" id="namaPengajar" required maxlength="100" autocomplete="off">
-                </div>
-                <div>
-                    <label for="passwordPengajar">Password</label>
-                    <input type="password" id="passwordPengajar" required minlength="4" maxlength="100" autocomplete="new-password">
-                </div>
-                <button type="submit" id="createPengajarButton">Simpan Pengajar</button>
-            </form>
-        </section>
+    <form id="createPengajarForm" novalidate>
+        <div>
+            <label for="kodePengajar">Kode Pengajar</label>
+            <input type="text" id="kodePengajar" required maxlength="20" autocomplete="off" placeholder="Contoh: P001">
+        </div>
 
-        <!-- Tabel pengajar -->
-        <section>
-            <h2>Daftar Pengajar</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Kode</th>
-                        <th>Nama</th>
-                        <th>Role</th>
-                    </tr>
-                </thead>
-                <tbody id="pengajarTableBody">
-                    <tr>
-                        <td colspan="4">Memuat data...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+        <div>
+            <label for="namaPengajar">Nama</label>
+            <input type="text" id="namaPengajar" required maxlength="100" autocomplete="off">
+        </div>
 
-        <!-- Form siswa -->
-        <section>
-            <h2>Tambah Siswa</h2>
-            <div id="siswaMessage" role="alert" aria-live="polite" hidden></div>
+        <div>
+            <label for="emailPengajar">Email</label>
+            <input type="email" id="emailPengajar" required maxlength="255" autocomplete="email" placeholder="Contoh: pengajar@email.com">
+        </div>
 
-            <form id="createSiswaForm" novalidate>
-                <div>
-                    <label for="kodeSiswa">Kode Siswa</label>
-                    <input type="text" id="kodeSiswa" required maxlength="20" autocomplete="off" placeholder="Contoh: S001">
-                </div>
-                <div>
-                    <label for="namaSiswa">Nama</label>
-                    <input type="text" id="namaSiswa" required maxlength="100" autocomplete="off">
-                </div>
-                <div>
-                    <label for="passwordSiswa">Password</label>
-                    <input type="password" id="passwordSiswa" required minlength="4" maxlength="100" autocomplete="new-password">
-                </div>
-                <button type="submit" id="createSiswaButton">Simpan Siswa</button>
-            </form>
-        </section>
+        <div>
+            <label for="passwordPengajar">Password</label>
+            <input type="password" id="passwordPengajar" required minlength="4" maxlength="100" autocomplete="new-password">
+        </div>
 
+        <button type="submit" id="createPengajarButton">Simpan Pengajar</button>
+    </form>
+</section>
+
+<!-- Form siswa -->
+<section>
+    <h2>Tambah Siswa</h2>
+    <div id="siswaMessage" role="alert" aria-live="polite" hidden></div>
+
+    <form id="createSiswaForm" novalidate>
+        <div>
+            <label for="kodeSiswa">Kode Siswa</label>
+            <input type="text" id="kodeSiswa" required maxlength="20" autocomplete="off" placeholder="Contoh: S001">
+        </div>
+
+        <div>
+            <label for="namaSiswa">Nama</label>
+            <input type="text" id="namaSiswa" required maxlength="100" autocomplete="off">
+        </div>
+
+        <div>
+            <label for="emailSiswa">Email</label>
+            <input type="email" id="emailSiswa" required maxlength="255" autocomplete="email" placeholder="Contoh: siswa@email.com">
+        </div>
+
+        <div>
+            <label for="passwordSiswa">Password</label>
+            <input type="password" id="passwordSiswa" required minlength="4" maxlength="100" autocomplete="new-password">
+        </div>
+
+        <button type="submit" id="createSiswaButton">Simpan Siswa</button>
+    </form>
+</section>
         <!-- Tabel siswa -->
         <section>
             <h2>Daftar Siswa</h2>

@@ -12,8 +12,15 @@ GUNA FILE   : Halaman login. Menampilkan pesan error/sukses dari backend
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Login - LMS</title>
+    <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer>
+</script>
 </head>
 <body>
+    <!-- Cloudflare Turnstile CAPTCHA -->
+
 
     <main>
         <section>
@@ -30,6 +37,10 @@ GUNA FILE   : Halaman login. Menampilkan pesan error/sukses dari backend
             ></div>
 
             <form id="loginForm" novalidate>
+                <div
+    class="cf-turnstile"
+    data-sitekey="1x00000000000000000000AA">
+</div>
                 <div>
                     <label for="kode">Kode</label><br>
                     <input

@@ -1,7 +1,11 @@
 <!--
 ================================================================================
 LOKASI FILE : frontend/siswa/kuis-kerjakan.html
-GUNA FILE   : Halaman mengerjakan kuis (soal + timer + kumpulkan).
+GUNA FILE   : Halaman mengerjakan kuis (soal + timer + kumpulkan). Halaman sendiri.
+              Dibuka dari tab Kuis di kelas-detail.html:
+                  kuis-kerjakan.html?id_kuis=1&id_kelas=2
+              id_kelas hanya dipakai agar tombol kembali mengarah ke tab Kuis kelas
+              asalnya (diatur oleh assets/js/siswa-kuis-nav.js).
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -22,7 +26,7 @@ GUNA FILE   : Halaman mengerjakan kuis (soal + timer + kumpulkan).
     </header>
 
     <nav>
-        <a href="kuis.html">Kembali ke daftar kuis</a>
+        <a href="kelas.html" id="backToKelasLink">Kembali ke daftar kelas</a>
     </nav>
 
     <main>
@@ -46,5 +50,6 @@ GUNA FILE   : Halaman mengerjakan kuis (soal + timer + kumpulkan).
     <script src="../assets/js/siswa-common.js"></script>
     <script src="../assets/js/siswa-kuis-mulai.js"></script>
     <script src="../assets/js/siswa-kuis-submit.js"></script>
+    <script src="../assets/js/siswa-kuis-nav.js"></script>
 </body>
 </html>
