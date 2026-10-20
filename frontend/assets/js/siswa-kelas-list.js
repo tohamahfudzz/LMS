@@ -1,8 +1,10 @@
 /*
 ================================================================================
 LOKASI FILE : frontend/assets/js/siswa-kelas-list.js
-GUNA FILE   : Hanya menampilkan daftar kelas siswa.
+GUNA FILE   : Menampilkan daftar kelas siswa di frontend/siswa/kelas.html.
               Endpoint: GET ../../backend/api/siswa/kelas/list.php
+              Setiap kelas punya tombol "Buka Kelas" ke kelas-detail.html?id_kelas=..
+              (materi, tugas, kuis, dan absensi dikelola di dalam halaman kelas itu).
 ================================================================================
 */
 
@@ -30,15 +32,12 @@ GUNA FILE   : Hanya menampilkan daftar kelas siswa.
             }
 
             tbody.innerHTML = rows.map(function (item, index) {
-                const id = encodeURIComponent(item.id_kelas);
                 return (
                     "<tr>" +
                     "<td>" + (index + 1) + "</td>" +
                     "<td>" + SiswaCommon.escapeHtml(item.nama_kelas) + "</td>" +
-                    "<td>" +
-                    "<a href=\"materi.html?id_kelas=" + id + "\">Materi</a> | " +
-                    "<a href=\"tugas.html?id_kelas=" + id + "\">Tugas</a>" +
-                    "</td>" +
+                    "<td><a href=\"kelas-detail.html?id_kelas=" + encodeURIComponent(item.id_kelas) +
+                    "\">Buka Kelas</a></td>" +
                     "</tr>"
                 );
             }).join("");

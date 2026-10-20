@@ -2,3 +2,15 @@ pengelolaan kelas masih sangat membingungkan
 tiap fungsi kelas harus dikelompokan ke dalam kelas tersebut seperti di spada(absensi tugas dan lainya masuk kedalam kelasnya tersendiri).
 untuk digunakan pengguna jangan menggunakan id untuk pencarian fungsi seperti absensi dan lainnya.
 siswa tidak bisa download materi.
+
+
+
+
+
+
+
+backend/api/auth/login.php
+Ada juga satu hal keamanan yang perlu diperhatikan: kode saat ini mengizinkan Access-Control-Allow-Origin: *. Untuk endpoint login, sebaiknya akses lintas origin dibatasi sesuai kebutuhan. Selain itu, session PHP harus sudah dimulai sebelum menggunakan $_SESSION.
+
+
+untuk pemilihan role dihilangkan saja dan ganti dengan user memasukkan kode lalu sistem mendeteksi otomatis kode itu adalah user apa.untuk daftar kode buat file php dibackend.

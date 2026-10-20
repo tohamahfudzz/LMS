@@ -6,7 +6,9 @@ GUNA FILE   : Tab Absensi pada halaman kelas pengajar (frontend/pengajar/kelas-d
               dalam tabel dengan tombol aksi.
               - Daftar sesi kelas ini : GET  ../../backend/api/pengajar/absensi/list.php?id_kelas=
               - Buka sesi             : POST ../../backend/api/absensi/open.php
-                                        Body: { id_kelas, tanggal }
+                                        Body: { id_kelas, tanggal, jam }
+                                        (tanggal + jam disimpan sebagai waktu_buka;
+                                        siswa baru bisa absen setelah jam tersebut)
               - Tutup sesi            : POST ../../backend/api/absensi/close.php
                                         Body: { id_absensi }
               - Lihat kehadiran sesi  : GET  ../../backend/api/pengajar/absensi/attendance.php?id_absensi=
@@ -29,6 +31,7 @@ GUNA FILE   : Tab Absensi pada halaman kelas pengajar (frontend/pengajar/kelas-d
 
     const openForm = document.getElementById("openAbsensiForm");
     const tanggalInput = document.getElementById("absensiTanggal");
+    const jamInput = document.getElementById("absensiJam");
     const sesiBody = document.getElementById("absensiTableBody");
     const detailSection = document.getElementById("attendanceSection");
     const detailBody = document.getElementById("attendanceTableBody");
@@ -44,9 +47,22 @@ GUNA FILE   : Tab Absensi pada halaman kelas pengajar (frontend/pengajar/kelas-d
         return now.getFullYear() + "-" + month + "-" + day;
     }
 
+    // Jam sekarang menurut jam perangkat, format HH:MM (24 jam).
+    function getCurrentTime() {
+        const now = new Date();
+        return String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
+    }
+
+    // Sesi yang waktu bukanya masih di masa depan ditandai "terjadwal".
+    function getStatusLabel(item) {
+        if (item.status === "terbuka" && item.belum_dimulai) {
+            return "terjadwal (belum dimulai)";
+        }
+        return item.status;
+    }
+
     async function loadSesiList() {
         sesiBody.innerHTML = "<tr><td colspan=\"7\">Memuat data...</td></tr>";
-        PengajarCommon.hideMessage("absensiListMessage");
 
         try {
             const url = API.list + "?id_kelas=" + encodeURIComponent(idKelas);
@@ -77,7 +93,7 @@ GUNA FILE   : Tab Absensi pada halaman kelas pengajar (frontend/pengajar/kelas-d
                     "<td>" + PengajarCommon.escapeHtml(item.tanggal) + "</td>" +
                     "<td>" + PengajarCommon.escapeHtml(item.waktu_buka) + "</td>" +
                     "<td>" + PengajarCommon.escapeHtml(item.waktu_tutup || "-") + "</td>" +
-                    "<td>" + PengajarCommon.escapeHtml(item.status) + "</td>" +
+                    "<td>" + PengajarCommon.escapeHtml(getStatusLabel(item)) + "</td>" +
                     "<td>" + PengajarCommon.escapeHtml(item.jumlah_hadir) + " / " +
                         PengajarCommon.escapeHtml(jumlahSiswa) + "</td>" +
                     "<td>" + aksi + "</td>" +
@@ -172,10 +188,15 @@ GUNA FILE   : Tab Absensi pada halaman kelas pengajar (frontend/pengajar/kelas-d
         PengajarCommon.hideMessage("openAbsensiMessage");
 
         const tanggal = tanggalInput.value;
+        const jam = jamInput.value;
         const button = document.getElementById("openAbsensiButton");
 
         if (!tanggal) {
             PengajarCommon.showMessage("openAbsensiMessage", "Tanggal wajib diisi.", "error");
+            return;
+        }
+        if (!jam) {
+            PengajarCommon.showMessage("openAbsensiMessage", "Jam mulai wajib diisi.", "error");
             return;
         }
 
@@ -184,7 +205,7 @@ GUNA FILE   : Tab Absensi pada halaman kelas pengajar (frontend/pengajar/kelas-d
         try {
             const result = await apiRequest(API.open, {
                 method: "POST",
-                body: { id_kelas: idKelas, tanggal: tanggal }
+                body: { id_kelas: idKelas, tanggal: tanggal, jam: jam }
             });
             PengajarCommon.showMessage("openAbsensiMessage", result.message || "Sesi absensi berhasil dibuka.", "success");
             await loadSesiList();
@@ -218,6 +239,7 @@ GUNA FILE   : Tab Absensi pada halaman kelas pengajar (frontend/pengajar/kelas-d
 
     KelasPage.registerTab("absensi", function () {
         tanggalInput.value = getTodayDate();
+        jamInput.value = getCurrentTime();
         loadSesiList();
     });
 })();

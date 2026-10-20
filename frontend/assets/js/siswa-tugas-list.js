@@ -48,32 +48,55 @@ GUNA FILE   : Hanya menampilkan daftar tugas siswa (+ filter kelas).
             }
 
             tbody.innerHTML = rows.map(function (item, index) {
-                const statusKumpul = item.sudah_mengumpulkan ? "Sudah dikumpulkan" : "Belum";
-                const bisaKumpul = item.status_tugas === "terbuka";
-                const aksi = bisaKumpul
-                    ? '<button type="button" class="btn-pilih-tugas" data-id="' +
-                      SiswaCommon.escapeHtml(item.id_tugas) + '">Pilih untuk kumpul</button>'
-                    : "-";
+    const statusKumpul = item.sudah_mengumpulkan ? "Sudah dikumpulkan" : "Belum";
+    const bisaKumpul = item.status_tugas === "terbuka";
 
-                return (
-                    "<tr>" +
-                    "<td>" + (index + 1) + "</td>" +
-                    "<td>" + SiswaCommon.escapeHtml(item.judul) + "</td>" +
-                    "<td>" + SiswaCommon.escapeHtml(item.nama_kelas) + "</td>" +
-                    "<td>" + SiswaCommon.escapeHtml(item.deadline) + "</td>" +
-                    "<td>" + SiswaCommon.escapeHtml(item.status_tugas) + "</td>" +
-                    "<td>" + SiswaCommon.escapeHtml(statusKumpul) + "</td>" +
-                    "<td>" + aksi + "</td>" +
-                    "</tr>"
-                );
-            }).join("");
+    let aksiParts = [];
 
-            tbody.querySelectorAll(".btn-pilih-tugas").forEach(function (btn) {
-                btn.addEventListener("click", function () {
-                    const id = parseInt(btn.getAttribute("data-id"), 10);
-                    if (id) fillUploadId(id);
-                });
-            });
+    if (bisaKumpul) {
+        aksiParts.push(
+            '<button type="button" class="btn-pilih-tugas" data-id="' +
+            SiswaCommon.escapeHtml(item.id_tugas) +
+            '">Pilih untuk kumpul</button>'
+        );
+    }
+
+    // Tombol hapus file hanya jika sudah kumpul + ada file + tugas masih terbuka
+    const punyaFile =
+        item.sudah_mengumpulkan &&
+        item.pengumpulan &&
+        item.pengumpulan.file;
+
+    if (punyaFile && bisaKumpul) {
+        aksiParts.push(
+            '<button type="button" class="btn-hapus-file-tugas" data-id="' +
+            SiswaCommon.escapeHtml(item.id_tugas) +
+            '">Hapus file</button>'
+        );
+    }
+
+    const aksi = aksiParts.length ? aksiParts.join(" ") : "-";
+
+    return (
+        "<tr>" +
+        "<td>" + (index + 1) + "</td>" +
+        "<td>" + SiswaCommon.escapeHtml(item.judul) + "</td>" +
+        "<td>" + SiswaCommon.escapeHtml(item.nama_kelas) + "</td>" +
+        "<td>" + SiswaCommon.escapeHtml(item.deadline) + "</td>" +
+        "<td>" + SiswaCommon.escapeHtml(item.status_tugas) + "</td>" +
+        "<td>" + SiswaCommon.escapeHtml(statusKumpul) + "</td>" +
+        "<td>" + aksi + "</td>" +
+        "</tr>"
+    );
+}).join("");
+
+// Event pilih-tugas tetap seperti sebelumnya
+tbody.querySelectorAll(".btn-pilih-tugas").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+        const id = parseInt(btn.getAttribute("data-id"), 10);
+        if (id) fillUploadId(id);
+    });
+});
         } catch (error) {
             tbody.innerHTML = "<tr><td colspan=\"7\">Gagal memuat data.</td></tr>";
             SiswaCommon.showMessage(

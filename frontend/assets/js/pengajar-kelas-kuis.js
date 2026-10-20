@@ -34,7 +34,6 @@ GUNA FILE   : Tab Kuis pada halaman kelas pengajar (frontend/pengajar/kelas-deta
 
     async function loadKuisList() {
         tbody.innerHTML = "<tr><td colspan=\"6\">Memuat data...</td></tr>";
-        PengajarCommon.hideMessage("kuisListMessage");
 
         try {
             const url = API.kuisList + "?id_kelas=" + encodeURIComponent(idKelas);
