@@ -1,66 +1,54 @@
 <?php
+// Tampilkan error sementara untuk mendeteksi masalah (Hapus jika sudah produksi)
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 require_once '../../config/database.php';
 require_once '../../functions/response.php';
 
-header("Content-Type: application/json; charset=UTF-8");
+// 1. Validasi Method dan Header menggunakan Helper Baru
+initApi('POST');
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    sendResponse(false, "Metode HTTP tidak diizinkan.");
-    exit;
-}
-
-$requestData = json_decode(file_get_contents("php://input"));
-$email = trim($requestData->email ?? '');
+// 2. Membaca Request JSON menggunakan Helper Baru (menghasilkan Array)
+$requestData = readJsonBody();
+$email = trim($requestData['email'] ?? '');
 
 if (empty($email)) {
-    http_response_code(400);
-    sendResponse(false, "Alamat email wajib diisi.");
-    exit;
+    sendError("Alamat email wajib diisi.", 400);
 }
 
 $database = new Database();
 $db = $database->getConnection();
 
 try {
-    $checkUserQuery = "
-        SELECT email 
-        FROM users 
-        WHERE email = :email 
-        LIMIT 1
-    "; 
+    $checkUserQuery = "SELECT email FROM siswa WHERE email = :email LIMIT 1"; 
     $checkUserStatement = $db->prepare($checkUserQuery);
-    $checkUserStatement->execute([
-        ":email" => $email
-    ]);
+    $checkUserStatement->execute([":email" => $email]);
 
     if ($checkUserStatement->rowCount() === 0) {
-        http_response_code(404);
-        sendResponse(false, "Akun tidak ditemukan. Pastikan email yang Anda masukkan sudah terdaftar di sistem.");
-        exit;
+        sendError("Akun tidak ditemukan. Pastikan email yang Anda masukkan sudah terdaftar di sistem.", 404);
     }
 
     $resetToken = bin2hex(random_bytes(32)); 
 
-    $insertTokenQuery = "
-        INSERT INTO password_resets (email, token) 
-        VALUES (:email, :token)
-    ";
+    $insertTokenQuery = "INSERT INTO password_resets (email, token) VALUES (:email, :token)";
     $insertTokenStatement = $db->prepare($insertTokenQuery);
     $insertTokenStatement->execute([
         ":email" => $email,
         ":token" => $resetToken
     ]);
 
-    $resetLink = "http://localhost:8000/frontend/auth/reset-password.html?token=" . $resetToken;
+    $resetLink = "http://localhost/LMS/frontend/auth/reset-password.html?token=" . $resetToken;
 
-    sendResponse(true, "Instruksi pemulihan kata sandi telah dikirim ke email terdaftar Anda.", [
+    // 3. Kirim Balasan Sukses menggunakan Helper Baru
+    sendSuccess("Instruksi pemulihan kata sandi telah dikirim ke email terdaftar Anda.", [
         "reset_link" => $resetLink
     ]);
 
 } catch (PDOException $error) {
-    error_log($error->getMessage());
-    http_response_code(500);
-    sendResponse(false, "Terjadi kesalahan pada server.");
+    // Mode Debug: Menampilkan error langsung ke Thunder Client
+    sendError("Database Error: " . $error->getMessage(), 500);
+    
+    // Jika pengujian sudah berhasil (200 OK), ganti baris di atas dengan standar PM:
+    // sendServerError($error, "ForgotPassword");
 }

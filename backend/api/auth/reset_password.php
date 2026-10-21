@@ -1,30 +1,24 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 require_once '../../config/database.php';
 require_once '../../functions/response.php';
 
-header("Content-Type: application/json; charset=UTF-8");
+// Validasi Method
+initApi('POST');
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    sendResponse(false, "Metode HTTP tidak diizinkan.");
-    exit;
-}
-
-$requestData = json_decode(file_get_contents("php://input"));
-$token = trim($requestData->token ?? '');
-$newPassword = $requestData->password_baru ?? '';
+// Membaca Request
+$requestData = readJsonBody();
+$token = trim($requestData['token'] ?? '');
+$newPassword = $requestData['password_baru'] ?? '';
 
 if (empty($token) || empty($newPassword)) {
-    http_response_code(400);
-    sendResponse(false, "Token pemulihan dan kata sandi baru wajib diisi.");
-    exit;
+    sendError("Token pemulihan dan kata sandi baru wajib diisi.", 400);
 }
 
 if (strlen($newPassword) < 8) {
-    http_response_code(400);
-    sendResponse(false, "Kata sandi baru harus memiliki minimal 8 karakter.");
-    exit;
+    sendError("Kata sandi baru harus memiliki minimal 8 karakter.", 400);
 }
 
 $database = new Database();
@@ -39,14 +33,10 @@ try {
         LIMIT 1
     ";
     $verifyTokenStatement = $db->prepare($verifyTokenQuery);
-    $verifyTokenStatement->execute([
-        ":token" => $token
-    ]);
+    $verifyTokenStatement->execute([":token" => $token]);
 
     if ($verifyTokenStatement->rowCount() === 0) {
-        http_response_code(401);
-        sendResponse(false, "Token pemulihan tidak valid atau sesi telah kedaluwarsa.");
-        exit;
+        sendError("Token pemulihan tidak valid atau sesi telah kedaluwarsa.", 401);
     }
 
     $userRecord = $verifyTokenStatement->fetch(PDO::FETCH_ASSOC);
@@ -54,30 +44,23 @@ try {
 
     $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-    $updatePasswordQuery = "
-        UPDATE users 
-        SET password = :password 
-        WHERE email = :email
-    ";
+    $updatePasswordQuery = "UPDATE siswa SET password = :password WHERE email = :email";
     $updatePasswordStatement = $db->prepare($updatePasswordQuery);
     $updatePasswordStatement->execute([
         ":password" => $hashedPassword,
         ":email" => $userEmail
     ]);
 
-    $deleteTokenQuery = "
-        DELETE FROM password_resets 
-        WHERE email = :email
-    ";
+    $deleteTokenQuery = "DELETE FROM password_resets WHERE email = :email";
     $deleteTokenStatement = $db->prepare($deleteTokenQuery);
-    $deleteTokenStatement->execute([
-        ":email" => $userEmail
-    ]);
+    $deleteTokenStatement->execute([":email" => $userEmail]);
 
-    sendResponse(true, "Kata sandi berhasil diperbarui. Silakan masuk kembali dengan sandi baru Anda.");
+    sendSuccess("Kata sandi berhasil diperbarui. Silakan masuk kembali dengan sandi baru Anda.");
 
 } catch (PDOException $error) {
-    error_log($error->getMessage());
-    http_response_code(500);
-    sendResponse(false, "Terjadi kesalahan pada server.");
+    // Mode Debug
+    sendError("Database Error: " . $error->getMessage(), 500);
+    
+    // Standar rilis:
+    // sendServerError($error, "ResetPassword");
 }
