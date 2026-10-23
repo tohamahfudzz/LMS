@@ -1,20 +1,21 @@
 <?php
-ini_set('display_errors', 1);
+
+ini_set('display_errors', '0');
 error_reporting(E_ALL);
 
 require_once '../../config/database.php';
 require_once '../../functions/response.php';
+require_once '../../functions/password_reset.php';
 
-// Validasi Method
 initApi('POST');
 
-// Membaca Request
 $requestData = readJsonBody();
-$token = trim($requestData['token'] ?? '');
-$newPassword = $requestData['password_baru'] ?? '';
+$email = is_string($requestData['email'] ?? null) ? trim($requestData['email']) : '';
+$resetCode = is_string($requestData['token'] ?? null) ? normalizeResetCode($requestData['token']) : '';
+$newPassword = is_string($requestData['password_baru'] ?? null) ? $requestData['password_baru'] : '';
 
-if (empty($token) || empty($newPassword)) {
-    sendError("Token pemulihan dan kata sandi baru wajib diisi.", 400);
+if ($email === '' || $resetCode === '' || $newPassword === '') {
+    sendError("Email, kode pemulihan, dan kata sandi baru wajib diisi dengan benar.", 400);
 }
 
 if (strlen($newPassword) < 8) {
@@ -25,42 +26,43 @@ $database = new Database();
 $db = $database->getConnection();
 
 try {
-    $verifyTokenQuery = "
-        SELECT email 
-        FROM password_resets 
-        WHERE token = :token 
-          AND created_at >= NOW() - INTERVAL 15 MINUTE 
+    $findCodeStatement = $db->prepare("
+        SELECT id, token
+        FROM password_resets
+        WHERE email = :email
+          AND created_at >= DATE_SUB(NOW(), INTERVAL " . RESET_CODE_VALID_MINUTES . " MINUTE)
+        ORDER BY id DESC
         LIMIT 1
-    ";
-    $verifyTokenStatement = $db->prepare($verifyTokenQuery);
-    $verifyTokenStatement->execute([":token" => $token]);
+    ");
+    $findCodeStatement->execute([":email" => $email]);
+    $resetRecord = $findCodeStatement->fetch(PDO::FETCH_ASSOC);
 
-    if ($verifyTokenStatement->rowCount() === 0) {
-        sendError("Token pemulihan tidak valid atau sesi telah kedaluwarsa.", 401);
+    // Pesan sama untuk email salah, kode salah, maupun kode kedaluwarsa.
+    if ($resetRecord === false || !password_verify($resetCode, $resetRecord['token'])) {
+        sendError("Kode pemulihan tidak valid atau sudah kedaluwarsa.", 401);
     }
-
-    $userRecord = $verifyTokenStatement->fetch(PDO::FETCH_ASSOC);
-    $userEmail = $userRecord['email'];
 
     $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-    $updatePasswordQuery = "UPDATE siswa SET password = :password WHERE email = :email";
-    $updatePasswordStatement = $db->prepare($updatePasswordQuery);
+    // Ganti kata sandi dan hapus kode dalam satu transaksi agar kode tidak bisa dipakai ulang.
+    $db->beginTransaction();
+
+    $updatePasswordStatement = $db->prepare("UPDATE siswa SET password = :password WHERE email = :email");
     $updatePasswordStatement->execute([
         ":password" => $hashedPassword,
-        ":email" => $userEmail
+        ":email" => $email
     ]);
 
-    $deleteTokenQuery = "DELETE FROM password_resets WHERE email = :email";
-    $deleteTokenStatement = $db->prepare($deleteTokenQuery);
-    $deleteTokenStatement->execute([":email" => $userEmail]);
+    $deleteCodeStatement = $db->prepare("DELETE FROM password_resets WHERE email = :email");
+    $deleteCodeStatement->execute([":email" => $email]);
+
+    $db->commit();
 
     sendSuccess("Kata sandi berhasil diperbarui. Silakan masuk kembali dengan sandi baru Anda.");
-
 } catch (PDOException $error) {
-    // Mode Debug
-    sendError("Database Error: " . $error->getMessage(), 500);
-    
-    // Standar rilis:
-    // sendServerError($error, "ResetPassword");
+    if ($db->inTransaction()) {
+        $db->rollBack();
+    }
+
+    sendServerError($error, "ResetPassword");
 }

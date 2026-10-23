@@ -1,54 +1,93 @@
 <?php
-// Tampilkan error sementara untuk mendeteksi masalah (Hapus jika sudah produksi)
-ini_set('display_errors', 1);
+
+ini_set('display_errors', '0');
 error_reporting(E_ALL);
 
 require_once '../../config/database.php';
 require_once '../../functions/response.php';
+require_once '../../functions/password_reset.php';
+require_once '../../functions/mailer.php';
 
-// 1. Validasi Method dan Header menggunakan Helper Baru
 initApi('POST');
 
-// 2. Membaca Request JSON menggunakan Helper Baru (menghasilkan Array)
 $requestData = readJsonBody();
-$email = trim($requestData['email'] ?? '');
+$email = is_string($requestData['email'] ?? null) ? trim($requestData['email']) : '';
 
-if (empty($email)) {
+if ($email === '') {
     sendError("Alamat email wajib diisi.", 400);
 }
+
+if (strlen($email) > 255 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    sendError("Format email tidak valid.", 400);
+}
+
+// Pesan sama untuk email terdaftar maupun tidak, agar daftar akun tidak bisa ditebak.
+$responseMessage = "Jika email terdaftar, kode pemulihan telah dikirim. "
+    . "Kode berlaku " . RESET_CODE_VALID_MINUTES . " menit.";
 
 $database = new Database();
 $db = $database->getConnection();
 
 try {
-    $checkUserQuery = "SELECT email FROM siswa WHERE email = :email LIMIT 1"; 
-    $checkUserStatement = $db->prepare($checkUserQuery);
+    // Membersihkan kode kedaluwarsa agar tabel tidak menumpuk.
+    $cleanupStatement = $db->prepare("
+        DELETE FROM password_resets
+        WHERE created_at < DATE_SUB(NOW(), INTERVAL " . RESET_CODE_VALID_MINUTES . " MINUTE)
+    ");
+    $cleanupStatement->execute();
+
+    $checkUserStatement = $db->prepare("SELECT email FROM siswa WHERE email = :email LIMIT 1");
     $checkUserStatement->execute([":email" => $email]);
 
-    if ($checkUserStatement->rowCount() === 0) {
-        sendError("Akun tidak ditemukan. Pastikan email yang Anda masukkan sudah terdaftar di sistem.", 404);
+    if ($checkUserStatement->fetch(PDO::FETCH_ASSOC) === false) {
+        sendSuccess($responseMessage);
     }
 
-    $resetToken = bin2hex(random_bytes(32)); 
+    // Jeda kirim ulang: permintaan beruntun tidak memicu email baru.
+    $recentRequestStatement = $db->prepare("
+        SELECT id
+        FROM password_resets
+        WHERE email = :email
+          AND created_at >= DATE_SUB(NOW(), INTERVAL " . RESET_CODE_RESEND_SECONDS . " SECOND)
+        LIMIT 1
+    ");
+    $recentRequestStatement->execute([":email" => $email]);
 
-    $insertTokenQuery = "INSERT INTO password_resets (email, token) VALUES (:email, :token)";
-    $insertTokenStatement = $db->prepare($insertTokenQuery);
-    $insertTokenStatement->execute([
+    if ($recentRequestStatement->fetch(PDO::FETCH_ASSOC) !== false) {
+        sendSuccess($responseMessage);
+    }
+
+    $resetCode = generateResetCode();
+
+    // Yang disimpan adalah hash kode, bukan kode aslinya.
+    $hashedCode = password_hash($resetCode, PASSWORD_DEFAULT);
+
+    // Hanya satu kode aktif per email.
+    $deleteOldStatement = $db->prepare("DELETE FROM password_resets WHERE email = :email");
+    $deleteOldStatement->execute([":email" => $email]);
+
+    $insertCodeStatement = $db->prepare("
+        INSERT INTO password_resets (email, token) VALUES (:email, :token)
+    ");
+    $insertCodeStatement->execute([
         ":email" => $email,
-        ":token" => $resetToken
+        ":token" => $hashedCode
     ]);
+    $resetId = (int) $db->lastInsertId();
 
-    $resetLink = "http://localhost/LMS/frontend/auth/reset-password.html?token=" . $resetToken;
+    try {
+        sendResetCodeEmail($email, $resetCode, RESET_CODE_VALID_MINUTES);
+    } catch (Throwable $error) {
+        error_log("[LMS][ForgotPassword][Email] " . get_class($error) . ": " . $error->getMessage());
 
-    // 3. Kirim Balasan Sukses menggunakan Helper Baru
-    sendSuccess("Instruksi pemulihan kata sandi telah dikirim ke email terdaftar Anda.", [
-        "reset_link" => $resetLink
-    ]);
+        // Kode dibatalkan agar percobaan berikutnya tidak tertahan jeda kirim ulang.
+        $rollbackCodeStatement = $db->prepare("DELETE FROM password_resets WHERE id = :id");
+        $rollbackCodeStatement->execute([":id" => $resetId]);
 
+        sendError("Gagal mengirim email.", 500);
+    }
+
+    sendSuccess($responseMessage);
 } catch (PDOException $error) {
-    // Mode Debug: Menampilkan error langsung ke Thunder Client
-    sendError("Database Error: " . $error->getMessage(), 500);
-    
-    // Jika pengujian sudah berhasil (200 OK), ganti baris di atas dengan standar PM:
-    // sendServerError($error, "ForgotPassword");
+    sendServerError($error, "ForgotPassword");
 }
