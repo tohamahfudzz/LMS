@@ -12,12 +12,16 @@ GUNA FILE   : Menutup sesi absensi yang dibuka pengajar. Setelah ditutup, siswa
               - error database tidak lagi dikirim mentah ke pengguna
               - sesi yang sudah tertutup tidak bisa ditutup dua kali
                 (waktu_tutup asli tidak tertimpa)
+              - sesi yang sudah lewat waktu_tutup dihitung sudah tertutup
+                (functions/absensi.php)
+              Menutup lebih awal dari jadwal mengubah waktu_tutup menjadi waktu sekarang.
 ================================================================================
 */
 
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../functions/response.php';
 require_once __DIR__ . '/../../functions/auth.php';
+require_once __DIR__ . '/../../functions/absensi.php';
 
 initApi('POST');
 
@@ -40,6 +44,9 @@ $database = new Database();
 $db = $database->getConnection();
 
 try {
+    // Sesi yang sudah lewat waktu_tutup otomatis tertutup, jadi tidak bisa ditutup lagi.
+    closeExpiredAbsensi($db);
+
     // Pastikan sesi ada dan milik pengajar yang login.
     $findStatement = $db->prepare(
         'SELECT id_pengajar, status FROM absensi WHERE id_absensi = :id_absensi LIMIT 1'

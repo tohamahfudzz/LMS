@@ -21,6 +21,7 @@ GUNA FILE   : Daftar sesi absensi pada satu kelas yang diikuti siswa, lengkap de
 require_once __DIR__ . '/../../../config/database.php';
 require_once __DIR__ . '/../../../functions/response.php';
 require_once __DIR__ . '/../../../functions/auth.php';
+require_once __DIR__ . '/../../../functions/absensi.php';
 
 initApi('GET');
 
@@ -53,6 +54,9 @@ try {
     if (!$checkStatement->fetch()) {
         sendError('Anda tidak terdaftar di kelas ini.', 403);
     }
+
+    // Sesi yang sudah lewat waktu_tutup otomatis menjadi 'tertutup'.
+    closeExpiredAbsensi($db, $idKelas);
 
     $statement = $db->prepare(
         'SELECT a.id_absensi, a.tanggal, a.waktu_buka, a.waktu_tutup, a.status,

@@ -1,0 +1,74 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/pengajar/absensi-report.html
+GUNA FILE   : Halaman report absensi satu kelas untuk pengajar (halaman sendiri).
+              Dibuka dari tab Absensi di kelas-detail.html dengan format:
+                  absensi-report.html?id_kelas=1
+              Isi: tabel semua siswa kelas dengan satu kolom per sesi absensi
+              (Hadir / Tidak hadir / Belum / -), total hadir, dan persentase kehadiran.
+              - Logika halaman : assets/js/pengajar-absensi-report.js
+              - Backend        : GET backend/api/pengajar/absensi/report.php?id_kelas=
+              Tampilan memakai assets/css/kelas-detail.css.
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Report Absensi - Pengajar LMS</title>
+    <link rel="stylesheet" href="../assets/css/kelas-detail.css">
+</head>
+<body>
+
+    <header>
+        <h1 id="reportTitle">Report Absensi</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="kelas-detail.html" id="backToKelasLink">Kembali ke kelas</a>
+    </nav>
+
+    <main>
+        <div id="reportMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+        <section class="kelas-panel__section">
+            <h2>Ringkasan</h2>
+            <p id="reportSummary">Memuat data...</p>
+            <p><small>Sesi yang belum dimulai (terjadwal) tidak dihitung. Persentase = jumlah hadir dibagi jumlah sesi yang sudah dimulai.</small></p>
+        </section>
+
+        <section class="kelas-panel__section">
+            <h2>Kehadiran Siswa</h2>
+
+            <div class="table-scroll">
+                <table border="1" cellpadding="6" cellspacing="0">
+                    <thead id="reportTableHead">
+                        <tr>
+                            <th>No</th>
+                            <th>Kode Siswa</th>
+                            <th>Nama</th>
+                            <th>Hadir</th>
+                            <th>Persentase</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTableBody">
+                        <tr>
+                            <td colspan="5">Memuat data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/pengajar-common.js"></script>
+    <script src="../assets/js/pengajar-absensi-report.js"></script>
+</body>
+</html>

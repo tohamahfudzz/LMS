@@ -9,10 +9,16 @@ GUNA FILE   : Halaman satu kelas untuk pengajar. Materi, tugas, kuis, dan absens
               Parameter opsional &tab=materi|tugas|kuis|absensi.
               - Header kelas : GET pengajar/kelas/detail.php (sekaligus cek hak akses)
               - Tab Materi   : assets/js/pengajar-kelas-materi.js
+                               (unduh file materi / buka link materi)
               - Tab Tugas    : assets/js/pengajar-kelas-tugas.js
+                               (unduh lampiran soal tugas, lihat pengumpulan siswa,
+                               unduh file jawaban siswa)
               - Tab Kuis     : assets/js/pengajar-kelas-kuis.js
                                (soal kuis tetap dibuka di halaman sendiri: kuis-soal.html)
               - Tab Absensi  : assets/js/pengajar-kelas-absensi.js
+                               (buka sesi dengan jam buka + jam tutup, tutup sesi, lihat
+                               kehadiran; tautan ke report: absensi-report.html)
+              - Unduh file   : assets/js/pengajar-kelas-download.js
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -85,6 +91,8 @@ GUNA FILE   : Halaman satu kelas untuk pengajar. Materi, tugas, kuis, dan absens
 
             <section class="kelas-panel__section">
                 <h2>Daftar Materi</h2>
+                <div id="materiListMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
                 <div class="table-scroll">
                     <table border="1" cellpadding="6" cellspacing="0">
                         <thead>
@@ -93,11 +101,12 @@ GUNA FILE   : Halaman satu kelas untuk pengajar. Materi, tugas, kuis, dan absens
                                 <th>Judul</th>
                                 <th>Tipe</th>
                                 <th>Waktu Upload</th>
+                                <th>File / Link</th>
                             </tr>
                         </thead>
                         <tbody id="materiTableBody">
                             <tr>
-                                <td colspan="4">Memuat data...</td>
+                                <td colspan="5">Memuat data...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -157,6 +166,34 @@ GUNA FILE   : Halaman satu kelas untuk pengajar. Materi, tugas, kuis, dan absens
                         <tbody id="tugasTableBody">
                             <tr>
                                 <td colspan="7">Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="submissionSection" class="kelas-panel__section" hidden>
+                <h2>Pengumpulan Tugas</h2>
+                <div id="submissionMessage" class="message" role="alert" aria-live="polite" hidden></div>
+                <p id="submissionMeta">-</p>
+                <p id="submissionStat">-</p>
+
+                <div class="table-scroll">
+                    <table border="1" cellpadding="6" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kode Siswa</th>
+                                <th>Nama</th>
+                                <th>Status</th>
+                                <th>Waktu Kumpul</th>
+                                <th>Jawaban Teks</th>
+                                <th>File</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissionTableBody">
+                            <tr>
+                                <td colspan="7">Pilih tugas di atas untuk melihat pengumpulan.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -233,12 +270,21 @@ GUNA FILE   : Halaman satu kelas untuk pengajar. Materi, tugas, kuis, dan absens
                         <label for="absensiTanggal">Tanggal</label>
                         <input type="date" id="absensiTanggal" required>
                     </div>
+                    <div class="form-field">
+                        <label for="absensiJamBuka">Waktu buka</label>
+                        <input type="time" id="absensiJamBuka" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="absensiJamTutup">Waktu tutup</label>
+                        <input type="time" id="absensiJamTutup" required>
+                    </div>
                     <button type="submit" id="openAbsensiButton">Buka Absensi</button>
                 </form>
             </section>
 
             <section class="kelas-panel__section">
                 <h2>Daftar Sesi Absensi</h2>
+                <p><a id="absensiReportLink" href="absensi-report.html">Lihat report absensi kelas ini</a></p>
                 <div id="absensiListMessage" class="message" role="alert" aria-live="polite" hidden></div>
 
                 <div class="table-scroll">
@@ -247,8 +293,8 @@ GUNA FILE   : Halaman satu kelas untuk pengajar. Materi, tugas, kuis, dan absens
                             <tr>
                                 <th>No</th>
                                 <th>Tanggal</th>
-                                <th>Dibuka</th>
-                                <th>Ditutup</th>
+                                <th>Waktu Buka</th>
+                                <th>Waktu Tutup</th>
                                 <th>Status</th>
                                 <th>Hadir</th>
                                 <th>Aksi</th>
@@ -295,6 +341,7 @@ GUNA FILE   : Halaman satu kelas untuk pengajar. Materi, tugas, kuis, dan absens
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/pengajar-common.js"></script>
     <script src="../assets/js/pengajar-kelas-detail.js"></script>
+    <script src="../assets/js/pengajar-kelas-download.js"></script>
     <script src="../assets/js/pengajar-kelas-materi.js"></script>
     <script src="../assets/js/pengajar-kelas-tugas.js"></script>
     <script src="../assets/js/pengajar-kelas-kuis.js"></script>

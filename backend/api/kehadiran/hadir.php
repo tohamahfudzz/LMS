@@ -6,8 +6,9 @@ GUNA FILE   : Siswa menandai kehadiran (hadir) pada sesi absensi yang dibuka pen
               Method : POST
               Body   : { "id_absensi": 1 }
               Role   : siswa (id siswa diambil dari session, bukan dari input)
-              Syarat : sesi berstatus 'terbuka', waktu_buka sudah tercapai, dan siswa
-                       terdaftar di kelas sesi tersebut. Satu siswa hanya bisa mengisi
+              Syarat : sesi berstatus 'terbuka', waktu_buka sudah tercapai, waktu_tutup
+                       belum lewat (sesi yang lewat waktu_tutup otomatis tertutup lewat
+                       functions/absensi.php), dan siswa terdaftar di kelas sesi tersebut. Satu siswa hanya bisa mengisi
                        satu kali per sesi.
               Perubahan: menolak absensi sebelum waktu_buka, dan detail error database
                          tidak lagi dikirim ke pengguna.
@@ -19,6 +20,7 @@ header("Access-Control-Allow-Methods: POST");
 
 require_once "../../config/database.php";
 require_once "../../functions/auth.php";
+require_once "../../functions/absensi.php";
 
 $session = requireRole('siswa');
 
@@ -31,6 +33,9 @@ if (!empty($data->id_absensi)) {
         // ID siswa diambil dari session, bukan dari input pengguna,
         // agar siswa tidak dapat mengisi absensi atas nama siswa lain.
         $idSiswa = $session['id'];
+
+        // Tutup dulu sesi yang sudah lewat waktu_tutup agar siswa tidak bisa absen terlambat.
+        closeExpiredAbsensi($db);
 
         $queryAbsen = "SELECT id_kelas, status, waktu_buka, (waktu_buka > NOW()) AS belum_dibuka
                        FROM absensi WHERE id_absensi = :id_absensi LIMIT 1";

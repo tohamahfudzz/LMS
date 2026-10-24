@@ -5,6 +5,7 @@ GUNA FILE   : Halaman utama setelah admin berhasil login.
               Menampilkan sambutan, menu navigasi (Kelas, Pengguna),
               dan tombol logout. Melakukan pengecekan role di sisi UI
               (proteksi sesungguhnya tetap di backend via session PHP).
+              Tombol "Profil" di header menuju profil.html (ganti email).
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -20,6 +21,7 @@ GUNA FILE   : Halaman utama setelah admin berhasil login.
     <header>
         <h1>Dashboard Admin</h1>
         <p id="welcomeText">Memuat data pengguna...</p>
+        <a href="profil.html" id="profilLink">Profil</a>
         <button type="button" id="logoutButton">Keluar</button>
     </header>
 

@@ -1,0 +1,71 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/siswa/profil.html
+GUNA FILE   : Halaman profil Siswa. Dibuka dari tombol "Profil" di dashboard.html.
+              Untuk sementara hanya berisi satu pengaturan: ganti email.
+              Email baru yang dimasukkan akan menimpa email lama.
+              - Logika halaman : assets/js/profil.js (dipakai bersama oleh admin,
+                                 pengajar, dan siswa; peran dibaca dari data-role di <body>)
+              - Backend        : backend/api/profil/get.php dan update_email.php
+              Tampilan memakai assets/css/kelas-detail.css.
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Profil - Siswa LMS</title>
+    <link rel="stylesheet" href="../assets/css/kelas-detail.css">
+</head>
+<body data-role="siswa">
+
+    <header>
+        <h1>Profil</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="kelas.html">Kelas</a>
+        <a href="profil.html">Profil</a>
+    </nav>
+
+    <main>
+        <div id="profilMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+        <section class="kelas-panel__section">
+            <h2>Informasi Akun</h2>
+            <dl>
+                <dt>Nama</dt>
+                <dd id="profilNama">Memuat...</dd>
+                <dt>Kode</dt>
+                <dd id="profilKode">Memuat...</dd>
+                <dt>Peran</dt>
+                <dd id="profilRole">Memuat...</dd>
+                <dt>Email saat ini</dt>
+                <dd id="profilEmailSaatIni">Memuat...</dd>
+            </dl>
+        </section>
+
+        <section class="kelas-panel__section">
+            <h2>Ganti Email</h2>
+            <form id="emailForm" novalidate>
+                <div class="form-field">
+                    <label for="profilEmail">Email baru</label>
+                    <input type="email" id="profilEmail" name="email" required maxlength="100"
+                        autocomplete="email" placeholder="nama@contoh.com">
+                </div>
+                <button type="submit" id="saveEmailButton">Simpan Email</button>
+            </form>
+            <p><small>Email baru akan menggantikan email lama.</small></p>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/profil.js"></script>
+</body>
+</html>
