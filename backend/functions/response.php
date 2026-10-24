@@ -10,6 +10,16 @@ function initApi(string $allowedMethod): void
     header("Content-Type: application/json; charset=UTF-8");
     header("X-Content-Type-Options: nosniff");
     header("Cache-Control: no-store");
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? 'http://localhost';
+    header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Accept");
+
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        http_response_code(200);
+        exit;
+    }
 
     if ($_SERVER['REQUEST_METHOD'] !== $allowedMethod) {
         header("Allow: " . $allowedMethod);
