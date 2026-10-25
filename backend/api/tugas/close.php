@@ -11,14 +11,16 @@ $session = requireRole('pengajar');
 $database = new Database();
 $db = $database->getConnection();
 $data = json_decode(file_get_contents("php://input"));
+$taskId = is_object($data)
+    ? filter_var($data->id_tugas ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])
+    : false;
 
-// Validasi id_tugas yang akan ditutup
-if (!empty($data->id_tugas)) {
+if ($taskId !== false) {
     try {
         // Memastikan tugas ini benar-benar milik pengajar yang login
         $queryCekPemilik = "SELECT id_pengajar FROM tugas WHERE id_tugas = :id_tugas LIMIT 1";
         $stmtCekPemilik = $db->prepare($queryCekPemilik);
-        $stmtCekPemilik->execute([":id_tugas" => $data->id_tugas]);
+        $stmtCekPemilik->execute([":id_tugas" => $taskId]);
         $tugas = $stmtCekPemilik->fetch(PDO::FETCH_ASSOC);
 
         if (!$tugas) {
@@ -38,7 +40,7 @@ if (!empty($data->id_tugas)) {
         $stmt = $db->prepare($query);
         
         $executed = $stmt->execute([
-            ":id_tugas" => $data->id_tugas
+            ":id_tugas" => $taskId
         ]);
 
         if ($executed) {
@@ -49,8 +51,9 @@ if (!empty($data->id_tugas)) {
             echo json_encode(["success" => false, "message" => "Gagal menutup pengumpulan tugas."]);
         }
     } catch (PDOException $e) {
+        error_log("Gagal menutup tugas: " . $e->getMessage());
         http_response_code(500);
-        echo json_encode(["success" => false, "message" => "Terjadi kesalahan database: " . $e->getMessage()]);
+        echo json_encode(["success" => false, "message" => "Terjadi kesalahan pada server."]);
     }
 } else {
     http_response_code(400);

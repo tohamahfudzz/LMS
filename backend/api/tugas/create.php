@@ -15,23 +15,36 @@ $db = $database->getConnection();
 // Catatan untuk frontend: endpoint ini menerima file, jadi data dikirim
 // sebagai multipart/form-data (FormData), BUKAN JSON.
 // Field: id_kelas, judul, deskripsi (opsional), waktu_mulai, deadline, file (opsional).
-$id_kelas = $_POST['id_kelas'] ?? null;
-$judul = $_POST['judul'] ?? null;
-$deskripsi = $_POST['deskripsi'] ?? null;
-$waktu_mulai = $_POST['waktu_mulai'] ?? null;
-$deadline = $_POST['deadline'] ?? null;
+$classId = filter_var(
+    $_POST['id_kelas'] ?? null,
+    FILTER_VALIDATE_INT,
+    ['options' => ['min_range' => 1]]
+);
+$title = is_string($_POST['judul'] ?? null) ? trim($_POST['judul']) : '';
+$descriptionInput = $_POST['deskripsi'] ?? null;
+$description = $descriptionInput === null || $descriptionInput === ''
+    ? null
+    : (is_string($descriptionInput) ? trim($descriptionInput) : false);
+$startTime = is_string($_POST['waktu_mulai'] ?? null) ? trim($_POST['waktu_mulai']) : '';
+$deadline = is_string($_POST['deadline'] ?? null) ? trim($_POST['deadline']) : '';
 
-if (!empty($id_kelas) && !empty($judul) && !empty($waktu_mulai) && !empty($deadline)) {
-    $waktuMulaiTs = strtotime($waktu_mulai);
-    $deadlineTs = strtotime($deadline);
+if (
+    $classId !== false
+    && $title !== ''
+    && $startTime !== ''
+    && $deadline !== ''
+    && $description !== false
+) {
+    $startTimestamp = strtotime($startTime);
+    $deadlineTimestamp = strtotime($deadline);
 
-    if ($waktuMulaiTs === false || $deadlineTs === false) {
+    if ($startTimestamp === false || $deadlineTimestamp === false) {
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "Format waktu mulai atau deadline tidak valid."]);
         exit;
     }
 
-    if ($waktuMulaiTs >= $deadlineTs) {
+    if ($startTimestamp >= $deadlineTimestamp) {
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "Waktu mulai harus lebih awal dari deadline."]);
         exit;
@@ -43,7 +56,7 @@ if (!empty($id_kelas) && !empty($judul) && !empty($waktu_mulai) && !empty($deadl
                               WHERE id_kelas = :id_kelas AND id_pengajar = :id_pengajar LIMIT 1";
         $stmtCekPengajar = $db->prepare($queryCekPengajar);
         $stmtCekPengajar->execute([
-            ":id_kelas" => $id_kelas,
+            ":id_kelas" => $classId,
             ":id_pengajar" => $session['id']
         ]);
 
@@ -67,10 +80,10 @@ if (!empty($id_kelas) && !empty($judul) && !empty($waktu_mulai) && !empty($deadl
         $executed = $stmt->execute([
             ":id_kelas" => $id_kelas,
             ":id_pengajar" => $session['id'],
-            ":judul" => $judul,
-            ":deskripsi" => empty($deskripsi) ? null : $deskripsi,
+            ":judul" => $title,
+            ":deskripsi" => $description === '' ? null : $description,
             ":file" => $namaFile,
-            ":waktu_mulai" => $waktu_mulai,
+            ":waktu_mulai" => $startTime,
             ":deadline" => $deadline
         ]);
 
@@ -82,8 +95,9 @@ if (!empty($id_kelas) && !empty($judul) && !empty($waktu_mulai) && !empty($deadl
             echo json_encode(["success" => false, "message" => "Gagal membuat tugas."]);
         }
     } catch (PDOException $e) {
+        error_log("Gagal membuat tugas: " . $e->getMessage());
         http_response_code(500);
-        echo json_encode(["success" => false, "message" => "Terjadi kesalahan database: " . $e->getMessage()]);
+        echo json_encode(["success" => false, "message" => "Terjadi kesalahan pada server."]);
     }
 } else {
     http_response_code(400);

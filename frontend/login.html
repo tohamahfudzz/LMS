@@ -12,37 +12,35 @@ GUNA FILE   : Halaman login. Menampilkan pesan error/sukses dari backend
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Login - LMS</title>
+    <link rel="stylesheet" href="assets/css/auth.css">
     <script
     src="https://challenges.cloudflare.com/turnstile/v0/api.js"
     async
     defer>
 </script>
 </head>
-<body>
+<body class="auth-page">
     <!-- Cloudflare Turnstile CAPTCHA -->
 
 
-    <main>
-        <section>
+    <main class="auth-page__main">
+        <section class="auth-card">
             <h1>LMS — Login</h1>
             <p>Masukkan kode, password, dan pilih role.</p>
 
             <!-- Area pesan untuk user (error / sukses) -->
             <div
                 id="loginMessage"
+                class="auth-message"
                 role="alert"
                 aria-live="polite"
                 hidden
-                style="margin: 12px 0; padding: 12px; border: 1px solid #ccc; background: #f8f8f8;"
             ></div>
 
             <form id="loginForm" novalidate>
-                <div
-    class="cf-turnstile"
-    data-sitekey="1x00000000000000000000AA">
-</div>
-                <div>
-                    <label for="kode">Kode</label><br>
+                <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA"></div>
+                <div class="auth-card__field">
+                    <label for="kode">Kode</label>
                     <input
                         type="text"
                         id="kode"
@@ -53,9 +51,8 @@ GUNA FILE   : Halaman login. Menampilkan pesan error/sukses dari backend
                         placeholder="Contoh: 7777"
                     >
                 </div>
-                <br>
-                <div>
-                    <label for="password">Password</label><br>
+                <div class="auth-card__field">
+                    <label for="password">Password</label>
                     <input
                         type="password"
                         id="password"
@@ -66,9 +63,9 @@ GUNA FILE   : Halaman login. Menampilkan pesan error/sukses dari backend
                         maxlength="100"
                     >
                 </div>
-                <br>
-                <div>
-                    <label for="role">Role</label><br>
+                <a class="auth-card__link" href="auth/forgot-password.html">Lupa Kata Sandi?</a>
+                <div class="auth-card__field">
+                    <label for="role">Role</label>
                     <select id="role" name="role" required>
                         <option value="" disabled selected>Pilih role</option>
                         <option value="admin">Admin</option>
@@ -76,7 +73,6 @@ GUNA FILE   : Halaman login. Menampilkan pesan error/sukses dari backend
                         <option value="siswa">Siswa</option>
                     </select>
                 </div>
-                <br>
                 <button type="submit" id="loginButton">Masuk</button>
             </form>
 

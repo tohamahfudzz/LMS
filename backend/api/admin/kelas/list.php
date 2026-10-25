@@ -21,11 +21,12 @@ $database = new Database();
 $db = $database->getConnection();
 
 try {
-    $statement = $db->query(
+    $statement = $db->prepare(
         'SELECT id_kelas, nama_kelas
          FROM kelas
          ORDER BY nama_kelas ASC'
     );
+    $statement->execute();
 
     $list = [];
     foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {

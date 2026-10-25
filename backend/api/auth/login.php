@@ -27,17 +27,6 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once "../../config/database.php";
 require_once "../../functions/auth.php";
 
-/*
-|--------------------------------------------------------------------------
-| Konfigurasi Cloudflare Turnstile
-|--------------------------------------------------------------------------
-*/
-
-// Secret key pengujian Cloudflare untuk development lokal.
-// Ganti dengan secret key produksi ketika website sudah online.
-const TURNSTILE_SECRET_KEY =
-    "1x0000000000000000000000000000000AA";
-
 const TURNSTILE_VERIFY_URL =
     "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
@@ -47,7 +36,7 @@ const TURNSTILE_VERIFY_URL =
 |--------------------------------------------------------------------------
 */
 
-function sendJsonResponse($statusCode, array $response)
+function sendJsonResponse(int $statusCode, array $response): void
 {
     http_response_code($statusCode);
 
@@ -65,8 +54,15 @@ function sendJsonResponse($statusCode, array $response)
 |--------------------------------------------------------------------------
 */
 
-function verifyTurnstileToken($token)
+function verifyTurnstileToken(string $token, string $secret): array
 {
+    if ($secret === '') {
+        return [
+            "success" => false,
+            "error" => "service_unavailable"
+        ];
+    }
+
     if (!function_exists("curl_init")) {
         error_log("CAPTCHA: Ekstensi PHP cURL tidak tersedia.");
 
@@ -77,7 +73,7 @@ function verifyTurnstileToken($token)
     }
 
     $postData = [
-        "secret" => TURNSTILE_SECRET_KEY,
+        "secret" => $secret,
         "response" => $token
     ];
 
@@ -208,7 +204,14 @@ if ($captchaToken === "") {
 |--------------------------------------------------------------------------
 */
 
-$captchaResult = verifyTurnstileToken($captchaToken);
+$turnstileSecret = getenv('LMS_TURNSTILE_SECRET_KEY');
+
+if ($turnstileSecret === false || $turnstileSecret === '') {
+    error_log("CAPTCHA: LMS_TURNSTILE_SECRET_KEY belum dikonfigurasi.");
+    $turnstileSecret = '';
+}
+
+$captchaResult = verifyTurnstileToken($captchaToken, $turnstileSecret);
 
 if (!$captchaResult["success"]) {
     if ($captchaResult["error"] === "service_unavailable") {
@@ -234,19 +237,13 @@ if (!$captchaResult["success"]) {
 
 $roleConfig = [
     "admin" => [
-        "table" => "admin",
-        "kode_column" => "kode_admin",
-        "id_column" => "id_admin"
+        "query" => "SELECT id_admin AS user_id, nama, password FROM admin WHERE kode_admin = :kode LIMIT 1"
     ],
     "pengajar" => [
-        "table" => "pengajar",
-        "kode_column" => "kode_pengajar",
-        "id_column" => "id_pengajar"
+        "query" => "SELECT id_pengajar AS user_id, nama, password FROM pengajar WHERE kode_pengajar = :kode LIMIT 1"
     ],
     "siswa" => [
-        "table" => "siswa",
-        "kode_column" => "kode_siswa",
-        "id_column" => "id_siswa"
+        "query" => "SELECT id_siswa AS user_id, nama, password FROM siswa WHERE kode_siswa = :kode LIMIT 1"
     ]
 ];
 
@@ -270,17 +267,13 @@ try {
     $database = new Database();
     $db = $database->getConnection();
 
-    $query = "SELECT * FROM {$config['table']}
-              WHERE {$config['kode_column']} = :kode
-              LIMIT 1";
+    $statement = $db->prepare($config['query']);
 
-    $stmt = $db->prepare($query);
-
-    $stmt->execute([
+    $statement->execute([
         ":kode" => $kode
     ]);
 
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $user = $statement->fetch(PDO::FETCH_ASSOC);
 
     if (
         !$user ||
@@ -301,7 +294,7 @@ try {
 
     session_regenerate_id(true);
 
-    $_SESSION["id"] = $user[$config["id_column"]];
+    $_SESSION["id"] = $user["user_id"];
     $_SESSION["role"] = $role;
     $_SESSION["nama"] = $user["nama"];
 
@@ -315,7 +308,7 @@ try {
         "success" => true,
         "message" => "Login berhasil.",
         "session" => [
-            "id" => $user[$config["id_column"]],
+            "id" => $user["user_id"],
             "role" => $role,
             "nama" => $user["nama"]
         ]

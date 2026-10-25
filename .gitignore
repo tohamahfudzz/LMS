@@ -1,0 +1,4 @@
+backend/config/mail.php
+backend/vendor/
+.htaccess
+
