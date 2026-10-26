@@ -5,61 +5,85 @@ error_reporting(E_ALL);
 
 require_once '../../config/database.php';
 require_once '../../functions/response.php';
-require_once '../../functions/password_reset.php';
+
+const RESET_TOKEN_VALID_MINUTES = 15;
 
 initApi('POST');
 
 $requestData = readJsonBody();
-$email = is_string($requestData['email'] ?? null) ? trim($requestData['email']) : '';
-$resetCode = is_string($requestData['token'] ?? null) ? normalizeResetCode($requestData['token']) : '';
-$newPassword = is_string($requestData['password_baru'] ?? null) ? $requestData['password_baru'] : '';
+$token = is_string($requestData['token'] ?? null)
+    ? trim($requestData['token'])
+    : '';
+$newPassword = is_string($requestData['password_baru'] ?? null)
+    ? $requestData['password_baru']
+    : '';
 
-if ($email === '' || $resetCode === '' || $newPassword === '') {
-    sendError("Email, kode pemulihan, dan kata sandi baru wajib diisi dengan benar.", 400);
+if (
+    strlen($token) !== 64 ||
+    !ctype_xdigit($token) ||
+    $newPassword === ''
+) {
+    sendError("Tautan pemulihan atau kata sandi baru tidak valid.", 400);
 }
 
 if (strlen($newPassword) < 8) {
     sendError("Kata sandi baru harus memiliki minimal 8 karakter.", 400);
 }
 
+if (strlen($newPassword) > 72) {
+    sendError("Kata sandi baru tidak boleh lebih dari 72 byte.", 400);
+}
+
 $database = new Database();
 $db = $database->getConnection();
+$hashedToken = hash('sha256', $token);
 
 try {
-    $findCodeStatement = $db->prepare("
-        SELECT id, token
-        FROM password_resets
-        WHERE email = :email
-          AND created_at >= DATE_SUB(NOW(), INTERVAL " . RESET_CODE_VALID_MINUTES . " MINUTE)
-        ORDER BY id DESC
-        LIMIT 1
-    ");
-    $findCodeStatement->execute([":email" => $email]);
-    $resetRecord = $findCodeStatement->fetch(PDO::FETCH_ASSOC);
-
-    // Pesan sama untuk email salah, kode salah, maupun kode kedaluwarsa.
-    if ($resetRecord === false || !password_verify($resetCode, $resetRecord['token'])) {
-        sendError("Kode pemulihan tidak valid atau sudah kedaluwarsa.", 401);
-    }
-
-    $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
-    // Ganti kata sandi dan hapus kode dalam satu transaksi agar kode tidak bisa dipakai ulang.
     $db->beginTransaction();
 
-    $updatePasswordStatement = $db->prepare("UPDATE siswa SET password = :password WHERE email = :email");
+    $findTokenStatement = $db->prepare("
+        SELECT id, email
+        FROM password_resets
+        WHERE token = :token
+          AND created_at >= DATE_SUB(NOW(), INTERVAL " . RESET_TOKEN_VALID_MINUTES . " MINUTE)
+        ORDER BY id DESC
+        LIMIT 1
+        FOR UPDATE
+    ");
+    $findTokenStatement->execute([":token" => $hashedToken]);
+    $resetRecord = $findTokenStatement->fetch(PDO::FETCH_ASSOC);
+
+    if ($resetRecord === false) {
+        $db->rollBack();
+        sendError("Tautan pemulihan tidak valid atau sudah kedaluwarsa.", 401);
+    }
+
+    $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+
+    $updatePasswordStatement = $db->prepare(
+        "UPDATE siswa SET password = :password WHERE email = :email"
+    );
     $updatePasswordStatement->execute([
         ":password" => $hashedPassword,
-        ":email" => $email
+        ":email" => $resetRecord['email']
     ]);
 
-    $deleteCodeStatement = $db->prepare("DELETE FROM password_resets WHERE email = :email");
-    $deleteCodeStatement->execute([":email" => $email]);
+    if ($updatePasswordStatement->rowCount() !== 1) {
+        $db->rollBack();
+        sendError("Akun untuk tautan pemulihan tidak ditemukan.", 404);
+    }
+
+    $deleteTokenStatement = $db->prepare(
+        "DELETE FROM password_resets WHERE id = :id"
+    );
+    $deleteTokenStatement->execute([":id" => $resetRecord['id']]);
 
     $db->commit();
 
-    sendSuccess("Kata sandi berhasil diperbarui. Silakan masuk kembali dengan sandi baru Anda.");
-} catch (PDOException $error) {
+    sendSuccess(
+        "Kata sandi berhasil diperbarui. Silakan masuk dengan kata sandi baru."
+    );
+} catch (Throwable $error) {
     if ($db->inTransaction()) {
         $db->rollBack();
     }
