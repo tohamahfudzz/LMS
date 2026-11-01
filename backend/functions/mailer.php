@@ -8,7 +8,7 @@ function sendResetCodeEmail(string $recipientEmail, string $resetCode, int $vali
 {
     require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-    $mailConfig = require dirname(__DIR__) . '/config/mail.php';
+    $mailConfig = require dirname(__DIR__) . '/config/mail_environment.php';
 
     $mail = new PHPMailer(true);
     $mail->isSMTP();

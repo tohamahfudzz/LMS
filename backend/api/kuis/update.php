@@ -104,12 +104,19 @@ try {
         }
     }
 
+    $setClauseByField = [
+        'judul' => 'judul = :judul',
+        'deskripsi' => 'deskripsi = :deskripsi',
+        'durasi_menit' => 'durasi_menit = :durasi_menit',
+        'waktu_mulai' => 'waktu_mulai = :waktu_mulai',
+        'waktu_selesai' => 'waktu_selesai = :waktu_selesai',
+    ];
     $setClauses = [];
     $params = [":id_kuis" => $idKuis, ":id_pengajar" => $idPengajar];
 
-    foreach ($fields as $kolom => $nilai) {
-        $setClauses[] = $kolom . " = :" . $kolom;
-        $params[":" . $kolom] = $nilai;
+    foreach ($fields as $fieldName => $fieldValue) {
+        $setClauses[] = $setClauseByField[$fieldName];
+        $params[":" . $fieldName] = $fieldValue;
     }
 
     $statement = $db->prepare(

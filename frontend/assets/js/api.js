@@ -8,6 +8,8 @@ GUNA FILE   : Helper generik untuk memanggil API backend.
 ================================================================================
 */
 
+const API_BASE_URL = "http://localhost/LMS";
+
 /**
  * Melakukan request ke API backend.
  * @param {string} url        Path relatif ke endpoint, contoh: "../../backend/api/auth/login.php"
@@ -15,6 +17,10 @@ GUNA FILE   : Helper generik untuk memanggil API backend.
  * @returns {Promise<object>} Response JSON dari server
  */
 async function apiRequest(url, options = {}) {
+    const apiPathIndex = url.indexOf("/backend/api/");
+    const apiUrl = apiPathIndex !== -1
+        ? `${API_BASE_URL}${url.substring(apiPathIndex)}`
+        : url;
     const config = {
         method: options.method || "GET",
         credentials: "include", // penting: kirim cookie session
@@ -32,7 +38,7 @@ async function apiRequest(url, options = {}) {
 
     let response;
     try {
-        response = await fetch(url, config);
+        response = await fetch(apiUrl, config);
     } catch (networkError) {
         throw new Error("Tidak dapat terhubung ke server. Periksa koneksi Anda.");
     }

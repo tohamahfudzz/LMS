@@ -37,3 +37,4 @@ CREATE TABLE percobaan_kuis (
         ON UPDATE CASCADE
         ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ 

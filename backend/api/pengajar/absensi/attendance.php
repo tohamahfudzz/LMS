@@ -12,13 +12,7 @@ $session = requireRole('pengajar');
 
 $id_pengajar = (int) $session['id'];
 
-// ID absensi wajib diberikan.
-// Contoh:
-// attendance.php?id_absensi=1
-if (
-    !isset($_GET['id_absensi']) ||
-    !is_numeric($_GET['id_absensi'])
-) {
+if (!isset($_GET['id_absensi'])) {
     http_response_code(400);
 
     echo json_encode([
@@ -30,9 +24,13 @@ if (
     exit;
 }
 
-$id_absensi = (int) $_GET['id_absensi'];
+$attendanceId = filter_var(
+    $_GET['id_absensi'],
+    FILTER_VALIDATE_INT,
+    ["options" => ["min_range" => 1]]
+);
 
-if ($id_absensi <= 0) {
+if ($attendanceId === false) {
     http_response_code(400);
 
     echo json_encode([
@@ -76,7 +74,7 @@ try {
     $stmtAbsensi = $db->prepare($queryAbsensi);
 
     $stmtAbsensi->execute([
-        ":id_absensi" => $id_absensi,
+        ":id_absensi" => $attendanceId,
         ":id_pengajar" => $id_pengajar
     ]);
 
@@ -132,7 +130,7 @@ try {
     $stmtSiswa = $db->prepare($querySiswa);
 
     $stmtSiswa->execute([
-        ":id_absensi" => $id_absensi,
+        ":id_absensi" => $attendanceId,
         ":id_kelas" => (int) $absensi['id_kelas']
     ]);
 
@@ -243,4 +241,4 @@ try {
     ]);
 
     exit;
-}9
+}
