@@ -1,4 +1,3 @@
-
 <?php
 /*
 ================================================================================
@@ -7,7 +6,8 @@ LOKASI FILE : backend/api/auth/login.php
 GUNA FILE :
     1. Menerima request login dari frontend/assets/js/auth.js.
     2. Memvalidasi token Cloudflare Turnstile melalui Siteverify.
-    3. Memeriksa kode, password, dan role pengguna di database.
+    3. Menentukan role dari 2 karakter pertama kode (tabel kodetb), lalu
+       memeriksa kode lengkap dan password di tabel sesuai role.
     4. Membuat session PHP jika login berhasil.
     5. Mengembalikan hasil dalam format JSON.
 
@@ -27,6 +27,17 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once "../../config/database.php";
 require_once "../../functions/auth.php";
 
+/*
+|--------------------------------------------------------------------------
+| Konfigurasi Cloudflare Turnstile
+|--------------------------------------------------------------------------
+*/
+
+// Secret key pengujian Cloudflare untuk development lokal.
+// Ganti dengan secret key produksi ketika website sudah online.
+const TURNSTILE_SECRET_KEY =
+    "1x0000000000000000000000000000000AA";
+
 const TURNSTILE_VERIFY_URL =
     "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
@@ -36,7 +47,7 @@ const TURNSTILE_VERIFY_URL =
 |--------------------------------------------------------------------------
 */
 
-function sendJsonResponse(int $statusCode, array $response): void
+function sendJsonResponse($statusCode, array $response)
 {
     http_response_code($statusCode);
 
@@ -50,19 +61,31 @@ function sendJsonResponse(int $statusCode, array $response): void
 
 /*
 |--------------------------------------------------------------------------
+| Respons gagal login. Pesannya selalu sama, baik awalan kode tidak dikenal,
+| kode tidak ada, maupun password salah, agar awalan yang valid tidak bisa
+| ditebak. password_hash() meniru biaya password_verify() supaya lama
+| responsnya tidak membedakan kasus-kasus itu.
+|--------------------------------------------------------------------------
+*/
+
+function sendLoginFailed($password)
+{
+    password_hash($password, PASSWORD_DEFAULT);
+
+    sendJsonResponse(401, [
+        "success" => false,
+        "message" => "Kode atau password salah."
+    ]);
+}
+
+/*
+|--------------------------------------------------------------------------
 | Fungsi memverifikasi token CAPTCHA ke Cloudflare
 |--------------------------------------------------------------------------
 */
 
-function verifyTurnstileToken(string $token, string $secret): array
+function verifyTurnstileToken($token)
 {
-    if ($secret === '') {
-        return [
-            "success" => false,
-            "error" => "service_unavailable"
-        ];
-    }
-
     if (!function_exists("curl_init")) {
         error_log("CAPTCHA: Ekstensi PHP cURL tidak tersedia.");
 
@@ -73,7 +96,7 @@ function verifyTurnstileToken(string $token, string $secret): array
     }
 
     $postData = [
-        "secret" => $secret,
+        "secret" => TURNSTILE_SECRET_KEY,
         "response" => $token
     ];
 
@@ -154,10 +177,9 @@ $data = json_decode($rawInput);
 
 if (
     !is_object($data) ||
-    !isset($data->kode, $data->password, $data->role) ||
+    !isset($data->kode, $data->password) ||
     !is_string($data->kode) ||
-    !is_string($data->password) ||
-    !is_string($data->role)
+    !is_string($data->password)
 ) {
     sendJsonResponse(400, [
         "success" => false,
@@ -167,7 +189,6 @@ if (
 
 $kode = trim($data->kode);
 $password = $data->password;
-$role = strtolower(trim($data->role));
 
 if (
     $kode === "" ||
@@ -204,14 +225,7 @@ if ($captchaToken === "") {
 |--------------------------------------------------------------------------
 */
 
-$turnstileSecret = getenv('LMS_TURNSTILE_SECRET_KEY');
-
-if ($turnstileSecret === false || $turnstileSecret === '') {
-    error_log("CAPTCHA: LMS_TURNSTILE_SECRET_KEY belum dikonfigurasi.");
-    $turnstileSecret = '';
-}
-
-$captchaResult = verifyTurnstileToken($captchaToken, $turnstileSecret);
+$captchaResult = verifyTurnstileToken($captchaToken);
 
 if (!$captchaResult["success"]) {
     if ($captchaResult["error"] === "service_unavailable") {
@@ -231,55 +245,80 @@ if (!$captchaResult["success"]) {
 
 /*
 |--------------------------------------------------------------------------
-| 5. Tentukan tabel berdasarkan role
+| 5. Peta role -> tabel (daftar putih, tidak pernah dari input pengguna)
 |--------------------------------------------------------------------------
 */
 
 $roleConfig = [
     "admin" => [
-        "query" => "SELECT id_admin AS user_id, nama, password FROM admin WHERE kode_admin = :kode LIMIT 1"
+        "table" => "admin",
+        "kode_column" => "kode_admin",
+        "id_column" => "id_admin"
     ],
     "pengajar" => [
-        "query" => "SELECT id_pengajar AS user_id, nama, password FROM pengajar WHERE kode_pengajar = :kode LIMIT 1"
+        "table" => "pengajar",
+        "kode_column" => "kode_pengajar",
+        "id_column" => "id_pengajar"
     ],
     "siswa" => [
-        "query" => "SELECT id_siswa AS user_id, nama, password FROM siswa WHERE kode_siswa = :kode LIMIT 1"
+        "table" => "siswa",
+        "kode_column" => "kode_siswa",
+        "id_column" => "id_siswa"
     ]
 ];
-
-if (!isset($roleConfig[$role])) {
-    sendJsonResponse(400, [
-        "success" => false,
-        "message" =>
-            "Role tidak valid. Pilih admin, pengajar, atau siswa."
-    ]);
-}
-
-$config = $roleConfig[$role];
-
-/*
-|--------------------------------------------------------------------------
-| 6. Periksa akun dan password ke database
-|--------------------------------------------------------------------------
-*/
 
 try {
     $database = new Database();
     $db = $database->getConnection();
 
-    $statement = $db->prepare($config['query']);
+    /*
+    |----------------------------------------------------------------------
+    | 6. Tentukan role dari 2 karakter pertama kode (tabel kodetb)
+    |----------------------------------------------------------------------
+    */
 
-    $statement->execute([
+    $kodePrefix = substr($kode, 0, 2);
+
+    $roleStmt = $db->prepare(
+        "SELECT role FROM kodetb WHERE kode = :prefix LIMIT 1"
+    );
+
+    $roleStmt->execute([
+        ":prefix" => $kodePrefix
+    ]);
+
+    $roleRow = $roleStmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$roleRow || !isset($roleConfig[$roleRow["role"]])) {
+        sendLoginFailed($password);
+    }
+
+    $role = $roleRow["role"];
+    $config = $roleConfig[$role];
+
+    /*
+    |----------------------------------------------------------------------
+    | 7. Periksa kode lengkap dan password di tabel sesuai role
+    |----------------------------------------------------------------------
+    */
+
+    $query = "SELECT * FROM {$config['table']}
+              WHERE {$config['kode_column']} = :kode
+              LIMIT 1";
+
+    $stmt = $db->prepare($query);
+
+    $stmt->execute([
         ":kode" => $kode
     ]);
 
-    $user = $statement->fetch(PDO::FETCH_ASSOC);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (
-        !$user ||
-        !isset($user["password"]) ||
-        !password_verify($password, $user["password"])
-    ) {
+    if (!$user || !isset($user["password"])) {
+        sendLoginFailed($password);
+    }
+
+    if (!password_verify($password, $user["password"])) {
         sendJsonResponse(401, [
             "success" => false,
             "message" => "Kode atau password salah."
@@ -287,28 +326,28 @@ try {
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | 7. Buat session backend
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
+    | 8. Buat session backend
+    |----------------------------------------------------------------------
     */
 
     session_regenerate_id(true);
 
-    $_SESSION["id"] = $user["user_id"];
+    $_SESSION["id"] = $user[$config["id_column"]];
     $_SESSION["role"] = $role;
     $_SESSION["nama"] = $user["nama"];
 
     /*
-    |--------------------------------------------------------------------------
-    | 8. Kirim respons login berhasil ke auth.js
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
+    | 9. Kirim respons login berhasil ke auth.js (role ikut dikirim)
+    |----------------------------------------------------------------------
     */
 
     sendJsonResponse(200, [
         "success" => true,
         "message" => "Login berhasil.",
         "session" => [
-            "id" => $user["user_id"],
+            "id" => $user[$config["id_column"]],
             "role" => $role,
             "nama" => $user["nama"]
         ]

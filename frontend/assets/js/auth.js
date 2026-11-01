@@ -1,13 +1,12 @@
-
 /*
 ================================================================================
 LOKASI FILE : frontend/assets/js/auth.js
 GUNA FILE   :
     1. Memvalidasi formulir login.
     2. Mengambil token Cloudflare Turnstile CAPTCHA.
-    3. Mengirim kode, password, role, dan token CAPTCHA ke backend.
+    3. Mengirim kode, password, dan token CAPTCHA ke backend.
     4. Menampilkan pesan error dari backend.
-    5. Mengarahkan pengguna ke dashboard sesuai role.
+    5. Mengarahkan pengguna ke dashboard sesuai role dari backend.
 ================================================================================
 */
 
@@ -43,17 +42,20 @@ GUNA FILE   :
         messageEl.textContent = "";
     }
 
-    function validateForm(kode, password, role) {
+    function resetSubmitButton() {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Masuk";
+        }
+    }
+
+    function validateForm(kode, password) {
         if (!kode || kode.trim().length < 2) {
             return "Kode wajib diisi (minimal 2 karakter).";
         }
 
         if (!password || password.length < 4) {
             return "Password wajib diisi (minimal 4 karakter).";
-        }
-
-        if (!role || ["admin", "pengajar", "siswa"].indexOf(role) === -1) {
-            return "Silakan pilih role (Admin / Pengajar / Siswa).";
         }
 
         return null;
@@ -75,10 +77,9 @@ GUNA FILE   :
 
         const kode = document.getElementById("kode").value.trim();
         const password = document.getElementById("password").value;
-        const role = document.getElementById("role").value;
 
         // Validasi formulir login
-        const validationError = validateForm(kode, password, role);
+        const validationError = validateForm(kode, password);
 
         if (validationError) {
             showMessage(validationError, "error");
@@ -117,22 +118,22 @@ GUNA FILE   :
                 body: {
                     kode: kode,
                     password: password,
-                    role: role,
                     captchaToken: captchaToken
                 }
             });
 
-            if (result.success) {
-                if (result.session) {
-                    sessionStorage.setItem(
-                        "lms_user",
-                        JSON.stringify({
-                            id: result.session.id,
-                            role: result.session.role,
-                            nama: result.session.nama
-                        })
-                    );
-                }
+            // Role ditentukan backend dari kode, bukan dari browser.
+            const role = result.session ? result.session.role : null;
+
+            if (result.success && role) {
+                sessionStorage.setItem(
+                    "lms_user",
+                    JSON.stringify({
+                        id: result.session.id,
+                        role: role,
+                        nama: result.session.nama
+                    })
+                );
 
                 showMessage(
                     result.message || "Login berhasil. Mengalihkan...",
@@ -149,23 +150,17 @@ GUNA FILE   :
                     "error"
                 );
 
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = "Masuk";
-                }
+                resetSubmitButton();
             }
 
         } catch (error) {
             showMessage(
                 error.message ||
-                "Login gagal. Periksa kode, password, dan role.",
+                "Login gagal. Periksa kode dan password.",
                 "error"
             );
 
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Masuk";
-            }
+            resetSubmitButton();
 
         } finally {
             // Kosongkan password setelah proses selesai.
