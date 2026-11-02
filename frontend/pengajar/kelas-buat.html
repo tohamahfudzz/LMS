@@ -1,0 +1,125 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/pengajar/kelas-buat.html
+GUNA FILE   : Form buat materi / tugas / kuis untuk satu kelas.
+              Dibuka dari tombol "+ Buat" di kelas-detail.html:
+                  kelas-buat.html?id_kelas=1&jenis=materi|tugas|kuis
+              Logika: assets/js/pengajar-kelas-buat.js
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title id="pageTitle">Buat - Pengajar LMS</title>
+    <link rel="stylesheet" href="../assets/css/kelas-detail.css">
+    <link rel="stylesheet" href="../assets/css/kelas-feed.css">
+</head>
+<body>
+
+    <header>
+        <h1 id="pageHeading">Memuat...</h1>
+        <p id="kelasNama"></p>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a id="backToKelasLink" href="dashboard.html">Kembali ke kelas</a>
+    </nav>
+
+    <main>
+        <div id="pageMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+        <!-- ===================== FORM MATERI ===================== -->
+        <section id="sectionMateri" hidden>
+            <form id="createMateriForm" enctype="multipart/form-data" novalidate>
+                <div class="form-field">
+                    <label for="materiJudul">Judul</label>
+                    <input type="text" id="materiJudul" name="judul" required maxlength="200" autocomplete="off">
+                </div>
+                <div class="form-field">
+                    <label for="materiTipe">Tipe</label>
+                    <select id="materiTipe" name="tipe" required>
+                        <option value="file">File</option>
+                        <option value="link">Link / Video</option>
+                        <option value="teks">Teks</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="materiLink">Link (opsional, untuk tipe link/video)</label>
+                    <input type="url" id="materiLink" name="link" maxlength="500" placeholder="https://...">
+                </div>
+                <div class="form-field">
+                    <label for="materiFile">File (opsional)</label>
+                    <input type="file" id="materiFile" name="file"
+                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png,.gif,.mp4">
+                </div>
+                <button type="submit" id="createMateriButton">Simpan Materi</button>
+            </form>
+        </section>
+
+        <!-- ===================== FORM TUGAS ===================== -->
+        <section id="sectionTugas" hidden>
+            <form id="createTugasForm" enctype="multipart/form-data" novalidate>
+                <div class="form-field">
+                    <label for="tugasJudul">Judul</label>
+                    <input type="text" id="tugasJudul" name="judul" required maxlength="200" autocomplete="off">
+                </div>
+                <div class="form-field">
+                    <label for="tugasDeskripsi">Deskripsi (opsional)</label>
+                    <textarea id="tugasDeskripsi" name="deskripsi" rows="3" maxlength="2000"></textarea>
+                </div>
+                <div class="form-field">
+                    <label for="tugasWaktuMulai">Waktu mulai</label>
+                    <input type="datetime-local" id="tugasWaktuMulai" name="waktu_mulai" required>
+                </div>
+                <div class="form-field">
+                    <label for="tugasDeadline">Deadline</label>
+                    <input type="datetime-local" id="tugasDeadline" name="deadline" required>
+                </div>
+                <div class="form-field">
+                    <label for="tugasFile">File lampiran (opsional)</label>
+                    <input type="file" id="tugasFile" name="file"
+                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png">
+                </div>
+                <button type="submit" id="createTugasButton">Simpan Tugas</button>
+            </form>
+        </section>
+
+        <!-- ===================== FORM KUIS ===================== -->
+        <section id="sectionKuis" hidden>
+            <form id="createKuisForm" novalidate>
+                <div class="form-field">
+                    <label for="kuisJudul">Judul</label>
+                    <input type="text" id="kuisJudul" required maxlength="200" autocomplete="off">
+                </div>
+                <div class="form-field">
+                    <label for="kuisDeskripsi">Deskripsi (opsional)</label>
+                    <textarea id="kuisDeskripsi" rows="2" maxlength="5000"></textarea>
+                </div>
+                <div class="form-field">
+                    <label for="kuisDurasi">Durasi (menit)</label>
+                    <input type="number" id="kuisDurasi" required min="1" max="600" value="30">
+                </div>
+                <div class="form-field">
+                    <label for="kuisWaktuMulai">Waktu mulai (opsional)</label>
+                    <input type="datetime-local" id="kuisWaktuMulai">
+                </div>
+                <div class="form-field">
+                    <label for="kuisWaktuSelesai">Waktu selesai (opsional)</label>
+                    <input type="datetime-local" id="kuisWaktuSelesai">
+                </div>
+                <button type="submit" id="createKuisButton">Simpan sebagai Draft</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/pengajar-common.js"></script>
+    <script src="../assets/js/pengajar-kelas-buat.js"></script>
+</body>
+</html>

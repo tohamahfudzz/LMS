@@ -489,7 +489,7 @@ function fetchKuisForStudent(PDO $db, int $idSiswa, ?int $idKuis = null): array
     closeExpiredAttemptsForSiswa($db, $idSiswa);
 
     $query = "SELECT k.id_kuis, k.id_kelas, kl.nama_kelas, k.judul, k.deskripsi,
-                     k.waktu_mulai, k.waktu_selesai, k.durasi_menit,
+                     k.waktu_mulai, k.waktu_selesai, k.durasi_menit, k.waktu_dibuat,
                      CASE
                          WHEN k.status <> :status_terbit THEN 'ditutup'
                          WHEN k.waktu_mulai IS NOT NULL AND k.waktu_mulai > NOW() THEN 'belum_dimulai'
@@ -543,6 +543,7 @@ function fetchKuisForStudent(PDO $db, int $idSiswa, ?int $idKuis = null): array
             "deskripsi" => $row['deskripsi'],
             "waktu_mulai" => $row['waktu_mulai'],
             "waktu_selesai" => $row['waktu_selesai'],
+            "waktu_dibuat" => $row['waktu_dibuat'],
             "durasi_menit" => (int) $row['durasi_menit'],
             "jumlah_soal" => (int) $row['jumlah_soal'],
             "total_poin" => (float) $row['total_poin'],

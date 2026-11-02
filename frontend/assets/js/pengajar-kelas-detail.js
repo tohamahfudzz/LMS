@@ -18,8 +18,8 @@ const KelasPage = (function () {
     "use strict";
 
     const API_DETAIL = "../../backend/api/pengajar/kelas/detail.php";
-    const TAB_NAMES = ["materi", "tugas", "kuis", "absensi"];
-    const DEFAULT_TAB = "materi";
+        const TAB_NAMES = ["aktivitas", "absensi"];
+    const DEFAULT_TAB = "aktivitas";
 
     const params = new URLSearchParams(window.location.search);
     const parsedIdKelas = parseInt(params.get("id_kelas"), 10);
@@ -42,8 +42,12 @@ const KelasPage = (function () {
         tabLoaders[name] = loadFunction;
     }
 
-    function readInitialTab() {
+        function readInitialTab() {
         const requestedTab = params.get("tab");
+
+        // Tautan lama (tab=materi|tugas|kuis) dialihkan ke feed aktivitas.
+        if (["materi", "tugas", "kuis"].indexOf(requestedTab) !== -1) return "aktivitas";
+
         return TAB_NAMES.indexOf(requestedTab) !== -1 ? requestedTab : DEFAULT_TAB;
     }
 

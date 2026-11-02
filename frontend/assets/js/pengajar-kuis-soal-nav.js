@@ -18,7 +18,7 @@ GUNA FILE   : Mengatur tautan "kembali" di halaman kelola soal kuis
     const idKelas = parseInt(params.get("id_kelas"), 10);
 
     if (idKelas > 0) {
-        link.href = "kelas-detail.html?id_kelas=" + encodeURIComponent(idKelas) + "&tab=kuis";
+               link.href = "kelas-detail.html?id_kelas=" + encodeURIComponent(idKelas) + "&tab=aktivitas";
         link.textContent = "Kembali ke kelas";
     }
 })();

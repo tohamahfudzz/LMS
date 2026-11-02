@@ -1,0 +1,51 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/pengajar/materi-detail.html
+GUNA FILE   : Halaman detail satu materi (pengajar). Dibuka dari card materi di
+              kelas-detail.html: materi-detail.html?id_materi=1&id_kelas=2
+              Logika: assets/js/pengajar-materi-detail.js
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Detail Materi - Pengajar LMS</title>
+    <link rel="stylesheet" href="../assets/css/kelas-detail.css">
+    <link rel="stylesheet" href="../assets/css/kelas-feed.css">
+</head>
+<body>
+
+    <header>
+        <h1>Detail Materi</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a id="backToKelasLink" href="dashboard.html">Kembali ke kelas</a>
+    </nav>
+
+    <main>
+        <div id="pageMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+        <section id="detailSection" hidden>
+            <h2 id="dJudul">-</h2>
+            <dl class="detail-list">
+                <dt>Kelas</dt><dd id="dKelas">-</dd>
+                <dt>Tipe</dt><dd id="dTipe">-</dd>
+                <dt>Waktu upload</dt><dd id="dWaktu">-</dd>
+                <dt>Materi</dt><dd id="dAksi">-</dd>
+            </dl>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/pengajar-common.js"></script>
+    <script src="../assets/js/pengajar-kelas-download.js"></script>
+    <script src="../assets/js/pengajar-materi-detail.js"></script>
+</body>
+</html>
