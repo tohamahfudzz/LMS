@@ -14,9 +14,9 @@ GUNA FILE   : Hanya menampilkan daftar soal satu kuis.
     const params = new URLSearchParams(window.location.search);
     const idKuis = parseInt(params.get("id_kuis"), 10);
     const tbody = document.getElementById("soalTableBody");
-    const labelId = document.getElementById("labelIdKuis");
+   
 
-    if (labelId) labelId.textContent = idKuis || "-";
+  
 
     if (!idKuis || idKuis < 1) {
         PengajarCommon.showMessage("soalListMessage", "ID kuis tidak valid.", "error");

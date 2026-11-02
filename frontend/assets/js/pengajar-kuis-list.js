@@ -44,6 +44,11 @@ GUNA FILE   : Hanya menampilkan daftar kuis milik pengajar.
                         '">Publish</button>';
                 }
 
+                aksi +=
+                    ' | <button type="button" class="btn-hapus-kuis" data-id="' +
+                    PengajarCommon.escapeHtml(item.id_kuis) +
+                    '">Hapus</button>';
+
                 return (
                     "<tr>" +
                     "<td>" + (index + 1) + "</td>" +

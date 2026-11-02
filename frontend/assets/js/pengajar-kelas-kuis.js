@@ -5,6 +5,7 @@ GUNA FILE   : Tab Kuis pada halaman kelas pengajar (frontend/pengajar/kelas-deta
               - Daftar kuis kelas ini : GET  ../../backend/api/kuis/list.php?id_kelas=
               - Buat kuis (draft)     : POST ../../backend/api/kuis/create.php
               - Terbitkan kuis        : POST ../../backend/api/kuis/publish.php  Body: { id_kuis }
+              - Hapus kuis            : POST ../../backend/api/kuis/delete.php   Body: { id_kuis }
               Daftar kuis ada di dalam kelas, tetapi mengelola soal dibuka di halaman
               tersendiri: kuis-soal.html?id_kuis=..&id_kelas=.. (id_kelas dipakai untuk
               tombol "Kembali ke kelas").
@@ -21,7 +22,8 @@ GUNA FILE   : Tab Kuis pada halaman kelas pengajar (frontend/pengajar/kelas-deta
     const API = {
         kuisList: "../../backend/api/kuis/list.php",
         kuisCreate: "../../backend/api/kuis/create.php",
-        kuisPublish: "../../backend/api/kuis/publish.php"
+        kuisPublish: "../../backend/api/kuis/publish.php",
+        kuisDelete: "../../backend/api/kuis/delete.php"
     };
 
     const form = document.getElementById("createKuisForm");
@@ -54,6 +56,9 @@ GUNA FILE   : Tab Kuis pada halaman kelas pengajar (frontend/pengajar/kelas-deta
                     aksi += " | <button type=\"button\" class=\"btn-publish-kuis\" data-id=\"" +
                         idKuis + "\">Publish</button>";
                 }
+
+                aksi += " | <button type=\"button\" class=\"btn-hapus-kuis\" data-id=\"" +
+                    idKuis + "\">Hapus</button>";
 
                 return (
                     "<tr>" +
@@ -94,6 +99,33 @@ GUNA FILE   : Tab Kuis pada halaman kelas pengajar (frontend/pengajar/kelas-deta
             PengajarCommon.showMessage("kuisListMessage", error.message || "Gagal menerbitkan kuis.", "error");
             button.disabled = false;
             button.textContent = "Publish";
+        }
+    }
+
+    async function hapusKuis(idKuis, button) {
+        const judul = button.closest("tr").children[1].textContent;
+        if (!window.confirm(
+            "Hapus kuis \"" + judul + "\"?\n" +
+            "Semua soal di dalamnya ikut terhapus dan tindakan ini tidak dapat dibatalkan."
+        )) {
+            return;
+        }
+
+        PengajarCommon.hideMessage("kuisListMessage");
+        button.disabled = true;
+        button.textContent = "...";
+
+        try {
+            const result = await apiRequest(API.kuisDelete, {
+                method: "POST",
+                body: { id_kuis: idKuis }
+            });
+            PengajarCommon.showMessage("kuisListMessage", result.message || "Kuis berhasil dihapus.", "success");
+            loadKuisList();
+        } catch (error) {
+            PengajarCommon.showMessage("kuisListMessage", error.message || "Gagal menghapus kuis.", "error");
+            button.disabled = false;
+            button.textContent = "Hapus";
         }
     }
 
@@ -160,11 +192,18 @@ GUNA FILE   : Tab Kuis pada halaman kelas pengajar (frontend/pengajar/kelas-deta
     }
 
     tbody.addEventListener("click", function (event) {
-        const button = event.target.closest(".btn-publish-kuis");
-        if (!button) return;
+        const publishButton = event.target.closest(".btn-publish-kuis");
+        if (publishButton) {
+            const idKuis = parseInt(publishButton.getAttribute("data-id"), 10);
+            if (idKuis) publishKuis(idKuis, publishButton);
+            return;
+        }
 
-        const idKuis = parseInt(button.getAttribute("data-id"), 10);
-        if (idKuis) publishKuis(idKuis, button);
+        const hapusButton = event.target.closest(".btn-hapus-kuis");
+        if (hapusButton) {
+            const idKuis = parseInt(hapusButton.getAttribute("data-id"), 10);
+            if (idKuis) hapusKuis(idKuis, hapusButton);
+        }
     });
 
     form.addEventListener("submit", submitKuis);

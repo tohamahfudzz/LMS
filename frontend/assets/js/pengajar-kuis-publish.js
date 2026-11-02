@@ -21,7 +21,10 @@ GUNA FILE   : Hanya menerbitkan kuis (draft → terbit).
         const idKuis = parseInt(btn.getAttribute("data-id"), 10);
         if (!idKuis) return;
 
-        if (!window.confirm("Terbitkan kuis ID " + idKuis + "?\nPastikan soal sudah lengkap.")) {
+        // Judul diambil dari sel tabel (kolom ke-2) agar ID tidak perlu ditampilkan.
+        const judul = btn.closest("tr").children[1].textContent;
+
+        if (!window.confirm("Terbitkan kuis \"" + judul + "\"?\nPastikan soal sudah lengkap.")) {
             return;
         }
 
