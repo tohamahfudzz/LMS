@@ -1,0 +1,76 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/siswa/tugas-detail.html
+GUNA FILE   : Halaman detail satu tugas (siswa): info tugas, unduh soal, status
+              pengumpulan saya, dan formulir kumpul / kirim ulang / hapus file.
+              Dibuka dari card tugas di kelas-detail.html:
+                  tugas-detail.html?id_tugas=1&id_kelas=2
+              Logika: assets/js/siswa-tugas-detail.js
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Detail Tugas - Siswa LMS</title>
+    <link rel="stylesheet" href="../assets/css/kelas-detail.css">
+    <link rel="stylesheet" href="../assets/css/kelas-feed.css">
+</head>
+<body>
+
+    <header>
+        <h1>Detail Tugas</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a id="backToKelasLink" href="kelas.html">Kembali ke kelas</a>
+    </nav>
+
+    <main>
+        <div id="pageMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+        <section id="detailSection" hidden>
+            <h2 id="dJudul">-</h2>
+            <dl class="detail-list">
+                <dt>Kelas</dt><dd id="dKelas">-</dd>
+                <dt>Dibuat</dt><dd id="dDibuat">-</dd>
+                <dt>Waktu mulai</dt><dd id="dMulai">-</dd>
+                <dt>Deadline</dt><dd id="dDeadline">-</dd>
+                <dt>Status tugas</dt><dd id="dStatus">-</dd>
+                <dt>Deskripsi</dt><dd id="dDeskripsi" class="detail-deskripsi">-</dd>
+                <dt>Soal / lampiran</dt><dd id="dLampiran">-</dd>
+                <dt>Pengumpulan saya</dt><dd id="dPengumpulan">-</dd>
+            </dl>
+        </section>
+
+        <section id="submitSection" hidden>
+            <h2 id="submitTitle">Kumpulkan Tugas</h2>
+            <div id="uploadMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+            <form id="uploadTugasForm" enctype="multipart/form-data" novalidate>
+                <div class="form-field">
+                    <label for="uploadTeks">Jawaban teks (opsional)</label>
+                    <textarea id="uploadTeks" name="teks" rows="4" maxlength="5000"></textarea>
+                </div>
+                <div class="form-field">
+                    <label for="uploadFile">File (opsional)</label>
+                    <input type="file" id="uploadFile" name="file"
+                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png">
+                </div>
+                <button type="submit" id="uploadTugasButton">Kirim Pengumpulan</button>
+            </form>
+            <p><small>Minimal isi teks atau unggah file. Anda bisa mengirim ulang selama tugas masih terbuka; bagian yang dikosongkan tetap memakai isi pengumpulan sebelumnya.</small></p>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/siswa-common.js"></script>
+    <script src="../assets/js/pengajar-kelas-download.js"></script>
+    <script src="../assets/js/siswa-tugas-detail.js"></script>
+</body>
+</html>
