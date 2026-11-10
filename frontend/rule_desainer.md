@@ -12,6 +12,11 @@ Tujuan utama:
 
 ---
 
+## 0.PENDAHULUAN
+1.gunakan bootstrap yang sudah tersedia di folder assets
+2.jangan ubah id atau kelas bawaan html,hanya properti bootstrap yang boleh diubah.
+
+
 ## 1. RUANG LINGKUP PEKERJAAN
 
 Desainer UI/UX bertanggung jawab atas:
