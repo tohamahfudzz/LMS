@@ -5,28 +5,50 @@ error_reporting(E_ALL);
 
 require_once '../../config/database.php';
 require_once '../../functions/response.php';
+require_once '../../functions/mailer.php';
 
 const RESET_TOKEN_VALID_MINUTES = 15;
-const GENERIC_MESSAGE = "Jika email terdaftar, tautan pemulihan akan tersedia.";
+const RESET_RESEND_SECONDS = 60;
+const GENERIC_MESSAGE = "Jika email terdaftar, tautan pemulihan telah dikirim ke email tersebut. Tautan berlaku 15 menit.";
 
-function sendForgotPasswordSuccess(string $message, ?string $resetUrl = null): void
+// Mengirim respons yang selalu sama (email terdaftar maupun tidak).
+// Dengan $continueAfter = true, script TIDAK berhenti sehingga email bisa dikirim
+// setelah klien menerima respons; lamanya SMTP tidak terlihat oleh klien.
+function sendGenericResponse(bool $continueAfter = false): void
 {
-    http_response_code(200);
+    ignore_user_abort(true);
+    set_time_limit(60);
 
-    $response = [
-        "success" => true,
-        "message" => $message
-    ];
-
-    if ($resetUrl !== null) {
-        $response["reset_url"] = $resetUrl;
-    }
-
-    echo json_encode(
-        $response,
+    $body = json_encode(
+        ["success" => true, "message" => GENERIC_MESSAGE],
         JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
     );
-    exit;
+
+    http_response_code(200);
+
+    if (!$continueAfter) {
+        echo $body;
+        exit;
+    }
+
+    if (function_exists('fastcgi_finish_request')) {
+        // PHP-FPM
+        echo $body;
+        fastcgi_finish_request();
+        return;
+    }
+
+    // Apache mod_php (XAMPP): tutup koneksi setelah isi respons terkirim.
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+
+    header("Content-Encoding: none");
+    header("Content-Length: " . strlen($body));
+    header("Connection: close");
+
+    echo $body;
+    flush();
 }
 
 initApi('POST');
@@ -42,18 +64,6 @@ if ($email === '') {
 
 if (strlen($email) > 255 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     sendError("Format email tidak valid.", 400);
-}
-
-/*
- * MODE DEVELOPER: tautan pemulihan dikembalikan langsung di respons.
- * Ini HANYA aman di localhost. Di server publik, siapa pun yang tahu email
- * seseorang bisa mengambil alih akunnya. Hapus blok ini dan kirim tautan
- * lewat email sebelum aplikasi dipakai di produksi.
- */
-$isLocalDev = in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1'], true);
-
-if (!$isLocalDev) {
-    sendForgotPasswordSuccess(GENERIC_MESSAGE);
 }
 
 $database = new Database();
@@ -76,7 +86,21 @@ try {
     $checkUserStatement->execute([":email" => $email]);
 
     if ($checkUserStatement->fetch(PDO::FETCH_ASSOC) === false) {
-        sendForgotPasswordSuccess(GENERIC_MESSAGE);
+        sendGenericResponse();
+    }
+
+    // Jeda kirim ulang: permintaan beruntun tidak memicu email baru.
+    $recentRequestStatement = $db->prepare("
+        SELECT id
+        FROM password_resets
+        WHERE email = :email
+          AND created_at >= DATE_SUB(NOW(), INTERVAL " . RESET_RESEND_SECONDS . " SECOND)
+        LIMIT 1
+    ");
+    $recentRequestStatement->execute([":email" => $email]);
+
+    if ($recentRequestStatement->fetch(PDO::FETCH_ASSOC) !== false) {
+        sendGenericResponse();
     }
 
     $token = bin2hex(random_bytes(32));
@@ -98,18 +122,30 @@ try {
         ":email" => $email,
         ":token" => $hashedToken
     ]);
+    $resetId = (int) $db->lastInsertId();
 
     $db->commit();
-
-    sendForgotPasswordSuccess(
-        "Tautan pemulihan siap digunakan dan berlaku selama "
-            . RESET_TOKEN_VALID_MINUTES . " menit.",
-        "login.html?token=" . rawurlencode($token)
-    );
 } catch (Throwable $error) {
     if ($db->inTransaction()) {
         $db->rollBack();
     }
 
     sendServerError($error, "ForgotPassword");
+}
+
+// Respons dikirim lebih dulu, baru email dikirim lewat SMTP.
+sendGenericResponse(true);
+
+try {
+    sendResetLinkEmail($email, $token, RESET_TOKEN_VALID_MINUTES);
+} catch (Throwable $error) {
+    error_log("[LMS][ForgotPassword][Email] " . get_class($error) . ": " . $error->getMessage());
+
+    // Token dibatalkan agar percobaan berikutnya tidak tertahan jeda kirim ulang.
+    try {
+        $rollbackTokenStatement = $db->prepare("DELETE FROM password_resets WHERE id = :id");
+        $rollbackTokenStatement->execute([":id" => $resetId]);
+    } catch (Throwable $rollbackError) {
+        error_log("[LMS][ForgotPassword][Rollback] " . $rollbackError->getMessage());
+    }
 }

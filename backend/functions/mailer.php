@@ -2,13 +2,17 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-// Mengirim email kode pemulihan kata sandi lewat SMTP.
+// Mengirim email tautan pemulihan kata sandi lewat SMTP (Brevo).
+// $resetToken adalah token asli (bukan hash); tautan dibangun di sini.
 // Melempar exception jika konfigurasi atau pengiriman gagal.
-function sendResetCodeEmail(string $recipientEmail, string $resetCode, int $validMinutes): void
+function sendResetLinkEmail(string $recipientEmail, string $resetToken, int $validMinutes): void
 {
     require_once dirname(__DIR__) . '/vendor/autoload.php';
 
     $mailConfig = require dirname(__DIR__) . '/config/mail_environment.php';
+
+    $resetUrl = $mailConfig['app_url'] . '/login.html?token=' . rawurlencode($resetToken);
+    $safeUrl = htmlspecialchars($resetUrl, ENT_QUOTES, 'UTF-8');
 
     $mail = new PHPMailer(true);
     $mail->isSMTP();
@@ -21,23 +25,25 @@ function sendResetCodeEmail(string $recipientEmail, string $resetCode, int $vali
         ? PHPMailer::ENCRYPTION_SMTPS
         : PHPMailer::ENCRYPTION_STARTTLS;
     $mail->CharSet = 'UTF-8';
+    $mail->Timeout = 15;
 
-    // Gmail mewajibkan alamat pengirim sama dengan akun yang login.
-    $mail->setFrom($mailConfig['username'], $mailConfig['from_name']);
+    // Brevo: pengirim harus email yang sudah diverifikasi, bukan login SMTP.
+    $mail->setFrom($mailConfig['from_email'], $mailConfig['from_name']);
     $mail->addAddress($recipientEmail);
 
     $mail->isHTML(true);
-    $mail->Subject = 'Kode Reset Kata Sandi LMS';
+    $mail->Subject = 'Pemulihan Kata Sandi LMS';
     $mail->Body = "Halo,<br><br>"
         . "Kami menerima permintaan untuk mengatur ulang kata sandi akun LMS Anda.<br><br>"
-        . "Kode pemulihan Anda:<br>"
-        . "<h2 style=\"letter-spacing: 4px;\">{$resetCode}</h2>"
-        . "Masukkan kode ini pada halaman reset kata sandi. "
-        . "Kode bersifat rahasia dan hanya berlaku selama <b>{$validMinutes} menit</b>.<br><br>"
+        . "Klik tautan berikut untuk membuat kata sandi baru:<br>"
+        . "<p><a href=\"{$safeUrl}\">Atur ulang kata sandi</a></p>"
+        . "Jika tombol tidak bisa dibuka, salin alamat ini ke browser:<br>"
+        . "{$safeUrl}<br><br>"
+        . "Tautan bersifat rahasia dan hanya berlaku selama <b>{$validMinutes} menit</b>.<br><br>"
         . "Jika Anda tidak merasa meminta pemulihan, abaikan pesan ini. Akun Anda tetap aman.<br><br>"
         . "Salam,<br>Tim Administrator LMS";
-    $mail->AltBody = "Kode pemulihan LMS Anda: {$resetCode}\n"
-        . "Berlaku selama {$validMinutes} menit. Jangan bagikan kode ini kepada siapa pun.";
+    $mail->AltBody = "Atur ulang kata sandi LMS Anda lewat tautan ini:\n{$resetUrl}\n"
+        . "Berlaku selama {$validMinutes} menit. Jangan bagikan tautan ini kepada siapa pun.";
 
     $mail->send();
 }

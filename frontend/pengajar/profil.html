@@ -61,10 +61,20 @@ GUNA FILE   : Halaman profil Pengajar. Dibuka dari tombol "Profil" di dashboard.
             </form>
             <p><small>Email baru akan menggantikan email lama.</small></p>
         </section>
+
+
+                <section class="kelas-panel__section">
+            <h2>Ganti Password</h2>
+            <div id="passwordMessage" class="message" role="alert" aria-live="polite" hidden></div>
+            <p>Untuk keamanan, password diganti lewat tautan yang dikirim ke email akun Anda.</p>
+            <button type="button" id="requestPasswordButton">Kirim Tautan ke Email Saya</button>
+            <p><small>Pastikan email sudah diisi di bagian Ganti Email di atas. Tautan berlaku 15 menit dan hanya bisa dipakai sekali.</small></p>
+        </section>
     </main>
 
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/profil.js"></script>
+     <script src="../assets/js/profil-password.js"></script>
 </body>
 </html>
