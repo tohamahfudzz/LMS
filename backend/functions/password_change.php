@@ -2,10 +2,11 @@
 /*
 ================================================================================
 LOKASI FILE : backend/functions/password_change.php
-GUNA FILE   : Konstanta dan helper kecil untuk fitur ganti password dari halaman
-              profil. Dipakai oleh request_password_change.php dan
-              confirm_password_change.php. Tidak mengakses database dan tidak
-              mengirim respons.
+GUNA FILE   : Konstanta dan helper kecil untuk fitur ganti/reset password
+              (halaman profil dan "Lupa password?"). Dipakai oleh
+              request_password_change.php, confirm_password_change.php, dan
+              forgot_password.php. Tidak mengakses database dan tidak mengirim
+              respons.
 ================================================================================
 */
 
@@ -19,9 +20,9 @@ const PASSWORD_CHANGE_MAX_BYTES = 72; // batas bcrypt
 function getPasswordChangeRoleConfig(string $role): ?array
 {
     $roleConfigs = [
-        'admin'    => ['table' => 'admin',    'primary' => 'id_admin'],
-        'pengajar' => ['table' => 'pengajar', 'primary' => 'id_pengajar'],
-        'siswa'    => ['table' => 'siswa',    'primary' => 'id_siswa'],
+        'admin'    => ['table' => 'admin',    'primary' => 'id_admin',    'kode_column' => 'kode_admin'],
+        'pengajar' => ['table' => 'pengajar', 'primary' => 'id_pengajar', 'kode_column' => 'kode_pengajar'],
+        'siswa'    => ['table' => 'siswa',    'primary' => 'id_siswa',    'kode_column' => 'kode_siswa'],
     ];
 
     return $roleConfigs[$role] ?? null;

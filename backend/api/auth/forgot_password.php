@@ -1,26 +1,47 @@
 <?php
+/*
+================================================================================
+LOKASI FILE : backend/api/auth/forgot_password.php
+GUNA FILE   : Meminta tautan reset password dari halaman "Lupa password?" (belum
+              login). Pengguna memasukkan KODE LOGIN-nya; role ditentukan dari 2
+              karakter pertama kode (tabel kodetb), akun dicari di tabel role itu,
+              lalu tautan dikirim ke email yang tersimpan di akun tersebut.
+              Method : POST
+              Body   : { "kode": "..." }
+              Akses  : publik (tanpa login).
+              Keamanan:
+                - Respons SELALU sama, baik kode terdaftar atau tidak, akun punya
+                  email atau tidak, sehingga daftar akun tidak bisa ditebak.
+                - Email dikirim SETELAH respons dikembalikan, jadi lamanya proses
+                  dan error pengiriman tidak terlihat oleh pemanggil.
+                - Jeda 60 detik per akun; token berlaku 15 menit, sekali pakai.
+              Berikutnya: pengguna membuka tautan -> ganti-password.html
+                          -> api/profil/confirm_password_change.php
+================================================================================
+*/
 
 ini_set('display_errors', '0');
 error_reporting(E_ALL);
 
-require_once '../../config/database.php';
-require_once '../../functions/response.php';
-require_once '../../functions/mailer.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../functions/response.php';
+require_once __DIR__ . '/../../functions/password_change_tokens.php';
+require_once __DIR__ . '/../../functions/mailer_forgot_password.php';
 
-const RESET_TOKEN_VALID_MINUTES = 15;
-const RESET_RESEND_SECONDS = 60;
-const GENERIC_MESSAGE = "Jika email terdaftar, tautan pemulihan telah dikirim ke email tersebut. Tautan berlaku 15 menit.";
+const FORGOT_KODE_MIN_LENGTH = 2;
+const FORGOT_KODE_MAX_LENGTH = 20;
+const FORGOT_GENERIC_MESSAGE = "Jika kode terdaftar dan akun memiliki email, tautan reset password telah dikirim ke email akun tersebut. Tautan berlaku "
+    . PASSWORD_CHANGE_VALID_MINUTES . " menit.";
 
-// Mengirim respons yang selalu sama (email terdaftar maupun tidak).
-// Dengan $continueAfter = true, script TIDAK berhenti sehingga email bisa dikirim
-// setelah klien menerima respons; lamanya SMTP tidak terlihat oleh klien.
-function sendGenericResponse(bool $continueAfter = false): void
+// Mengirim respons yang selalu sama. Dengan $continueAfter = true, script TIDAK
+// berhenti sehingga email bisa dikirim setelah klien menerima respons.
+function sendForgotGenericResponse(bool $continueAfter = false): void
 {
     ignore_user_abort(true);
     set_time_limit(60);
 
     $body = json_encode(
-        ["success" => true, "message" => GENERIC_MESSAGE],
+        ["success" => true, "message" => FORGOT_GENERIC_MESSAGE],
         JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
     );
 
@@ -54,97 +75,76 @@ function sendGenericResponse(bool $continueAfter = false): void
 initApi('POST');
 
 $requestData = readJsonBody();
-$email = is_string($requestData['email'] ?? null)
-    ? trim($requestData['email'])
-    : '';
+$kode = is_string($requestData['kode'] ?? null) ? trim($requestData['kode']) : '';
 
-if ($email === '') {
-    sendError("Alamat email wajib diisi.", 400);
+if ($kode === '') {
+    sendError("Kode wajib diisi.", 400);
 }
 
-if (strlen($email) > 255 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    sendError("Format email tidak valid.", 400);
+if (strlen($kode) < FORGOT_KODE_MIN_LENGTH || strlen($kode) > FORGOT_KODE_MAX_LENGTH) {
+    sendError(
+        "Kode harus " . FORGOT_KODE_MIN_LENGTH . " sampai " . FORGOT_KODE_MAX_LENGTH . " karakter.",
+        400
+    );
 }
 
 $database = new Database();
 $db = $database->getConnection();
 
+$issued = null;
+$account = null;
+$email = '';
+
 try {
+    // Membersihkan token kedaluwarsa agar tabel tidak menumpuk.
     $cleanupStatement = $db->prepare("
-        DELETE FROM password_resets
-        WHERE created_at < DATE_SUB(NOW(), INTERVAL " . RESET_TOKEN_VALID_MINUTES . " MINUTE)
+        DELETE FROM password_change_tokens
+        WHERE created_at < DATE_SUB(NOW(), INTERVAL " . PASSWORD_CHANGE_VALID_MINUTES . " MINUTE)
     ");
     $cleanupStatement->execute();
 
-    // Tahan terhadap CR/LF, spasi di tepi, dan perbedaan huruf besar/kecil.
-    $checkUserStatement = $db->prepare("
-        SELECT id_siswa
-        FROM siswa
-        WHERE LOWER(TRIM(REPLACE(REPLACE(email, CHAR(13), ''), CHAR(10), ''))) = LOWER(:email)
-        LIMIT 1
-    ");
-    $checkUserStatement->execute([":email" => $email]);
+    $account = findAccountByKode($db, $kode);
 
-    if ($checkUserStatement->fetch(PDO::FETCH_ASSOC) === false) {
-        sendGenericResponse();
+    if ($account !== null) {
+        // Buang CR/LF dan spasi di tepi (data lama bisa menyimpannya).
+        $email = strtolower(trim(preg_replace('/[\r\n]+/', '', $account['email'])));
+
+        if ($email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            // null = akun ini baru saja meminta (masih dalam jeda kirim ulang).
+            $issued = issuePasswordChangeToken($db, $account['role'], $account['id']);
+        }
     }
-
-    // Jeda kirim ulang: permintaan beruntun tidak memicu email baru.
-    $recentRequestStatement = $db->prepare("
-        SELECT id
-        FROM password_resets
-        WHERE email = :email
-          AND created_at >= DATE_SUB(NOW(), INTERVAL " . RESET_RESEND_SECONDS . " SECOND)
-        LIMIT 1
-    ");
-    $recentRequestStatement->execute([":email" => $email]);
-
-    if ($recentRequestStatement->fetch(PDO::FETCH_ASSOC) !== false) {
-        sendGenericResponse();
-    }
-
-    $token = bin2hex(random_bytes(32));
-    $hashedToken = hash('sha256', $token);
-
-    $db->beginTransaction();
-
-    // Hanya satu token aktif per email.
-    $deleteOldStatement = $db->prepare(
-        "DELETE FROM password_resets WHERE email = :email"
-    );
-    $deleteOldStatement->execute([":email" => $email]);
-
-    $insertTokenStatement = $db->prepare("
-        INSERT INTO password_resets (email, token)
-        VALUES (:email, :token)
-    ");
-    $insertTokenStatement->execute([
-        ":email" => $email,
-        ":token" => $hashedToken
-    ]);
-    $resetId = (int) $db->lastInsertId();
-
-    $db->commit();
 } catch (Throwable $error) {
     if ($db->inTransaction()) {
         $db->rollBack();
     }
 
-    sendServerError($error, "ForgotPassword");
+    sendServerError($error, 'ForgotPassword');
+}
+
+// Kode tidak terdaftar, akun tanpa email, atau masih dalam jeda: jawaban tetap
+// sama, tanpa email.
+if ($issued === null) {
+    sendForgotGenericResponse();
 }
 
 // Respons dikirim lebih dulu, baru email dikirim lewat SMTP.
-sendGenericResponse(true);
+sendForgotGenericResponse(true);
 
 try {
-    sendResetLinkEmail($email, $token, RESET_TOKEN_VALID_MINUTES);
+    sendForgotPasswordEmail(
+        $email,
+        $account['nama'],
+        $account['role'],
+        $issued['token'],
+        PASSWORD_CHANGE_VALID_MINUTES
+    );
 } catch (Throwable $error) {
     error_log("[LMS][ForgotPassword][Email] " . get_class($error) . ": " . $error->getMessage());
 
     // Token dibatalkan agar percobaan berikutnya tidak tertahan jeda kirim ulang.
     try {
-        $rollbackTokenStatement = $db->prepare("DELETE FROM password_resets WHERE id = :id");
-        $rollbackTokenStatement->execute([":id" => $resetId]);
+        deletePasswordChangeToken($db, $issued['id']);
     } catch (Throwable $rollbackError) {
         error_log("[LMS][ForgotPassword][Rollback] " . $rollbackError->getMessage());
     }
