@@ -36,7 +36,7 @@ jobs:
 
           # TRUE = simulasi, belum mengunggah atau menghapus file
           # FALSE = deployment sungguhan
-          dry-run: true
+          dry-run: false
 
           # Jangan menghapus seluruh isi folder hosting
           dangerous-clean-slate: false
