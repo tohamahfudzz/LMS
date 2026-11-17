@@ -1,0 +1,698 @@
+/*
+================================================================================
+LOKASI FILE : frontend/assets/css/kelas-detail.css
+GUNA FILE   : Master Stylesheet untuk Desktop Web LMS (EduSiswa / Pelita).
+              Mencakup:
+              1. Master Layout Web Desktop (Sidebar Kiri Starry Navy + Topbar Putih + Content Area)
+              2. Kartu Metrik / Stat Cards (Gaya Pengajar & Gaya Siswa)
+              3. Tabel Data Responsif & Kartu Konten
+              4. Tabs Kelas (Aktivitas & Absensi)
+              5. Form & Pesan Alert (Success / Error)
+================================================================================
+*/
+
+:root {
+    --lms-sidebar-bg: #07193b;
+    --lms-sidebar-gradient: linear-gradient(180deg, #07193b 0%, #0d2858 100%);
+    --lms-sidebar-width: 260px;
+    --lms-topbar-height: 68px;
+    --lms-bg-main: #f1f5f9;
+    --lms-card-bg: #ffffff;
+    --lms-card-radius: 14px;
+    --lms-border-color: #e2e8f0;
+    --lms-text-dark: #0f172a;
+    --lms-text-muted: #64748b;
+    --lms-primary-blue: #1e40af;
+    --lms-accent-cyan: #38bdf8;
+}
+
+/* ================= RESET & DASAR ================= */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--lms-bg-main);
+    color: var(--lms-text-dark);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ================= 1. MASTER LAYOUT WEB DESKTOP ================= */
+.lms-app-wrapper {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* SIDEBAR KIRI (Starry Navy Theme) */
+.lms-sidebar {
+    width: var(--lms-sidebar-width);
+    min-width: var(--lms-sidebar-width);
+    background: var(--lms-sidebar-gradient);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1040;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, margin-left 0.3s ease;
+}
+
+/* Efek Bintang Lembut pada Sidebar */
+.lms-sidebar-stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(#ffffff 1px, transparent 1px),
+                      radial-gradient(#ffffff 1.5px, transparent 1.5px);
+    background-size: 35px 35px, 70px 70px;
+    background-position: 0 0, 15px 15px;
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.lms-sidebar-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.5rem 1.15rem;
+}
+
+/* Profil User di Sidebar */
+.lms-sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.85rem;
+    margin-bottom: 1.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.2s;
+}
+
+.lms-sidebar-user:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+}
+
+.lms-sidebar-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0f172a;
+    flex-shrink: 0;
+    border: 2px solid #ffffff;
+}
+
+.lms-sidebar-userinfo {
+    overflow: hidden;
+}
+
+.lms-sidebar-username {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.lms-sidebar-role {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+/* Menu Navigasi Sidebar */
+.lms-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 auto 0;
+}
+
+.lms-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 500;
+    border-radius: 10px;
+    transition: all 0.18s ease;
+}
+
+.lms-sidebar-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.lms-sidebar-link.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.22);
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.lms-sidebar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+/* Tombol Logout di Bawah Sidebar */
+.lms-sidebar-footer {
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    margin-top: 1rem;
+}
+
+.lms-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 14px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    color: #fda4af;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.18s, color 0.18s;
+}
+
+.lms-logout-btn:hover {
+    background: rgba(225, 29, 72, 0.18);
+    color: #ff4d6d;
+}
+
+/* ================= 2. SISI KANAN (TOPBAR & KONTEN) ================= */
+.lms-main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background-color: var(--lms-bg-main);
+}
+
+/* TOPBAR */
+.lms-topbar {
+    height: var(--lms-topbar-height);
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--lms-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.lms-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.lms-menu-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--lms-text-dark);
+    padding: 4px;
+    cursor: pointer;
+}
+
+.lms-topbar-meta {
+    font-size: 0.88rem;
+    color: var(--lms-text-muted);
+    font-weight: 500;
+}
+
+.lms-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.lms-topbar-btn {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    position: relative;
+    padding: 6px;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, background 0.15s;
+}
+
+.lms-topbar-btn:hover {
+    color: var(--lms-text-dark);
+    background: #f1f5f9;
+}
+
+.lms-topbar-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--lms-text-dark);
+    border: 1.5px solid #cbd5e1;
+    overflow: hidden;
+}
+
+/* AREA KONTEN UTAMA */
+.lms-body-area {
+    padding: 2rem;
+    flex: 1;
+}
+
+/* Banner Sambutan / Greeting */
+.lms-greeting-section {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.lms-greeting-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--lms-text-dark);
+    margin: 0 0 4px 0;
+    letter-spacing: -0.5px;
+}
+
+.lms-greeting-subtitle {
+    font-size: 0.95rem;
+    color: var(--lms-text-muted);
+    margin: 0;
+}
+
+/* Widget Kalender "Hari Ini" */
+.lms-date-badge {
+    background: #e9f0fe;
+    border: 1px solid #d0e1fd;
+    border-radius: 12px;
+    padding: 0.65rem 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #1e40af;
+}
+
+.lms-date-badge-text small {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #3b82f6;
+    letter-spacing: 0.5px;
+}
+
+.lms-date-badge-text strong {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1e3a8a;
+}
+
+/* ================= 3. STAT CARDS / KARTU METRIK ================= */
+.lms-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+/* GAYA STAT PENGAJAR (Soft Light Blue Cards) */
+.lms-stat-card-soft {
+    background: #eaf1f8;
+    border: 1px solid #dbe6f1;
+    border-radius: var(--lms-card-radius);
+    padding: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lms-stat-card-soft:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.lms-stat-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 6px;
+}
+
+.lms-stat-number {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.1;
+    margin-bottom: 6px;
+}
+
+.lms-stat-desc {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* GAYA STAT SISWA (4 Kartu Warna Vibrant sesuai Figma) */
+.lms-stat-card-vibrant {
+    border-radius: var(--lms-card-radius);
+    padding: 1.25rem;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.15s ease;
+}
+
+.lms-stat-card-vibrant:hover {
+    transform: translateY(-2px);
+}
+
+.lms-stat-card-blue   { background: linear-gradient(135deg, #1d61d8 0%, #2563eb 100%); }
+.lms-stat-card-green  { background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%); }
+.lms-stat-card-purple { background: linear-gradient(135deg, #a855f7 0%, #c026d3 100%); }
+.lms-stat-card-gold   { background: linear-gradient(135deg, #ca8a04 0%, #d97706 100%); }
+
+.lms-stat-vibrant-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lms-stat-vibrant-info .label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.lms-stat-vibrant-info .val {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* ================= 4. KARTU KONTEN & TABEL ================= */
+.lms-card {
+    background-color: var(--lms-card-bg);
+    border: 1px solid var(--lms-border-color);
+    border-radius: var(--lms-card-radius);
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+    margin-bottom: 1.75rem;
+    overflow: hidden;
+}
+
+.lms-card-header {
+    padding: 1.15rem 1.5rem;
+    border-bottom: 1px solid var(--lms-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+}
+
+.lms-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--lms-text-dark);
+    margin: 0;
+}
+
+.lms-card-link {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.lms-card-link:hover {
+    text-decoration: underline;
+}
+
+.lms-card-body {
+    padding: 1.5rem;
+}
+
+/* Tabel Elegan LMS */
+.lms-table-wrapper {
+    overflow-x: auto;
+}
+
+.lms-table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.lms-table thead th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+    border-bottom: 1.5px solid var(--lms-border-color);
+    border-top: none;
+}
+
+.lms-table tbody td {
+    padding: 14px 16px;
+    font-size: 0.92rem;
+    color: var(--lms-text-dark);
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.lms-table tbody tr:hover td {
+    background-color: #f8fafc;
+}
+
+.lms-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Tombol Aksi di Tabel */
+.lms-table td a,
+.lms-btn-action {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #eff6ff;
+    color: #2563eb;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.lms-table td a:hover,
+.lms-btn-action:hover {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+/* ================= 5. TABS KELAS (Aktivitas & Absensi) ================= */
+.kelas-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+    background: #e2e8f0;
+    padding: 4px;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.kelas-tabs__button {
+    border: none;
+    background: transparent;
+    padding: 8px 18px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #475569;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.kelas-tabs__button[aria-selected="true"],
+.kelas-tabs__button.active {
+    background: #ffffff;
+    color: #1e40af;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.kelas-panel {
+    background: #ffffff;
+    border-radius: var(--lms-card-radius);
+    border: 1px solid var(--lms-border-color);
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.kelas-panel__section {
+    margin-bottom: 2rem;
+}
+
+.kelas-panel__section:last-child {
+    margin-bottom: 0;
+}
+
+.kelas-panel__section h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: var(--lms-text-dark);
+}
+
+/* ================= 6. FORM FIELDS & PESAN ================= */
+.form-field {
+    margin-bottom: 1.25rem;
+}
+
+.form-field label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 6px;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--lms-border-color);
+    border-radius: 8px;
+    font-size: 0.92rem;
+    background-color: #ffffff;
+    color: var(--lms-text-dark);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    box-sizing: border-box;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Tombol Form */
+form button[type="submit"],
+.btn-lms-primary {
+    padding: 10px 20px;
+    background: #0d234d;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s ease;
+}
+
+form button[type="submit"]:hover,
+.btn-lms-primary:hover {
+    background: #163b7e;
+}
+
+/* Kotak Pesan Error / Sukses */
+.message {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+}
+
+/* ================= 7. RESPONSIVE MEDIA QUERIES ================= */
+@media (max-width: 991.98px) {
+    .lms-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+    }
+
+    .lms-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .lms-menu-toggle {
+        display: block;
+    }
+
+    .lms-topbar {
+        padding: 0 1rem;
+    }
+
+    .lms-body-area {
+        padding: 1.25rem;
+    }
+
+    .lms-greeting-title {
+        font-size: 1.45rem;
+    }
+}
