@@ -1,0 +1,58 @@
+
+name: Deploy LMS ke InfinityFree
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Upload Website ke InfinityFree
+    runs-on: ubuntu-latest
+
+    steps:
+      # Mengambil kode terbaru dari repository GitHub
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      # Mengunggah file ke hosting InfinityFree melalui FTP
+      - name: Deploy ke InfinityFree
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftp
+
+          # Folder sumber yang akan diunggah
+          local-dir: ./
+
+          # Folder tujuan di hosting InfinityFree
+          server-dir: htdocs/
+
+          # TRUE = simulasi, belum mengunggah atau menghapus file
+          # FALSE = deployment sungguhan
+          dry-run: true
+
+          # Jangan menghapus seluruh isi folder hosting
+          dangerous-clean-slate: false
+
+          # File dan folder yang tidak perlu diunggah
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/node_modules/**
+            **/.vscode/**
+            **/.env
+            **/.env.*
+            **/database.php
+          
+            **/mail_environment.php
+            **/vendor/bin/**
+         
+            **/README.md
