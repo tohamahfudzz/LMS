@@ -449,6 +449,115 @@ html, body {
     line-height: 1.2;
 }
 
+/* Tombol Aksi di Bawah Kartu Metrik Admin */
+.lms-stat-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lms-stat-action-btn {
+    display: block;
+    width: 100%;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    transition: opacity 0.18s ease, transform 0.15s ease;
+}
+
+.lms-stat-action-btn:hover {
+    color: #ffffff;
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.lms-btn-blue   { background-color: #1d61d8; }
+.lms-btn-green  { background-color: #16a34a; }
+.lms-btn-purple { background-color: #9333ea; }
+
+/* Grid Dashboard 2 Kolom (Kelas Terbaru & Aktivitas Terbaru) */
+.lms-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 991.98px) {
+    .lms-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Status Badge Aktif */
+.badge-status-active {
+    display: inline-block;
+    padding: 3px 10px;
+    background-color: #dcfce7;
+    color: #15803d;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+/* List Aktivitas Terbaru */
+.lms-activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.lms-activity-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 16px;
+    background: #ffffff;
+    border: 1px solid var(--lms-border-color);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.02);
+    transition: background 0.15s ease;
+}
+
+.lms-activity-item:hover {
+    background: #f8fafc;
+}
+
+.lms-activity-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.lms-activity-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #eff6ff;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lms-activity-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--lms-text-dark);
+    margin: 0;
+}
+
+.lms-activity-time {
+    font-size: 0.78rem;
+    color: var(--lms-text-muted);
+    white-space: nowrap;
+}
+
 /* ================= 4. KARTU KONTEN & TABEL ================= */
 .lms-card {
     background-color: var(--lms-card-bg);
