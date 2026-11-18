@@ -453,31 +453,43 @@ html, body {
 .lms-stat-col {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .lms-stat-action-btn {
-    display: block;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    padding: 8px 14px;
-    border-radius: 10px;
-    font-size: 0.88rem;
-    font-weight: 700;
+    min-height: 44px;
+    padding: 10px 16px;
+    background-color: #1668e3 !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    font-size: 0.92rem !important;
+    font-weight: 700 !important;
     text-align: center;
-    text-decoration: none;
-    color: #ffffff;
-    transition: opacity 0.18s ease, transform 0.15s ease;
+    text-decoration: none !important;
+    box-shadow: 0 4px 12px rgba(22, 104, 227, 0.28) !important;
+    border: none !important;
+    transition: all 0.2s ease !important;
 }
 
 .lms-stat-action-btn:hover {
-    color: #ffffff;
-    opacity: 0.9;
-    transform: translateY(-1px);
+    background-color: #0f52b8 !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(22, 104, 227, 0.38) !important;
+    text-decoration: none !important;
 }
 
-.lms-btn-blue   { background-color: #1d61d8; }
-.lms-btn-green  { background-color: #16a34a; }
-.lms-btn-purple { background-color: #9333ea; }
+.lms-stat-action-btn:active {
+    transform: translateY(0);
+}
+
+.lms-btn-blue   { background-color: #1668e3 !important; }
+.lms-btn-green  { background-color: #1668e3 !important; }
+.lms-btn-purple { background-color: #1668e3 !important; }
 
 /* Grid Dashboard 2 Kolom (Kelas Terbaru & Aktivitas Terbaru) */
 .lms-dashboard-grid {
