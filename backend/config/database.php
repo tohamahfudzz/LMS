@@ -12,7 +12,7 @@ class Database
     // Method untuk membuat dan mengembalikan koneksi database.
     public function getConnection(): ?PDO
     {
-        // Alamat server MySQL.
+         // Alamat server MySQL.
         // Menggunakan localhost (127.0.0.1) karena database
         // dijalankan secara lokal melalui XAMPP.
         $host = '127.0.0.1';

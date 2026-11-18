@@ -14,7 +14,7 @@ GUNA FILE   : Siswa mengunduh file lampiran (soal) yang diunggah pengajar pada t
               Bergantung pada: functions/download.php (sendUploadedFile).
 ================================================================================
 */
-
+date_default_timezone_set('Asia/Jakarta');
 require_once __DIR__ . '/../../../config/database.php';
 require_once __DIR__ . '/../../../functions/response.php';
 require_once __DIR__ . '/../../../functions/auth.php';

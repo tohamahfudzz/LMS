@@ -22,6 +22,9 @@
  * Identitas siswa diambil dari session, bukan dari request.
  */
 
+date_default_timezone_set('Asia/Jakarta');
+
+
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");

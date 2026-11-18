@@ -60,15 +60,15 @@ if ($classId !== false && $title !== '' && $type !== '' && $link !== false) {
         $query = "INSERT INTO materi (id_kelas, id_pengajar, judul, tipe, file, link, waktu_upload) 
                   VALUES (:id_kelas, :id_pengajar, :judul, :tipe, :file, :link, NOW())";
         
-        $stmt = $db->prepare($query);
-        $executed = $stmt->execute([
-            ":id_kelas" => $id_kelas,
-            ":id_pengajar" => $session['id'],
-            ":judul" => $title,
-            ":tipe" => $type,
-            ":file" => $namaFile,
-            ":link" => $link === '' ? null : $link
-        ]);
+            $stmt = $db->prepare($query);
+    $executed = $stmt->execute([
+        ":id_kelas" => $classId,
+        ":id_pengajar" => $session['id'],
+        ":judul" => $title,
+        ":tipe" => $type,
+        ":file" => $namaFile,
+        ":link" => $link === '' ? null : $link
+    ]);
 
         if ($executed) {
             http_response_code(201);
