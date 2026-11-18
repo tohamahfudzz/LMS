@@ -77,15 +77,15 @@ if (
                   VALUES (:id_kelas, :id_pengajar, :judul, :deskripsi, :file, :waktu_mulai, :deadline, 'terbuka', NOW())";
         
         $stmt = $db->prepare($query);
-        $executed = $stmt->execute([
-            ":id_kelas" => $id_kelas,
-            ":id_pengajar" => $session['id'],
-            ":judul" => $title,
-            ":deskripsi" => $description === '' ? null : $description,
-            ":file" => $namaFile,
-            ":waktu_mulai" => $startTime,
-            ":deadline" => $deadline
-        ]);
+$executed = $stmt->execute([
+    ":id_kelas" => $classId,
+    ":id_pengajar" => $session['id'],
+    ":judul" => $title,
+    ":deskripsi" => $description === '' ? null : $description,
+    ":file" => $namaFile,
+    ":waktu_mulai" => $startTime,
+    ":deadline" => $deadline
+]);
 
         if ($executed) {
             http_response_code(201);

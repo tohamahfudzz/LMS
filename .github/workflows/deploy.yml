@@ -51,6 +51,7 @@ jobs:
             **/.env
             **/.env.*
             **/database.php
+            **/api.js
           
             **/mail_environment.php
             **/vendor/bin/**
