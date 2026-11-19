@@ -787,6 +787,301 @@ form button[type="submit"]:hover,
     margin-bottom: 1.25rem;
 }
 
+/* ================= 6B. KOMPONEN ADMIN FIGMA (Paket 3) ================= */
+
+/* Search & Filter Bar */
+.lms-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 1.25rem;
+    background: #ffffff;
+    border: 1px solid var(--lms-border-color);
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.lms-search-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8fafc;
+    border: 1.5px solid var(--lms-border-color);
+    border-radius: 8px;
+    padding: 8px 14px;
+    flex: 1;
+    min-width: 220px;
+}
+
+.lms-search-input-group input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 0.9rem;
+    color: var(--lms-text-dark);
+}
+
+.lms-filter-select {
+    padding: 9px 14px;
+    border: 1.5px solid var(--lms-border-color);
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: var(--lms-text-dark);
+    font-size: 0.9rem;
+    font-weight: 500;
+    min-width: 160px;
+    outline: none;
+}
+
+.lms-btn-cari {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    background-color: #1668e3;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.lms-btn-cari:hover {
+    background-color: #0f52b8;
+}
+
+/* Tombol Aksi Tabel (Edit & Hapus Sesuai Figma) */
+.lms-actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lms-action-icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-decoration: none;
+}
+
+.lms-btn-edit {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+.lms-btn-edit:hover {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+.lms-btn-delete {
+    background-color: #fef2f2;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+}
+
+.lms-btn-delete:hover {
+    background-color: #ef4444;
+    color: #ffffff;
+}
+
+/* Badge Role Pengguna */
+.badge-role-pengajar {
+    display: inline-block;
+    padding: 3px 12px;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.badge-role-siswa {
+    display: inline-block;
+    padding: 3px 12px;
+    background-color: #faf5ff;
+    color: #7e22ce;
+    border: 1px solid #e9d5ff;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* Banner Informasi Form Tambah */
+.lms-info-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    color: #1e40af;
+    font-size: 0.88rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+.lms-info-banner svg {
+    flex-shrink: 0;
+    color: #2563eb;
+}
+
+/* Card Form Tambah */
+.lms-form-container {
+    background: #ffffff;
+    border: 1px solid var(--lms-border-color);
+    border-radius: var(--lms-card-radius);
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+}
+
+.lms-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 2rem;
+}
+
+.btn-lms-batal {
+    padding: 9px 22px;
+    background: #ffffff;
+    border: 1.5px solid var(--lms-border-color);
+    border-radius: 8px;
+    color: #475569;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.btn-lms-batal:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.btn-lms-simpan {
+    padding: 9px 24px;
+    background: #1668e3;
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.btn-lms-simpan:hover {
+    background: #0f52b8;
+}
+
+/* Modal Logout Modern */
+.lms-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1060;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.lms-modal-backdrop.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lms-modal-card {
+    background: #ffffff;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 420px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    transform: scale(0.95);
+    transition: transform 0.2s ease;
+}
+
+.lms-modal-backdrop.show .lms-modal-card {
+    transform: scale(1);
+}
+
+.lms-modal-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #fee2e2;
+    color: #dc2626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+}
+
+.lms-modal-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.lms-modal-desc {
+    font-size: 0.92rem;
+    color: #64748b;
+    margin-bottom: 1.75rem;
+    line-height: 1.5;
+}
+
+.lms-modal-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-modal-cancel {
+    flex: 1;
+    padding: 10px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 8px;
+    color: #475569;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-modal-confirm {
+    flex: 1;
+    padding: 10px;
+    background: #dc2626;
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
 /* ================= 7. RESPONSIVE MEDIA QUERIES ================= */
 @media (max-width: 991.98px) {
     .lms-sidebar {
