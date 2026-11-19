@@ -1,13 +1,15 @@
 <!--
 ================================================================================
 LOKASI FILE : frontend/pengajar/profil.html
-GUNA FILE   : Halaman profil Pengajar. Dibuka dari tombol "Profil" di dashboard.html.
-              Untuk sementara hanya berisi satu pengaturan: ganti email.
-              Email baru yang dimasukkan akan menimpa email lama.
-              - Logika halaman : assets/js/profil.js (dipakai bersama oleh admin,
-                                 pengajar, dan siswa; peran dibaca dari data-role di <body>)
-              - Backend        : backend/api/profil/get.php dan update_email.php
-              Tampilan memakai assets/css/kelas-detail.css.
+GUNA FILE   : Halaman profil Pengajar.
+              Desain Master Layout Desktop Web sesuai Figma (Layer 5: Profil Pengajar).
+              - Catatan Redesain: Pada mockup Figma, tab konten bawah masih kosong.
+                Diredesain dengan tab interaktif (Informasi Pribadi / Ganti Email,
+                Keamanan & Password, dan Informasi Penugasan Kelas).
+              - Hero Banner: Avatar lingkaran, Nama, NIP/Kode, Role, dan Email Aktif
+              - Card Side: Pengaturan Foto Profil (Ubah Foto)
+              - Card Tab: Form Ganti Email & Permintaan Reset Password
+              - Modal Konfirmasi Logout Pengajar
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -16,65 +18,397 @@ GUNA FILE   : Halaman profil Pengajar. Dibuka dari tombol "Profil" di dashboard.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Profil - Pengajar LMS</title>
-    <link rel="stylesheet" href="../assets/css/kelas-detail.css">
+    <title>Profil Saya - Pengajar LMS</title>
+
+    <!-- Bootstrap 5 CSS Lokal -->
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
+    <!-- Master CSS Desktop Web (Figma LMS) -->
+    <link rel="stylesheet" href="../assets/css/kelas-detail.css?v=4">
 </head>
 <body data-role="pengajar">
 
-    <header>
-        <h1>Profil</h1>
-        <p id="welcomeText">Memuat...</p>
-        <button type="button" id="logoutButton">Keluar</button>
-    </header>
+    <div class="lms-app-wrapper">
 
-    <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="profil.html">Profil</a>
-    </nav>
+        <!-- ================= 1. SIDEBAR KIRI (Starry Navy Theme) ================= -->
+        <aside class="lms-sidebar" id="appSidebar">
+            <div class="lms-sidebar-stars"></div>
+            <div class="lms-sidebar-inner">
 
-    <main>
-        <div id="profilMessage" class="message" role="alert" aria-live="polite" hidden></div>
+                <!-- Profil Pengajar di Sidebar -->
+                <a href="profil.html" class="lms-sidebar-user">
+                    <div class="lms-sidebar-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="lms-sidebar-userinfo">
+                        <p class="lms-sidebar-username" id="welcomeText">Memuat...</p>
+                        <p class="lms-sidebar-role">Pengajar LMS</p>
+                    </div>
+                </a>
 
-        <section class="kelas-panel__section">
-            <h2>Informasi Akun</h2>
-            <dl>
-                <dt>Nama</dt>
-                <dd id="profilNama">Memuat...</dd>
-                <dt>Kode</dt>
-                <dd id="profilKode">Memuat...</dd>
-                <dt>Peran</dt>
-                <dd id="profilRole">Memuat...</dd>
-                <dt>Email saat ini</dt>
-                <dd id="profilEmailSaatIni">Memuat...</dd>
-            </dl>
-        </section>
+                <!-- Navigasi Menu Pengajar -->
+                <nav>
+                    <ul class="lms-sidebar-nav">
+                        <li>
+                            <a href="dashboard.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="9" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="5" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="9" x="14" y="12" rx="1"/>
+                                        <rect width="7" height="5" x="3" y="16" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="profil.html" class="lms-sidebar-link active">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                </span>
+                                <span>Profil Saya</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="materi.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                                        <path d="M6 6h10"/>
+                                        <path d="M6 10h10"/>
+                                    </svg>
+                                </span>
+                                <span>Materi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tugas.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                        <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
+                                        <path d="M9 11h6"/>
+                                        <path d="M9 15h4"/>
+                                    </svg>
+                                </span>
+                                <span>Tugas</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="kuis.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="m9 12 2 2 4-4"/>
+                                    </svg>
+                                </span>
+                                <span>Kuis</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="absensi.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                                        <line x1="16" x2="16" y1="2" y2="6"/>
+                                        <line x1="8" x2="8" y1="2" y2="6"/>
+                                        <line x1="3" x2="21" y1="10" y2="10"/>
+                                    </svg>
+                                </span>
+                                <span>Absensi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="absensi-report.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 3v18h18"/>
+                                        <path d="m19 9-5 5-4-4-3 3"/>
+                                    </svg>
+                                </span>
+                                <span>Rekap Capaian Siswa</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
 
-        <section class="kelas-panel__section">
-            <h2>Ganti Email</h2>
-            <form id="emailForm" novalidate>
-                <div class="form-field">
-                    <label for="profilEmail">Email baru</label>
-                    <input type="email" id="profilEmail" name="email" required maxlength="100"
-                        autocomplete="email" placeholder="nama@contoh.com">
+                <!-- Tombol Logout di Bawah Sidebar (Memicu Modal Konfirmasi) -->
+                <div class="lms-sidebar-footer">
+                    <button type="button" class="lms-logout-btn" id="openLogoutModal">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        <span>Keluar</span>
+                    </button>
+                    <!-- Tombol logout asli yang diikat oleh listener -->
+                    <button type="button" id="logoutButton" class="d-none">Keluar</button>
                 </div>
-                <button type="submit" id="saveEmailButton">Simpan Email</button>
-            </form>
-            <p><small>Email baru akan menggantikan email lama.</small></p>
-        </section>
 
+            </div>
+        </aside>
 
-                <section class="kelas-panel__section">
-            <h2>Ganti Password</h2>
-            <div id="passwordMessage" class="message" role="alert" aria-live="polite" hidden></div>
-            <p>Untuk keamanan, password diganti lewat tautan yang dikirim ke email akun Anda.</p>
-            <button type="button" id="requestPasswordButton">Kirim Tautan ke Email Saya</button>
-            <p><small>Pastikan email sudah diisi di bagian Ganti Email di atas. Tautan berlaku 15 menit dan hanya bisa dipakai sekali.</small></p>
-        </section>
-    </main>
+        <!-- ================= 2. AREA KONTEN (Topbar + Main) ================= -->
+        <div class="lms-main-content">
 
+            <!-- Topbar Navigasi -->
+            <header class="lms-topbar">
+                <div class="lms-topbar-left">
+                    <button class="lms-menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" x2="20" y1="12" y2="12"/>
+                            <line x1="4" x2="20" y1="6" y2="6"/>
+                            <line x1="4" x2="20" y1="18" y2="18"/>
+                        </svg>
+                    </button>
+                    <span class="lms-topbar-meta">Pengaturan Akun &bull; Portal Pengajar LMS</span>
+                </div>
+
+                <div class="lms-topbar-right">
+                    <button class="lms-topbar-btn" title="Notifikasi">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                        </svg>
+                    </button>
+                    <a href="profil.html" class="lms-topbar-avatar" title="Lihat Profil">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="lms-body-area">
+
+                <!-- Header Halaman Sesuai Figma -->
+                <div class="mb-4">
+                    <h1 class="lms-page-title mb-1">Profil Pengajar</h1>
+                    <p class="lms-page-subtitle">Kelola informasi data diri, alamat email akun, dan keamanan kata sandi Anda.</p>
+                </div>
+
+                <!-- Alert Pesan Profil -->
+                <div id="profilMessage" class="alert d-none" role="alert" aria-live="polite"></div>
+
+                <!-- Grid Atas: Hero Banner & Card Foto Profil Sesuai Figma -->
+                <div class="row g-4 mb-4">
+                    
+                    <!-- Hero Banner Profil -->
+                    <div class="col-lg-8">
+                        <div class="lms-profile-hero h-100 mb-0">
+                            <div class="lms-profile-avatar-large">
+                                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <span class="lms-profile-camera-badge" title="Ubah Foto">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                        <circle cx="12" cy="13" r="4"/>
+                                    </svg>
+                                </span>
+                            </div>
+
+                            <div class="lms-profile-info-block">
+                                <h2 id="profilNama">Memuat Nama...</h2>
+                                <span class="lms-profile-role-tag">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                    <span id="profilRole">Pengajar</span>
+                                </span>
+
+                                <div class="lms-profile-meta-details mt-2">
+                                    <div><strong>NIP / Kode:</strong> <span id="profilKode">-</span></div>
+                                    <div><strong>Email:</strong> <span id="profilEmailSaatIni">-</span></div>
+                                    <div><strong>Status:</strong> <span class="badge bg-success-subtle text-success">Aktif</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Samping: Foto Profil Sesuai Figma -->
+                    <div class="col-lg-4">
+                        <div class="lms-data-card h-100 d-flex flex-column justify-content-center align-items-center text-center p-4">
+                            <h3 class="h6 fw-bold text-dark mb-3">Foto Profil</h3>
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; border: 2px solid #e2e8f0;">
+                                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2">
+                                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary btn-sm fw-bold px-3 py-2 mb-2" style="border-radius: 8px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                    <circle cx="12" cy="13" r="4"/>
+                                </svg>
+                                Ubah Foto
+                            </button>
+                            <p class="text-muted small mb-0">Format: JPG, PNG, maksimal 2MB</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Card Bawah: Tab Navigasi & Form Pengaturan Profil -->
+                <section class="lms-data-card">
+                    <div class="p-3 p-md-4">
+                        
+                        <!-- Nav Tabs -->
+                        <div class="lms-profile-nav-tabs">
+                            <button type="button" class="lms-profile-tab-btn active" id="tabBtnPribadi">Informasi Pribadi & Email</button>
+                            <button type="button" class="lms-profile-tab-btn" id="tabBtnKeamanan">Keamanan & Password</button>
+                        </div>
+
+                        <!-- Tab 1 Content: Ganti Email -->
+                        <div id="contentTabPribadi">
+                            <h3 class="h6 fw-bold text-dark mb-2">Perbarui Email Akun</h3>
+                            <p class="text-muted small mb-4">Email baru yang dimasukkan akan digunakan untuk login serta menerima tautan reset kata sandi.</p>
+
+                            <form id="emailForm" novalidate class="mb-3" style="max-width: 540px;">
+                                <div class="form-field mb-3">
+                                    <label for="profilEmail" class="form-label fw-bold">Email Baru <span class="text-danger">*</span></label>
+                                    <input
+                                        type="email"
+                                        id="profilEmail"
+                                        name="email"
+                                        required
+                                        maxlength="100"
+                                        autocomplete="email"
+                                        placeholder="nama@email.com"
+                                        class="form-control"
+                                    >
+                                </div>
+                                <button type="submit" id="saveEmailButton" class="btn-lms-simpan">
+                                    Simpan Perubahan Email
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Tab 2 Content: Ganti Password -->
+                        <div id="contentTabKeamanan" class="d-none">
+                            <h3 class="h6 fw-bold text-dark mb-2">Atur Ulang Kata Sandi</h3>
+                            <p class="text-muted small mb-3">Untuk alasan keamanan data, penggantian kata sandi dilakukan secara terverifikasi melalui tautan rahasia yang dikirimkan langsung ke email akun terdaftar Anda.</p>
+
+                            <div id="passwordMessage" class="alert d-none" role="alert" aria-live="polite"></div>
+
+                            <div class="p-3 rounded-3 mb-4" style="background: #eff6ff; border: 1px solid #bfdbfe; max-width: 600px;">
+                                <p class="text-primary small mb-3">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                    Tautan reset password berlaku selama <strong>15 menit</strong> dan hanya dapat digunakan satu kali.
+                                </p>
+                                <button type="button" id="requestPasswordButton" class="btn btn-primary fw-bold" style="border-radius: 8px;">
+                                    Kirim Tautan Reset ke Email Saya
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
+    </div>
+
+    <!-- ================= LAYER 7: MODAL KONFIRMASI LOGOUT ================= -->
+    <div class="lms-modal-backdrop" id="logoutModalBackdrop">
+        <div class="lms-modal-card">
+            <div class="lms-modal-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </div>
+            <h3 class="lms-modal-title">Konfirmasi Keluar</h3>
+            <p class="lms-modal-desc">Apakah Anda yakin ingin keluar dari akun Pengajar LMS?</p>
+            <div class="lms-modal-buttons">
+                <button type="button" class="btn-modal-cancel" id="btnBatalLogout">Batal</button>
+                <button type="button" class="btn-modal-confirm" id="btnKonfirmasiLogout">Ya, Keluar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Logika Profil -->
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/profil.js"></script>
-     <script src="../assets/js/profil-password.js"></script>
+    <script src="../assets/js/profil-password.js"></script>
+
+    <!-- Interaksi UI Tab & Modal Logout -->
+    <script>
+        (function() {
+            // Tab Switcher
+            const tabBtnPribadi = document.getElementById("tabBtnPribadi");
+            const tabBtnKeamanan = document.getElementById("tabBtnKeamanan");
+            const contentPribadi = document.getElementById("contentTabPribadi");
+            const contentKeamanan = document.getElementById("contentTabKeamanan");
+
+            if (tabBtnPribadi && tabBtnKeamanan && contentPribadi && contentKeamanan) {
+                tabBtnPribadi.addEventListener("click", function() {
+                    tabBtnPribadi.classList.add("active");
+                    tabBtnKeamanan.classList.remove("active");
+                    contentPribadi.classList.remove("d-none");
+                    contentKeamanan.classList.add("d-none");
+                });
+
+                tabBtnKeamanan.addEventListener("click", function() {
+                    tabBtnKeamanan.classList.add("active");
+                    tabBtnPribadi.classList.remove("active");
+                    contentKeamanan.classList.remove("d-none");
+                    contentPribadi.classList.add("d-none");
+                });
+            }
+
+            // Modal Logout Konfirmasi
+            const openModalBtn = document.getElementById("openLogoutModal");
+            const modalBackdrop = document.getElementById("logoutModalBackdrop");
+            const btnBatalLogout = document.getElementById("btnBatalLogout");
+            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
+            const realLogoutBtn = document.getElementById("logoutButton");
+
+            if (openModalBtn && modalBackdrop) {
+                openModalBtn.addEventListener("click", function() {
+                    modalBackdrop.classList.add("show");
+                });
+            }
+
+            if (btnBatalLogout && modalBackdrop) {
+                btnBatalLogout.addEventListener("click", function() {
+                    modalBackdrop.classList.remove("show");
+                });
+            }
+
+            if (btnKonfirmasiLogout && realLogoutBtn) {
+                btnKonfirmasiLogout.addEventListener("click", function() {
+                    realLogoutBtn.click();
+                });
+            }
+
+            // Mobile menu drawer
+            const toggleBtn = document.getElementById("menuToggle");
+            const sidebar = document.getElementById("appSidebar");
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener("click", function() {
+                    sidebar.classList.toggle("open");
+                });
+            }
+        })();
+    </script>
 </body>
 </html>

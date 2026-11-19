@@ -1,10 +1,11 @@
 <!--
 ================================================================================
 LOKASI FILE : frontend/pengajar/materi.html
-GUNA FILE   : Halaman pengajar untuk melihat dan mengunggah materi.
-              - Filter per kelas (opsional)
-              - Tabel daftar materi (pengajar/materi/list.php)
-              - Form upload materi (materi/create.php — multipart/form-data)
+GUNA FILE   : Halaman pengajar untuk melihat dan mengunggah materi belajar.
+              Desain Master Layout Desktop Web sesuai Figma (Layer 1: Kelola Materi).
+              - Card 1: Tabel Daftar Materi (dengan filter kelas dan status akses siswa)
+              - Card 2: Form Tambah Materi (Judul, Kelas, Tipe, Dropzone File, Link)
+              - Modal Konfirmasi Logout Pengajar
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -13,93 +14,399 @@ GUNA FILE   : Halaman pengajar untuk melihat dan mengunggah materi.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Materi - Pengajar LMS</title>
+    <title>Kelola Materi - Pengajar LMS</title>
+
+    <!-- Bootstrap 5 CSS Lokal -->
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
+    <!-- Master CSS Desktop Web (Figma LMS) -->
+    <link rel="stylesheet" href="../assets/css/kelas-detail.css?v=4">
 </head>
 <body>
 
-    <header>
-        <h1>Kelola Materi</h1>
-        <p id="welcomeText">Memuat...</p>
-        <button type="button" id="logoutButton">Keluar</button>
-    </header>
+    <div class="lms-app-wrapper">
 
-    <nav>
-        <a href="kuis.html">Kuis</a>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="materi.html">Materi</a>
-        <a href="tugas.html">Tugas</a>
-        <a href="absensi.html">Absensi</a>
-    </nav>
+        <!-- ================= 1. SIDEBAR KIRI (Starry Navy Theme) ================= -->
+        <aside class="lms-sidebar" id="appSidebar">
+            <div class="lms-sidebar-stars"></div>
+            <div class="lms-sidebar-inner">
 
-    <main>
-        <!-- Form upload materi -->
-        <section>
-            <h2>Unggah Materi Baru</h2>
-            <div id="materiMessage" role="alert" aria-live="polite" hidden></div>
+                <!-- Profil Pengajar di Sidebar -->
+                <a href="profil.html" class="lms-sidebar-user">
+                    <div class="lms-sidebar-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="lms-sidebar-userinfo">
+                        <p class="lms-sidebar-username" id="welcomeText">Memuat...</p>
+                        <p class="lms-sidebar-role">Pengajar LMS</p>
+                    </div>
+                </a>
 
-            <form id="createMateriForm" enctype="multipart/form-data" novalidate>
-                <div>
-                    <label for="materiKelas">Kelas</label>
-                    <select id="materiKelas" name="id_kelas" required>
-                        <option value="">-- Memuat kelas --</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="materiJudul">Judul</label>
-                    <input type="text" id="materiJudul" name="judul" required maxlength="200" autocomplete="off">
-                </div>
-                <div>
-                    <label for="materiTipe">Tipe</label>
-                    <select id="materiTipe" name="tipe" required>
-                        <option value="file">File</option>
-                        <option value="link">Link / Video</option>
-                        <option value="teks">Teks</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="materiLink">Link (opsional, untuk tipe link/video)</label>
-                    <input type="url" id="materiLink" name="link" maxlength="500" placeholder="https://...">
-                </div>
-                <div>
-                    <label for="materiFile">File (opsional)</label>
-                    <input type="file" id="materiFile" name="file"
-                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png,.gif,.mp4">
-                </div>
-                <button type="submit" id="createMateriButton">Simpan Materi</button>
-            </form>
-        </section>
+                <!-- Navigasi Menu Pengajar -->
+                <nav>
+                    <ul class="lms-sidebar-nav">
+                        <li>
+                            <a href="dashboard.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="9" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="5" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="9" x="14" y="12" rx="1"/>
+                                        <rect width="7" height="5" x="3" y="16" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="profil.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                </span>
+                                <span>Profil Saya</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="materi.html" class="lms-sidebar-link active">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                                        <path d="M6 6h10"/>
+                                        <path d="M6 10h10"/>
+                                    </svg>
+                                </span>
+                                <span>Materi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tugas.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                        <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
+                                        <path d="M9 11h6"/>
+                                        <path d="M9 15h4"/>
+                                    </svg>
+                                </span>
+                                <span>Tugas</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="kuis.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="m9 12 2 2 4-4"/>
+                                    </svg>
+                                </span>
+                                <span>Kuis</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="absensi.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                                        <line x1="16" x2="16" y1="2" y2="6"/>
+                                        <line x1="8" x2="8" y1="2" y2="6"/>
+                                        <line x1="3" x2="21" y1="10" y2="10"/>
+                                    </svg>
+                                </span>
+                                <span>Absensi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="absensi-report.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 3v18h18"/>
+                                        <path d="m19 9-5 5-4-4-3 3"/>
+                                    </svg>
+                                </span>
+                                <span>Rekap Capaian Siswa</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
 
-        <!-- Filter + daftar -->
-        <section>
-            <h2>Daftar Materi</h2>
-            <div>
-                <label for="filterKelasMateri">Filter Kelas</label>
-                <select id="filterKelasMateri">
-                    <option value="">Semua kelas</option>
-                </select>
+                <!-- Tombol Logout di Bawah Sidebar (Memicu Modal Konfirmasi) -->
+                <div class="lms-sidebar-footer">
+                    <button type="button" class="lms-logout-btn" id="openLogoutModal">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" x2="9" y1="12" y2="12"/>
+                        </svg>
+                        <span>Keluar</span>
+                    </button>
+                    <!-- Tombol logout asli yang diikat oleh listener -->
+                    <button type="button" id="logoutButton" class="d-none">Keluar</button>
+                </div>
+
             </div>
+        </aside>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Judul</th>
-                        <th>Kelas</th>
-                        <th>Tipe</th>
-                        <th>Waktu Upload</th>
-                    </tr>
-                </thead>
-                <tbody id="materiTableBody">
-                    <tr>
-                        <td colspan="5">Memuat data...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-    </main>
+        <!-- ================= 2. AREA KONTEN (Topbar + Main) ================= -->
+        <div class="lms-main-content">
 
-<script src="../assets/js/api.js"></script>
-<script src="../assets/js/auth.js"></script>
-<script src="../assets/js/pengajar-common.js"></script>
-<script src="../assets/js/pengajar-materi.js"></script></body>
+            <!-- Topbar Navigasi -->
+            <header class="lms-topbar">
+                <div class="lms-topbar-left">
+                    <button class="lms-menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" x2="20" y1="12" y2="12"/>
+                            <line x1="4" x2="20" y1="6" y2="6"/>
+                            <line x1="4" x2="20" y1="18" y2="18"/>
+                        </svg>
+                    </button>
+                    <span class="lms-topbar-meta">Kelola Materi Belajar &bull; Portal Pengajar LMS</span>
+                </div>
+
+                <div class="lms-topbar-right">
+                    <button class="lms-topbar-btn" title="Notifikasi">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                        </svg>
+                    </button>
+                    <a href="profil.html" class="lms-topbar-avatar" title="Lihat Profil">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="lms-body-area">
+
+                <!-- Header Halaman Sesuai Figma -->
+                <div class="mb-4">
+                    <h1 class="lms-page-title mb-1">Kelola Materi</h1>
+                    <p class="lms-page-subtitle">Selamat datang di Dashboard pengajar! Kelola dan publikasikan materi pembelajaran untuk kelas Anda.</p>
+                </div>
+
+                <!-- Alert Pesan Aksi -->
+                <div id="materiMessage" class="alert d-none" role="alert" aria-live="polite"></div>
+
+                <!-- ================= CARD 1: DAFTAR MATERI ================= -->
+                <section class="lms-data-card mb-4">
+                    <div class="lms-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div>
+                            <h2 class="lms-card-title mb-1">Daftar Materi</h2>
+                            <p class="lms-card-subtitle text-muted mb-0">Jumlah siswa yang sudah mengakses tiap materi pembelajaran</p>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <label for="filterKelasMateri" class="form-label mb-0 text-muted small fw-bold">Filter:</label>
+                            <select id="filterKelasMateri" class="form-select form-select-sm" style="min-width: 180px;">
+                                <option value="">Semua Kelas</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="lms-custom-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">No</th>
+                                    <th>Judul Materi</th>
+                                    <th>Kelas</th>
+                                    <th>Tipe & Diunggah</th>
+                                    <th style="width: 100px; text-align: center;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="materiTableBody">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">Memuat data materi pembelajaran...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- ================= CARD 2: TAMBAH MATERI ================= -->
+                <section class="lms-data-card">
+                    <div class="lms-card-header">
+                        <h2 class="lms-card-title mb-1">Tambah Materi</h2>
+                        <p class="lms-card-subtitle text-muted mb-0">Unggah dokumen, video, atau tautan bahan pembelajaran baru</p>
+                    </div>
+
+                    <div class="p-3 p-md-4">
+                        <form id="createMateriForm" enctype="multipart/form-data" novalidate>
+                            
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-8">
+                                    <div class="form-field">
+                                        <label for="materiJudul" class="form-label fw-bold">Judul Materi <span class="text-danger">*</span></label>
+                                        <input
+                                            type="text"
+                                            id="materiJudul"
+                                            name="judul"
+                                            required
+                                            maxlength="200"
+                                            autocomplete="off"
+                                            placeholder="Contoh: Pengantar Trigonometri"
+                                            class="form-control"
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-field">
+                                        <label for="materiKelas" class="form-label fw-bold">Kelas <span class="text-danger">*</span></label>
+                                        <select id="materiKelas" name="id_kelas" required class="form-select">
+                                            <option value="">-- Pilih Kelas --</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-4">
+                                    <div class="form-field">
+                                        <label for="materiTipe" class="form-label fw-bold">Tipe Konten <span class="text-danger">*</span></label>
+                                        <select id="materiTipe" name="tipe" required class="form-select">
+                                            <option value="file" selected>Dokumen / File (PDF, DOC, PPT)</option>
+                                            <option value="link">Tautan Web / Video Pembelajaran</option>
+                                            <option value="teks">Teks / Catatan Ringkas</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8" id="linkFieldWrapper">
+                                    <div class="form-field">
+                                        <label for="materiLink" class="form-label fw-bold">Link URL (Tautan Pembelajaran)</label>
+                                        <input
+                                            type="url"
+                                            id="materiLink"
+                                            name="link"
+                                            maxlength="500"
+                                            placeholder="https://youtube.com/... atau https://drive.google.com/..."
+                                            class="form-control"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dashed Dropzone untuk File Materi -->
+                            <div class="mb-4" id="fileFieldWrapper">
+                                <label class="form-label fw-bold">File Materi</label>
+                                <div class="lms-dropzone" id="materiDropzone">
+                                    <div class="lms-dropzone-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                            <polyline points="17 8 12 3 7 8"/>
+                                            <line x1="12" x2="12" y1="3" y2="15"/>
+                                        </svg>
+                                    </div>
+                                    <p class="lms-dropzone-title" id="dropzoneFileName">Pilih atau seret file ke area ini</p>
+                                    <p class="lms-dropzone-subtitle">Mendukung PDF, DOC, PPT, XLS, ZIP, Gambar, atau MP4 (Maksimal 25MB)</p>
+                                    <input
+                                        type="file"
+                                        id="materiFile"
+                                        name="file"
+                                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png,.gif,.mp4"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" id="createMateriButton" class="btn-lms-simpan" style="min-width: 170px;">
+                                    Unggah Materi
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
+    </div>
+
+    <!-- ================= LAYER 7: MODAL KONFIRMASI LOGOUT ================= -->
+    <div class="lms-modal-backdrop" id="logoutModalBackdrop">
+        <div class="lms-modal-card">
+            <div class="lms-modal-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </div>
+            <h3 class="lms-modal-title">Konfirmasi Keluar</h3>
+            <p class="lms-modal-desc">Apakah Anda yakin ingin keluar dari akun Pengajar LMS?</p>
+            <div class="lms-modal-buttons">
+                <button type="button" class="btn-modal-cancel" id="btnBatalLogout">Batal</button>
+                <button type="button" class="btn-modal-confirm" id="btnKonfirmasiLogout">Ya, Keluar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Logika Pengajar -->
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/pengajar-common.js"></script>
+    <script src="../assets/js/pengajar-materi.js"></script>
+
+    <!-- Interaksi UI Tambahan (Dropzone label update & Modal Logout) -->
+    <script>
+        (function() {
+            // Dropzone file name feedback
+            const fileInput = document.getElementById("materiFile");
+            const labelText = document.getElementById("dropzoneFileName");
+            if (fileInput && labelText) {
+                fileInput.addEventListener("change", function() {
+                    if (fileInput.files && fileInput.files.length > 0) {
+                        labelText.textContent = "File terpilih: " + fileInput.files[0].name;
+                    } else {
+                        labelText.textContent = "Pilih atau seret file ke area ini";
+                    }
+                });
+            }
+
+            // Modal Logout Konfirmasi
+            const openModalBtn = document.getElementById("openLogoutModal");
+            const modalBackdrop = document.getElementById("logoutModalBackdrop");
+            const btnBatalLogout = document.getElementById("btnBatalLogout");
+            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
+            const realLogoutBtn = document.getElementById("logoutButton");
+
+            if (openModalBtn && modalBackdrop) {
+                openModalBtn.addEventListener("click", function() {
+                    modalBackdrop.classList.add("show");
+                });
+            }
+
+            if (btnBatalLogout && modalBackdrop) {
+                btnBatalLogout.addEventListener("click", function() {
+                    modalBackdrop.classList.remove("show");
+                });
+            }
+
+            if (btnKonfirmasiLogout && realLogoutBtn) {
+                btnKonfirmasiLogout.addEventListener("click", function() {
+                    realLogoutBtn.click();
+                });
+            }
+
+            // Mobile menu drawer
+            const toggleBtn = document.getElementById("menuToggle");
+            const sidebar = document.getElementById("appSidebar");
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener("click", function() {
+                    sidebar.classList.toggle("open");
+                });
+            }
+        })();
+    </script>
+</body>
 </html>
