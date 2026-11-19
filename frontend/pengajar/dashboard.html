@@ -2,11 +2,10 @@
 ================================================================================
 LOKASI FILE : frontend/pengajar/dashboard.html
 GUNA FILE   : Halaman utama setelah pengajar login.
-              - Sambutan + logout
-              - Daftar kelas yang diajar (pengajar/kelas/list.php)
-              - Tombol "Buka Kelas" menuju kelas-detail.html; materi, tugas, kuis,
-                dan absensi dikelola di dalam halaman kelas tersebut.
-              Tombol "Profil" di header menuju profil.html (ganti email).
+              Desain Master Layout Desktop Web sesuai Figma (Sidebar + Topbar + Content).
+              - Menampilkan sambutan & logout
+              - Menampilkan kartu metrik ringkasan
+              - Menampilkan tabel kelas yang diajar (diisi via pengajar-dashboard.js)
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -16,44 +15,266 @@ GUNA FILE   : Halaman utama setelah pengajar login.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Dashboard Pengajar - LMS</title>
+
+    <!-- Bootstrap 5 CSS Lokal -->
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
+    <!-- Master CSS Desktop Web (Figma LMS) -->
+    <link rel="stylesheet" href="../assets/css/kelas-detail.css">
 </head>
 <body>
 
-    <header>
-        <h1>Dashboard Pengajar</h1>
-        <p id="welcomeText">Memuat...</p>
-        <a href="profil.html" id="profilLink">Profil</a>
-        <button type="button" id="logoutButton">Keluar</button>
-    </header>
+    <div class="lms-app-wrapper">
 
-    <nav>
-        <a href="dashboard.html">Dashboard</a>
-    </nav>
+        <!-- ================= 1. SIDEBAR KIRI (Starry Navy Theme) ================= -->
+        <aside class="lms-sidebar" id="appSidebar">
+            <div class="lms-sidebar-stars"></div>
+            <div class="lms-sidebar-inner">
 
-    <main>
-        <section>
-            <h2>Kelas yang Anda Ajar</h2>
-            <table border="1" cellpadding="6" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Kelas</th>
-                        <th>Jumlah Siswa</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="kelasTableBody">
-                    <tr>
-                        <td colspan="4">Memuat data...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-    </main>
+                <!-- Profil Pengajar di Sidebar -->
+                <a href="profil.html" class="lms-sidebar-user">
+                    <div class="lms-sidebar-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="lms-sidebar-userinfo">
+                        <p class="lms-sidebar-username" id="welcomeText">Memuat...</p>
+                        <p class="lms-sidebar-role">Pengajar LMS</p>
+                    </div>
+                </a>
 
+                <!-- Navigasi Menu -->
+                <nav>
+                    <ul class="lms-sidebar-nav">
+                        <li>
+                            <a href="dashboard.html" class="lms-sidebar-link active">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="9" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="5" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="9" x="14" y="12" rx="1"/>
+                                        <rect width="7" height="5" x="3" y="16" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="profil.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                </span>
+                                <span>Profil Saya</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="materi.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                                        <path d="M6 6h10"/>
+                                        <path d="M6 10h10"/>
+                                    </svg>
+                                </span>
+                                <span>Materi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tugas.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                        <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
+                                        <path d="m9 14 2 2 4-4"/>
+                                    </svg>
+                                </span>
+                                <span>Tugas</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="kuis.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                        <path d="M12 17h.01"/>
+                                    </svg>
+                                </span>
+                                <span>Kuis</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="absensi.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                                        <line x1="16" x2="16" y1="2" y2="6"/>
+                                        <line x1="8" x2="8" y1="2" y2="6"/>
+                                        <line x1="3" x2="21" y1="10" y2="10"/>
+                                        <path d="m9 16 2 2 4-4"/>
+                                    </svg>
+                                </span>
+                                <span>Absensi</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Tombol Logout di Bawah Sidebar -->
+                <div class="lms-sidebar-footer">
+                    <button type="button" id="logoutButton" class="lms-logout-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" x2="9" y1="12" y2="12"/>
+                        </svg>
+                        <span>Keluar</span>
+                    </button>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- ================= 2. AREA KONTEN (Topbar + Main) ================= -->
+        <div class="lms-main-content">
+
+            <!-- Topbar Navigasi -->
+            <header class="lms-topbar">
+                <div class="lms-topbar-left">
+                    <button class="lms-menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" x2="20" y1="12" y2="12"/>
+                            <line x1="4" x2="20" y1="6" y2="6"/>
+                            <line x1="4" x2="20" y1="18" y2="18"/>
+                        </svg>
+                    </button>
+                    <span class="lms-topbar-meta">Portal Pembelajaran &bull; Tahun Ajaran 2026/2027</span>
+                </div>
+
+                <div class="lms-topbar-right">
+                    <button class="lms-topbar-btn" title="Notifikasi">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                        </svg>
+                    </button>
+                    <a href="profil.html" id="profilLink" class="lms-topbar-avatar" title="Lihat Profil">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Isi Halaman Dashboard Pengajar -->
+            <main class="lms-body-area">
+
+                <!-- Header Sambutan & Widget Hari Ini -->
+                <div class="lms-greeting-section">
+                    <div>
+                        <h1 class="lms-greeting-title">Dashboard Pengajar &#128075;</h1>
+                        <p class="lms-greeting-subtitle">Selamat datang di portal akademik. Kelola kelas, materi, dan tugas Anda.</p>
+                    </div>
+                    <div class="lms-date-badge">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                            <line x1="16" x2="16" y1="2" y2="6"/>
+                            <line x1="8" x2="8" y1="2" y2="6"/>
+                            <line x1="3" x2="21" y1="10" y2="10"/>
+                        </svg>
+                        <div class="lms-date-badge-text">
+                            <small>Hari Ini</small>
+                            <strong id="currentDateText">Aktif</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Stat Cards Ringkasan Pengajar (Figma Soft Style) -->
+                <div class="lms-stats-grid">
+                    <div class="lms-stat-card-soft">
+                        <div class="lms-stat-title">Kelas Diampu</div>
+                        <div class="lms-stat-number">&bull;&bull;</div>
+                        <p class="lms-stat-desc">Daftar kelas aktif di bawah</p>
+                    </div>
+                    <div class="lms-stat-card-soft">
+                        <div class="lms-stat-title">Perlu Dinilai</div>
+                        <div class="lms-stat-number">21</div>
+                        <p class="lms-stat-desc">Pengumpulan tugas siswa</p>
+                    </div>
+                    <div class="lms-stat-card-soft">
+                        <div class="lms-stat-title">Kuis Berlangsung</div>
+                        <div class="lms-stat-number">2</div>
+                        <p class="lms-stat-desc">Status kuis aktif</p>
+                    </div>
+                    <div class="lms-stat-card-soft">
+                        <div class="lms-stat-title">Sesi Absensi Aktif</div>
+                        <div class="lms-stat-number">1</div>
+                        <p class="lms-stat-desc">Presensi kehadiran hari ini</p>
+                    </div>
+                </div>
+
+                <!-- Kartu Tabel Kelas yang Diajar -->
+                <section class="lms-card">
+                    <div class="lms-card-header">
+                        <h2 class="lms-card-title">Kelas yang Anda Ajar</h2>
+                    </div>
+                    <div class="lms-card-body p-0">
+                        <div class="lms-table-wrapper">
+                            <table class="lms-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 80px;">No</th>
+                                        <th>Nama Kelas</th>
+                                        <th>Jumlah Siswa</th>
+                                        <th style="width: 140px;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="kelasTableBody">
+                                    <tr>
+                                        <td colspan="4" class="text-center py-4 text-muted">Memuat data...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
+    </div>
+
+    <!-- Script Fungsionalitas Pengajar -->
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/pengajar-common.js"></script>
     <script src="../assets/js/pengajar-dashboard.js"></script>
+
+    <!-- Script UI Sederhana untuk Tanggal & Mobile Drawer -->
+    <script>
+        (function() {
+            // Set tanggal hari ini secara dinamis
+            const dateEl = document.getElementById("currentDateText");
+            if (dateEl) {
+                const now = new Date();
+                const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+                dateEl.textContent = now.toLocaleDateString('id-ID', options);
+            }
+            // Toggle sidebar pada mobile
+            const toggleBtn = document.getElementById("menuToggle");
+            const sidebar = document.getElementById("appSidebar");
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener("click", function() {
+                    sidebar.classList.toggle("open");
+                });
+            }
+        })();
+    </script>
 </body>
 </html>
