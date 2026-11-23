@@ -241,3 +241,374 @@
 .btn-lms-modal-confirm:hover {
     background: #0f52b8;
 }
+
+
+/* ==========================================================================
+   BATCH 2: MODUL SISWA (MATERI, TUGAS, DETAIL, & PENGUMPULAN TUGAS)
+   ========================================================================== */
+
+/* 5. Subject Header Banner (Matematika dll) */
+.lms-subject-banner {
+    background: linear-gradient(135deg, #4b7bec 0%, #3867d6 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 4px 14px rgba(56, 103, 214, 0.15);
+}
+
+.lms-subject-banner h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: #ffffff;
+}
+
+.lms-subject-banner p {
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0;
+}
+
+/* 6. Sub-Navigation Tabs (Materi, Tugas, Kuis, Absensi) */
+.lms-subnav-tabs {
+    display: flex;
+    gap: 2.25rem;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 1.5rem;
+    padding-left: 0.5rem;
+}
+
+.lms-subnav-link {
+    display: inline-block;
+    padding: 0.75rem 0.25rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #64748b;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.15s ease;
+}
+
+.lms-subnav-link:hover {
+    color: #0088ff;
+}
+
+.lms-subnav-link.active {
+    color: #0088ff;
+}
+
+.lms-subnav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #0088ff;
+    border-radius: 3px 3px 0 0;
+}
+
+/* 7. Action List Item Card (Materi & Tugas) */
+.lms-action-list-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1rem 1.35rem;
+    margin-bottom: 0.9rem;
+    text-decoration: none;
+    color: #1e293b;
+    transition: all 0.2s ease;
+}
+
+.lms-action-list-card:hover {
+    border-color: #0088ff;
+    box-shadow: 0 4px 14px rgba(0, 136, 255, 0.09);
+    transform: translateY(-2px);
+    color: #0088ff;
+}
+
+.lms-action-left {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    min-width: 0;
+}
+
+.lms-action-icon-wrap {
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lms-action-icon-video {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.lms-action-icon-text {
+    border: 2px solid #334155;
+    background: #ffffff;
+    color: #0f172a;
+    font-weight: 800;
+    font-size: 1.15rem;
+}
+
+.lms-action-icon-file {
+    background: #f8fafc;
+    border: 1.5px solid #cbd5e1;
+    color: #475569;
+}
+
+.lms-action-info {
+    min-width: 0;
+}
+
+.lms-action-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #0f172a;
+    margin-bottom: 0.15rem;
+    transition: color 0.15s ease;
+}
+
+.lms-action-list-card:hover .lms-action-title {
+    color: #0088ff;
+}
+
+.lms-action-subtitle {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin-bottom: 0;
+}
+
+.lms-action-chevron {
+    color: #94a3b8;
+    transition: transform 0.2s ease, color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.lms-action-list-card:hover .lms-action-chevron {
+    color: #0088ff;
+    transform: translateX(4px);
+}
+
+/* 8. Breadcrumb LMS */
+.lms-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    color: #64748b;
+    margin-bottom: 1.25rem;
+}
+
+.lms-breadcrumb a {
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.lms-breadcrumb a:hover {
+    color: #0088ff;
+}
+
+.lms-breadcrumb-sep {
+    color: #94a3b8;
+}
+
+.lms-breadcrumb-active {
+    color: #0f172a;
+    font-weight: 600;
+}
+
+/* 9. Video Player Container (Aspect Ratio 16:9) */
+.lms-video-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    border-radius: 12px;
+    overflow: hidden;
+    background: #0f172a;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.lms-video-container iframe,
+.lms-video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.lms-video-placeholder-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #eff6ff 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.lms-video-play-btn {
+    width: 68px;
+    height: 48px;
+    background: #ff0000;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(255, 0, 0, 0.35);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.lms-video-placeholder-cover:hover .lms-video-play-btn {
+    transform: scale(1.1);
+    background: #cc0000;
+}
+
+/* 10. File Attachment Box */
+.lms-file-soal-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 0.85rem 1.15rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: #f8fafc;
+    max-width: 420px;
+    margin-top: 0.5rem;
+    transition: border-color 0.2s ease;
+}
+
+.lms-file-soal-card:hover {
+    border-color: #0088ff;
+}
+
+.lms-file-soal-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.lms-file-pdf-icon {
+    width: 38px;
+    height: 38px;
+    background: #fee2e2;
+    color: #dc2626;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+/* 11. Drag & Drop Upload Zone */
+.lms-upload-dropzone {
+    border: 2px dashed #94a3b8;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.lms-upload-dropzone:hover,
+.lms-upload-dropzone.dragover {
+    border-color: #0088ff;
+    background: #f0f7ff;
+}
+
+.lms-upload-icon-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #e0f2fe;
+    color: #0284c7;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.85rem;
+}
+
+.lms-dropzone-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
+}
+
+.lms-dropzone-desc {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 0;
+}
+
+/* 12. Submit Instruction Grey Bar */
+.lms-submit-instruction-bar {
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.88rem;
+    color: #475569;
+    margin-bottom: 1.25rem;
+}
+
+/* 13. Submit Type Switcher Tabs (Upload file / Tulis jawaban) */
+.lms-submit-tabs {
+    display: flex;
+    gap: 1.5rem;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 1.5rem;
+}
+
+.lms-submit-tab-btn {
+    background: none;
+    border: none;
+    padding: 0.6rem 0.25rem;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: #64748b;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.15s ease;
+}
+
+.lms-submit-tab-btn:hover {
+    color: #0088ff;
+}
+
+.lms-submit-tab-btn.active {
+    color: #0088ff;
+}
+
+.lms-submit-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #0088ff;
+    border-radius: 3px 3px 0 0;
+}

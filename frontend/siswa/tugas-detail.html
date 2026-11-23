@@ -1,11 +1,15 @@
 <!--
 ================================================================================
 LOKASI FILE : frontend/siswa/tugas-detail.html
-GUNA FILE   : Halaman detail satu tugas (siswa): info tugas, unduh soal, status
-              pengumpulan saya, dan formulir kumpul / kirim ulang / hapus file.
-              Dibuka dari card tugas di kelas-detail.html:
-                  tugas-detail.html?id_tugas=1&id_kelas=2
-              Logika: assets/js/siswa-tugas-detail.js
+GUNA FILE   : Halaman detail satu tugas (siswa).
+              Desain Master Layout Desktop Web sesuai Figma (Detail Tugas).
+              - Breadcrumb Navigasi: Tugas > Detail tugas
+              - Judul Tugas (Tugas 1)
+              - Meta Info: Dibuat oleh, Deadline, Status (Masih Dibuka)
+              - Deskripsi Tugas
+              - File Soal (PDF)
+              - Tombol Aksi "Kumpulkan Tugas"
+              - Modal Konfirmasi Logout Siswa
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -15,62 +19,333 @@ GUNA FILE   : Halaman detail satu tugas (siswa): info tugas, unduh soal, status
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Detail Tugas - Siswa LMS</title>
-    <link rel="stylesheet" href="../assets/css/kelas-detail.css">
-    <link rel="stylesheet" href="../assets/css/kelas-feed.css">
+
+    <!-- Bootstrap 5 CSS Lokal -->
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
+    <!-- Custom CSS Siswa (meng-import kelas-detail.css) -->
+    <link rel="stylesheet" href="../assets/css/siswa.css?v=2">
 </head>
-<body>
+<body data-role="siswa">
 
-    <header>
-        <h1>Detail Tugas</h1>
-        <p id="welcomeText">Memuat...</p>
-        <button type="button" id="logoutButton">Keluar</button>
-    </header>
+    <div class="lms-app-wrapper">
 
-    <nav>
-        <a id="backToKelasLink" href="kelas.html">Kembali ke kelas</a>
-    </nav>
+        <!-- ================= 1. SIDEBAR KIRI (Starry Navy Theme) ================= -->
+        <aside class="lms-sidebar" id="appSidebar">
+            <div class="lms-sidebar-stars"></div>
+            <div class="lms-sidebar-inner">
 
-    <main>
-        <div id="pageMessage" class="message" role="alert" aria-live="polite" hidden></div>
+                <!-- Profil Siswa di Sidebar -->
+                <a href="profil.html" class="lms-sidebar-user">
+                    <div class="lms-sidebar-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="lms-sidebar-userinfo">
+                        <p class="lms-sidebar-username" id="welcomeText">Budi Santoso</p>
+                        <p class="lms-sidebar-role">budisansss@gmail.com</p>
+                    </div>
+                </a>
 
-        <section id="detailSection" hidden>
-            <h2 id="dJudul">-</h2>
-            <dl class="detail-list">
-                <dt>Kelas</dt><dd id="dKelas">-</dd>
-                <dt>Dibuat</dt><dd id="dDibuat">-</dd>
-                <dt>Waktu mulai</dt><dd id="dMulai">-</dd>
-                <dt>Deadline</dt><dd id="dDeadline">-</dd>
-                <dt>Status tugas</dt><dd id="dStatus">-</dd>
-                <dt>Deskripsi</dt><dd id="dDeskripsi" class="detail-deskripsi">-</dd>
-                <dt>Soal / lampiran</dt><dd id="dLampiran">-</dd>
-                <dt>Pengumpulan saya</dt><dd id="dPengumpulan">-</dd>
-            </dl>
-        </section>
+                <!-- Navigasi Menu Siswa -->
+                <nav>
+                    <ul class="lms-sidebar-nav">
+                        <li>
+                            <a href="dashboard.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="9" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="5" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="9" x="14" y="12" rx="1"/>
+                                        <rect width="7" height="5" x="3" y="16" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="profil.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                </span>
+                                <span>Profil Saya</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="materi.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                                        <path d="M6 6h10"/>
+                                        <path d="M6 10h10"/>
+                                    </svg>
+                                </span>
+                                <span>Materi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tugas.html" class="lms-sidebar-link active">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                        <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
+                                        <path d="M9 11h6"/>
+                                        <path d="M9 15h4"/>
+                                    </svg>
+                                </span>
+                                <span>Tugas</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="kuis-detail.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="m9 12 2 2 4-4"/>
+                                    </svg>
+                                </span>
+                                <span>Kuis</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="kelas-detail.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                                        <line x1="16" x2="16" y1="2" y2="6"/>
+                                        <line x1="8" x2="8" y1="2" y2="6"/>
+                                        <line x1="3" x2="21" y1="10" y2="10"/>
+                                    </svg>
+                                </span>
+                                <span>Absensi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="kelas-detail.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                                    </svg>
+                                </span>
+                                <span>Rekap Capaian Siswa</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="ubah-password.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                </span>
+                                <span>Ubah Password</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
 
-        <section id="submitSection" hidden>
-            <h2 id="submitTitle">Kumpulkan Tugas</h2>
-            <div id="uploadMessage" class="message" role="alert" aria-live="polite" hidden></div>
-
-            <form id="uploadTugasForm" enctype="multipart/form-data" novalidate>
-                <div class="form-field">
-                    <label for="uploadTeks">Jawaban teks (opsional)</label>
-                    <textarea id="uploadTeks" name="teks" rows="4" maxlength="5000"></textarea>
+                <!-- Tombol Logout -->
+                <div class="lms-sidebar-footer">
+                    <button type="button" class="lms-sidebar-logout-btn" id="openLogoutModal">
+                        <span class="lms-sidebar-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                        </span>
+                        <span>Logout</span>
+                    </button>
+                    <!-- Tombol logout tersembunyi untuk auth.js -->
+                    <button type="button" id="logoutButton" class="d-none">Keluar</button>
                 </div>
-                <div class="form-field">
-                    <label for="uploadFile">File (opsional)</label>
-                    <input type="file" id="uploadFile" name="file"
-                        accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip,.jpg,.jpeg,.png">
-                </div>
-                <button type="submit" id="uploadTugasButton">Kirim Pengumpulan</button>
-            </form>
-            <p><small>Minimal isi teks atau unggah file. Anda bisa mengirim ulang selama tugas masih terbuka; bagian yang dikosongkan tetap memakai isi pengumpulan sebelumnya.</small></p>
-        </section>
-    </main>
 
+            </div>
+        </aside>
+
+        <!-- ================= 2. MAIN CONTENT ================= -->
+        <div class="lms-main-content">
+            
+            <!-- Topbar Header -->
+            <header class="lms-topbar">
+                <button type="button" class="lms-topbar-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+            </header>
+
+            <!-- Main Body Wrapper -->
+            <main class="lms-content-body">
+
+                <!-- Alert Pesan -->
+                <div id="pageMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+                <!-- Breadcrumb Navigasi Sesuai Figma -->
+                <div class="lms-breadcrumb">
+                    <a href="tugas.html" id="backToKelasLink">Tugas</a>
+                    <span class="lms-breadcrumb-sep">&gt;</span>
+                    <span class="lms-breadcrumb-active">Detail tugas</span>
+                </div>
+
+                <!-- Card Container Detail Tugas Sesuai Figma -->
+                <div class="lms-data-card p-4">
+
+                    <!-- Judul Tugas -->
+                    <h2 class="h4 fw-bold text-dark mb-3" id="dJudul">Tugas 1</h2>
+
+                    <!-- Meta Info: Pembuat, Deadline, Status -->
+                    <div class="d-flex flex-column gap-2 mb-4">
+                        <div class="d-flex align-items-center gap-2 text-secondary small">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            <span>Dibuat oleh : <strong class="text-dark" id="dPembuat">Muh Toha Mahfud</strong></span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 text-secondary small">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            <span>Deadline : <strong class="text-dark" id="dDeadline">18-10-2026</strong></span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 small">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="9 12 12 15 16 10"/>
+                            </svg>
+                            <span class="text-secondary">Status : <strong class="text-success fw-bold" id="dStatus">Masih Dibuka</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Bagian Deskripsi Sesuai Figma -->
+                    <div class="mb-4">
+                        <h3 class="h6 fw-bold text-dark mb-2">Deskripsi</h3>
+                        <p class="text-secondary leading-relaxed mb-0" id="dDeskripsi">
+                            Lorem Ipsum Dolor sit Amet.............. Silakan kerjakan soal matematika pada berkas lampiran dengan teliti, kemudian kumpulkan jawaban Anda sebelum batas waktu yang ditentukan.
+                        </p>
+                    </div>
+
+                    <!-- Bagian File Soal Sesuai Figma -->
+                    <div class="mb-4">
+                        <h3 class="h6 fw-bold text-dark mb-2">File Soal</h3>
+                        <div id="dLampiran">
+                            <div class="lms-file-soal-card">
+                                <div class="lms-file-soal-left">
+                                    <div class="lms-file-pdf-icon">PDF</div>
+                                    <span class="fw-medium small text-dark">Soal_tugas_Matematika_1.pdf(1,3mb)</span>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-primary fw-semibold" style="border-radius: 6px;">
+                                    Unduh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi Kumpulkan Tugas Sesuai Figma -->
+                    <div class="d-flex justify-content-end pt-3 border-top">
+                        <a href="tugas-submit.html?id_tugas=1" class="btn btn-primary fw-bold px-4 py-2" style="border-radius: 8px;">
+                            Kumpulkan Tugas
+                        </a>
+                    </div>
+
+                    <!-- Elemen Kompatibilitas Tersembunyi untuk siswa-tugas-detail.js -->
+                    <section id="detailSection" class="d-none">
+                        <span id="dKelas">-</span>
+                        <span id="dDibuat">-</span>
+                        <span id="dMulai">-</span>
+                        <span id="dPengumpulan">-</span>
+                    </section>
+
+                    <section id="submitSection" class="d-none">
+                        <h2 id="submitTitle">Kumpulkan Tugas</h2>
+                        <div id="uploadMessage" class="message" role="alert" aria-live="polite" hidden></div>
+                        <form id="uploadTugasForm" enctype="multipart/form-data" novalidate>
+                            <textarea id="uploadTeks" name="teks"></textarea>
+                            <input type="file" id="uploadFile" name="file">
+                            <button type="submit" id="uploadTugasButton">Kirim Pengumpulan</button>
+                        </form>
+                    </section>
+
+                </div>
+
+            </main>
+        </div>
+
+    </div>
+
+    <!-- ================= MODAL KONFIRMASI LOGOUT SISWA ================= -->
+    <div class="lms-modal-backdrop" id="logoutModalBackdrop">
+        <div class="lms-logout-modal-card">
+            <div class="lms-logout-icon-wrap">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </div>
+            <h3 class="lms-logout-modal-title">Konfirmasi Logout</h3>
+            <p class="lms-logout-modal-text">Apakah Anda yakin ingin keluar dari akun LMS ?</p>
+            <div class="lms-logout-modal-actions">
+                <button type="button" class="btn-lms-modal-cancel" id="btnBatalLogout">Batal</button>
+                <button type="button" class="btn-lms-modal-confirm" id="btnKonfirmasiLogout">Ya, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Logika Siswa -->
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/siswa-common.js"></script>
     <script src="../assets/js/pengajar-kelas-download.js"></script>
     <script src="../assets/js/siswa-tugas-detail.js"></script>
+
+    <!-- Modal Logout & Mobile Drawer Script -->
+    <script>
+        (function() {
+            const openModalBtn = document.getElementById("openLogoutModal");
+            const modalBackdrop = document.getElementById("logoutModalBackdrop");
+            const btnBatalLogout = document.getElementById("btnBatalLogout");
+            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
+            const realLogoutBtn = document.getElementById("logoutButton");
+
+            if (openModalBtn && modalBackdrop) {
+                openModalBtn.addEventListener("click", function() {
+                    modalBackdrop.classList.add("show");
+                });
+            }
+            if (btnBatalLogout && modalBackdrop) {
+                btnBatalLogout.addEventListener("click", function() {
+                    modalBackdrop.classList.remove("show");
+                });
+            }
+            if (btnKonfirmasiLogout) {
+                btnKonfirmasiLogout.addEventListener("click", function() {
+                    if (typeof logout === "function") {
+                        logout();
+                    } else if (realLogoutBtn) {
+                        realLogoutBtn.click();
+                    }
+                });
+            }
+
+            const toggleBtn = document.getElementById("menuToggle");
+            const sidebar = document.getElementById("appSidebar");
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener("click", function() {
+                    sidebar.classList.toggle("open");
+                });
+            }
+        })();
+    </script>
 </body>
 </html>
