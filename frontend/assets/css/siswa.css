@@ -612,3 +612,296 @@
     background-color: #0088ff;
     border-radius: 3px 3px 0 0;
 }
+
+
+/* ==========================================================================
+   BATCH 3: MODUL SISWA (ABSENSI, DAFTAR KUIS, PENGERJAAN KUIS, & REPORT)
+   ========================================================================== */
+
+/* 14. Absensi Table & Status Badge */
+.lms-attendance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.lms-attendance-table th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 12px 14px;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.lms-attendance-table td {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+    vertical-align: middle;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.lms-attendance-table td:first-child,
+.lms-attendance-table td:nth-child(2) {
+    text-align: left;
+}
+
+.badge-hadir {
+    background-color: #dcfce7;
+    color: #15803d;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.84rem;
+    display: inline-block;
+}
+
+.badge-izin {
+    background-color: #fef9c3;
+    color: #a16207;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.84rem;
+    display: inline-block;
+}
+
+.badge-sakit {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.84rem;
+    display: inline-block;
+}
+
+.badge-absen {
+    background-color: #f1f5f9;
+    color: #64748b;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.84rem;
+    display: inline-block;
+}
+
+.btn-submit-attendance {
+    background: #0088ff;
+    color: #ffffff;
+    border: none;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.btn-submit-attendance:hover {
+    background: #006cd8;
+    color: #ffffff;
+}
+
+/* 15. Daftar Kuis Cards & Statistik */
+.lms-kuis-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lms-kuis-card:hover {
+    box-shadow: 0 4px 14px rgba(0, 136, 255, 0.08);
+    transform: translateY(-2px);
+}
+
+.lms-kuis-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    min-width: 0;
+}
+
+.lms-kuis-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lms-kuis-icon-blue { background: #0088ff; color: #ffffff; }
+.lms-kuis-icon-magenta { background: #d946ef; color: #ffffff; }
+.lms-kuis-icon-cyan { background: #06b6d4; color: #ffffff; }
+.lms-kuis-icon-green { background: #22c55e; color: #ffffff; }
+
+.lms-stat-card-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.lms-stat-pill {
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.lms-stat-blue { background: #e0f2fe; color: #0284c7; }
+.lms-stat-cyan { background: #e0f7fa; color: #00838f; }
+.lms-stat-green { background: #dcfce7; color: #15803d; }
+.lms-stat-red { background: #fee2e2; color: #b91c1c; }
+
+/* 16. Pengerjaan Kuis Interaktif (Timer & Number Grid) */
+.lms-timer-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.lms-timer-digit {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: 1.5px;
+}
+
+.lms-number-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 1.25rem;
+}
+
+.lms-number-box {
+    height: 40px;
+    border-radius: 8px;
+    border: 1.5px solid #cbd5e1;
+    background: #ffffff;
+    font-weight: 700;
+    font-size: 0.92rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.lms-number-box.answered {
+    background: #22c55e;
+    color: #ffffff;
+    border-color: #22c55e;
+}
+
+.lms-number-box.current {
+    background: #0088ff;
+    color: #ffffff;
+    border-color: #0088ff;
+}
+
+/* Radio Options Pilihan Ganda */
+.lms-quiz-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 1rem 1.25rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    background: #f8fafc;
+    margin-bottom: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.lms-quiz-option:hover {
+    border-color: #93c5fd;
+    background: #f0f7ff;
+}
+
+.lms-quiz-option.selected {
+    border-color: #0088ff;
+    background: #eaf4ff;
+}
+
+.lms-option-letter {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #334155;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.88rem;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+}
+
+.lms-quiz-option.selected .lms-option-letter {
+    background: #0088ff;
+    color: #ffffff;
+}
+
+/* 17. Report Capaian Belajar Metrik */
+.lms-report-metric-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.lms-metric-number {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.1;
+    margin-top: 0.35rem;
+}
+
+.lms-metric-icon-wrap {
+    width: 54px;
+    height: 54px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lms-metric-icon-blue { background: #eff6ff; color: #2563eb; }
+.lms-metric-icon-red { background: #fef2f2; color: #ef4444; }
+.lms-metric-icon-green { background: #f0fdf4; color: #16a34a; }
+.lms-metric-icon-yellow { background: #fefce8; color: #ca8a04; }
+
+.badge-target {
+    background: #eafbe7;
+    color: #2e7d32;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.82rem;
+}

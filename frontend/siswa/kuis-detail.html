@@ -1,12 +1,16 @@
 <!--
 ================================================================================
 LOKASI FILE : frontend/siswa/kuis-detail.html
-GUNA FILE   : Halaman detail satu kuis (siswa): info kuis, status, nilai, dan
-              tombol Kerjakan / Lanjutkan. Dibuka dari card kuis di kelas-detail.html:
-                  kuis-detail.html?id_kuis=1&id_kelas=2
-              Mengerjakan kuis tetap di kuis-kerjakan.html. Halaman ini ada supaya
-              kuis TIDAK langsung dimulai hanya karena card diklik.
-              Logika: assets/js/siswa-kuis-detail.js
+GUNA FILE   : Halaman Pengerjaan Kuis Interaktif Siswa LMS.
+              Desain Master Layout Desktop Web sesuai Figma (Modul Siswa - Kuis).
+              - Navigasi: &larr; Kembali ke Daftar Kuis
+              - Header Info Ujian: Icon mapel, badge, judul kuis, info deadline, soal, durasi
+              - Box Countdown Timer Waktu Berjalan (24:17)
+              - Bar Progress Pengerjaan Soal (Soal 3 dari 10)
+              - Soal Pertanyaan Pilihan Ganda Interaktif (opsi A, B, C, D)
+              - Tombol Navigasi Soal: Sebelumnya & Selanjutnya / Kumpulkan Jawaban
+              - Sidebar Navigasi Nomor Soal Grid Box (nomor 1 s/d 10) dengan status warna
+              - Modal Konfirmasi Logout Siswa
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -15,47 +19,447 @@ GUNA FILE   : Halaman detail satu kuis (siswa): info kuis, status, nilai, dan
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Detail Kuis - Siswa LMS</title>
-    <link rel="stylesheet" href="../assets/css/kelas-detail.css">
-    <link rel="stylesheet" href="../assets/css/kelas-feed.css">
+    <title>Pengerjaan Kuis - Siswa LMS</title>
+
+    <!-- Bootstrap 5 CSS Lokal -->
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
+    <!-- Custom CSS Siswa (meng-import kelas-detail.css) -->
+    <link rel="stylesheet" href="../assets/css/siswa.css?v=3">
 </head>
-<body>
+<body data-role="siswa">
 
-    <header>
-        <h1>Detail Kuis</h1>
-        <p id="welcomeText">Memuat...</p>
-        <button type="button" id="logoutButton">Keluar</button>
-    </header>
+    <div class="lms-app-wrapper">
 
-    <nav>
-        <a id="backToKelasLink" href="kelas.html">Kembali ke kelas</a>
-    </nav>
+        <!-- ================= 1. SIDEBAR KIRI (Starry Navy Theme) ================= -->
+        <aside class="lms-sidebar" id="appSidebar">
+            <div class="lms-sidebar-stars"></div>
+            <div class="lms-sidebar-inner">
 
-    <main>
-        <div id="pageMessage" class="message" role="alert" aria-live="polite" hidden></div>
+                <!-- Profil Siswa di Sidebar -->
+                <a href="profil.html" class="lms-sidebar-user">
+                    <div class="lms-sidebar-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="lms-sidebar-userinfo">
+                        <p class="lms-sidebar-username" id="welcomeText">Budi Santoso</p>
+                        <p class="lms-sidebar-role">budisansss@gmail.com</p>
+                    </div>
+                </a>
 
-        <section id="detailSection" hidden>
-            <h2 id="dJudul">-</h2>
-            <dl class="detail-list">
-                <dt>Kelas</dt><dd id="dKelas">-</dd>
-                <dt>Dibuat</dt><dd id="dDibuat">-</dd>
-                <dt>Deskripsi</dt><dd id="dDeskripsi" class="detail-deskripsi">-</dd>
-                <dt>Durasi</dt><dd id="dDurasi">-</dd>
-                <dt>Jumlah soal</dt><dd id="dSoal">-</dd>
-                <dt>Waktu mulai</dt><dd id="dMulai">-</dd>
-                <dt>Waktu selesai</dt><dd id="dSelesai">-</dd>
-                <dt>Ketersediaan</dt><dd id="dKetersediaan">-</dd>
-                <dt>Status saya</dt><dd id="dStatus">-</dd>
-                <dt>Nilai</dt><dd id="dNilai">-</dd>
-                <dt>Aksi</dt><dd id="dAksi">-</dd>
-            </dl>
-            <p><small>Kuis hanya bisa dikerjakan satu kali. Waktu langsung berjalan setelah kuis dimulai.</small></p>
-        </section>
-    </main>
+                <!-- Navigasi Menu Siswa -->
+                <nav>
+                    <ul class="lms-sidebar-nav">
+                        <li>
+                            <a href="dashboard.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="9" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="5" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="9" x="14" y="12" rx="1"/>
+                                        <rect width="7" height="5" x="3" y="16" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="profil.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                </span>
+                                <span>Profil Saya</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="materi.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                                        <path d="M6 6h10"/>
+                                        <path d="M6 10h10"/>
+                                    </svg>
+                                </span>
+                                <span>Materi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tugas.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                        <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
+                                        <path d="M9 11h6"/>
+                                        <path d="M9 15h4"/>
+                                    </svg>
+                                </span>
+                                <span>Tugas</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="kuis.html" class="lms-sidebar-link active">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                                        <path d="m9 12 2 2 4-4"/>
+                                    </svg>
+                                </span>
+                                <span>Kuis</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="absensi.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                                        <line x1="16" x2="16" y1="2" y2="6"/>
+                                        <line x1="8" x2="8" y1="2" y2="6"/>
+                                        <line x1="3" x2="21" y1="10" y2="10"/>
+                                    </svg>
+                                </span>
+                                <span>Absensi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="report.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                                    </svg>
+                                </span>
+                                <span>Rekap Capaian Siswa</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="ubah-password.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                </span>
+                                <span>Ubah Password</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
 
+                <!-- Tombol Logout -->
+                <div class="lms-sidebar-footer">
+                    <button type="button" class="lms-sidebar-logout-btn" id="openLogoutModal">
+                        <span class="lms-sidebar-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                        </span>
+                        <span>Logout</span>
+                    </button>
+                    <!-- Tombol logout tersembunyi untuk auth.js -->
+                    <button type="button" id="logoutButton" class="d-none">Keluar</button>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- ================= 2. MAIN CONTENT ================= -->
+        <div class="lms-main-content">
+            
+            <!-- Topbar Header -->
+            <header class="lms-topbar">
+                <button type="button" class="lms-topbar-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+            </header>
+
+            <!-- Main Body Wrapper -->
+            <main class="lms-content-body">
+
+                <!-- Alert Pesan -->
+                <div id="pageMessage" class="message" role="alert" aria-live="polite" hidden></div>
+
+                <!-- Navigasi Kembali ke Kuis Sesuai Figma -->
+                <div class="mb-3">
+                    <a href="kuis.html" class="text-secondary text-decoration-none small fw-semibold d-inline-flex align-items-center gap-1" id="backToKelasLink">
+                        &larr; Kembali ke Daftar Kuis
+                    </a>
+                </div>
+
+                <div class="row g-4">
+                    
+                    <!-- ================= KOLOM KIRI: SOAL & JAWABAN ================= -->
+                    <div class="col-lg-8">
+                        
+                        <!-- Header Card Kuis Sesuai Figma -->
+                        <div class="lms-data-card p-3 mb-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="lms-kuis-icon-box lms-kuis-icon-blue">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-semibold mb-1" id="dKelas">Matematika</span>
+                                    <h2 class="h6 fw-bold text-dark mb-1" id="dJudul">Kuis: Persamaan Linear Dua Variabel</h2>
+                                    <p class="text-secondary small mb-0" id="dDeskripsi">Kerjakan soal berikut dengan teliti. Pilih jawaban yang paling tepat.</p>
+                                </div>
+                            </div>
+
+                            <!-- Meta Info Badge Sesuai Figma -->
+                            <div class="d-flex flex-wrap gap-2 mt-3 pt-2 border-top small text-secondary">
+                                <span class="bg-light px-2 py-1 rounded border">📅 <strong id="dSelesai">25 Agustus 2026, 23:59</strong></span>
+                                <span class="bg-light px-2 py-1 rounded border">📝 <strong id="dSoal">10 Soal</strong></span>
+                                <span class="bg-light px-2 py-1 rounded border">⏱ <strong id="dDurasi">30 Menit</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar Pengerjaan Sesuai Figma -->
+                        <div class="lms-data-card p-3 mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="small fw-bold text-success">Progress Kuis</span>
+                                <span class="small text-secondary" id="progressText">Soal 3 dari 10</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 30%" id="quizProgressBar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+
+                        <!-- Card Pertanyaan Soal Sesuai Figma -->
+                        <div class="lms-data-card p-4">
+                            
+                            <div class="mb-3">
+                                <span class="badge bg-primary-subtle text-primary fw-bold mb-2">Soal 3</span>
+                                <h3 class="h6 fw-bold text-dark leading-relaxed" id="questionText">
+                                    Himpunan penyelesaian dari sistem persamaan linear 2x + y = 11 dan x - y = 1 adalah...
+                                </h3>
+                            </div>
+
+                            <!-- Opsi Jawaban Radio Sesuai Figma -->
+                            <div class="lms-quiz-options-wrap mb-4">
+                                
+                                <div class="lms-quiz-option" data-option="A">
+                                    <div class="lms-option-letter">A</div>
+                                    <div class="lms-option-text small text-dark">{ (4, 3) }</div>
+                                </div>
+
+                                <div class="lms-quiz-option selected" data-option="B">
+                                    <div class="lms-option-letter">B</div>
+                                    <div class="lms-option-text small text-dark">{ (3, 4) }</div>
+                                </div>
+
+                                <div class="lms-quiz-option" data-option="C">
+                                    <div class="lms-option-letter">C</div>
+                                    <div class="lms-option-text small text-dark">{ (5, 1) }</div>
+                                </div>
+
+                                <div class="lms-quiz-option" data-option="D">
+                                    <div class="lms-option-letter">D</div>
+                                    <div class="lms-option-text small text-dark">{ (2, 7) }</div>
+                                </div>
+
+                            </div>
+
+                            <!-- Tombol Aksi Navigasi Soal Sesuai Figma -->
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                                <button type="button" class="btn btn-outline-secondary fw-semibold px-4 py-2" style="border-radius: 8px;" id="btnPrevQuestion">
+                                    &larr; Sebelumnya
+                                </button>
+                                <button type="button" class="btn btn-primary fw-bold px-4 py-2" style="border-radius: 8px;" id="btnNextQuestion">
+                                    Selanjutnya &rarr;
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <!-- Elemen Kompatibilitas Tersembunyi untuk siswa-kuis-detail.js -->
+                        <section id="detailSection" class="d-none">
+                            <span id="dDibuat">-</span>
+                            <span id="dMulai">-</span>
+                            <span id="dKetersediaan">-</span>
+                            <span id="dStatus">-</span>
+                            <span id="dNilai">-</span>
+                            <div id="dAksi"></div>
+                        </section>
+
+                    </div>
+
+                    <!-- ================= KOLOM KANAN: TIMER & GRID NOMOR ================= -->
+                    <div class="col-lg-4">
+                        
+                        <!-- Box Sisa Waktu Countdown Sesuai Figma (24:17) -->
+                        <div class="lms-timer-card mb-4">
+                            <div class="d-flex align-items-center justify-content-center gap-2 text-secondary mb-1">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                <span class="fw-semibold small">Sisa waktu</span>
+                            </div>
+                            <div class="lms-timer-digit" id="liveTimerCountdown">24:17</div>
+                        </div>
+
+                        <!-- Card Navigasi Nomor Soal Grid Box Sesuai Figma -->
+                        <div class="lms-data-card p-4">
+                            
+                            <h4 class="h6 fw-bold text-dark mb-3">Nomor Soal</h4>
+
+                            <!-- Grid 1-10 Sesuai Figma -->
+                            <div class="lms-number-grid">
+                                <div class="lms-number-box answered" data-no="1">1</div>
+                                <div class="lms-number-box answered" data-no="2">2</div>
+                                <div class="lms-number-box current" data-no="3">3</div>
+                                <div class="lms-number-box" data-no="4">4</div>
+                                <div class="lms-number-box" data-no="5">5</div>
+                                <div class="lms-number-box" data-no="6">6</div>
+                                <div class="lms-number-box" data-no="7">7</div>
+                                <div class="lms-number-box" data-no="8">8</div>
+                                <div class="lms-number-box" data-no="9">9</div>
+                                <div class="lms-number-box" data-no="10">10</div>
+                            </div>
+
+                            <!-- Petunjuk Sesuai Figma -->
+                            <ul class="text-secondary small ps-3 mb-0" style="line-height: 1.7; font-size: 0.8rem;">
+                                <li>Pilih salah satu jawaban yang paling tepat.</li>
+                                <li>Setiap soal memiliki nilai yang sama.</li>
+                                <li>Anda tidak dapat kembali ke soal sebelumnya jika sudah menjawab (Kecuali untuk soal terakhir).</li>
+                                <li>Pastikan koneksi internet tetap stabil.</li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </main>
+        </div>
+
+    </div>
+
+    <!-- ================= MODAL KONFIRMASI LOGOUT SISWA ================= -->
+    <div class="lms-modal-backdrop" id="logoutModalBackdrop">
+        <div class="lms-logout-modal-card">
+            <div class="lms-logout-icon-wrap">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </div>
+            <h3 class="lms-logout-modal-title">Konfirmasi Logout</h3>
+            <p class="lms-logout-modal-text">Apakah Anda yakin ingin keluar dari akun LMS ?</p>
+            <div class="lms-logout-modal-actions">
+                <button type="button" class="btn-lms-modal-cancel" id="btnBatalLogout">Batal</button>
+                <button type="button" class="btn-lms-modal-confirm" id="btnKonfirmasiLogout">Ya, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Logika Siswa -->
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/siswa-common.js"></script>
     <script src="../assets/js/siswa-kuis-detail.js"></script>
+
+    <!-- Script Countdown Timer Live & Pilihan Opsi -->
+    <script>
+        (function() {
+            // Live Countdown Timer (24 menit 17 detik)
+            let totalSeconds = 24 * 60 + 17;
+            const timerEl = document.getElementById("liveTimerCountdown");
+
+            function updateTimer() {
+                if (totalSeconds <= 0) {
+                    timerEl.textContent = "00:00";
+                    return;
+                }
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                timerEl.textContent =
+                    (minutes < 10 ? "0" + minutes : minutes) + ":" +
+                    (seconds < 10 ? "0" + seconds : seconds);
+                totalSeconds--;
+            }
+            setInterval(updateTimer, 1000);
+
+            // Radio Options Selection
+            const options = document.querySelectorAll(".lms-quiz-option");
+            options.forEach(function(opt) {
+                opt.addEventListener("click", function() {
+                    options.forEach(function(o) { o.classList.remove("selected"); });
+                    opt.classList.add("selected");
+                });
+            });
+
+            // Number Grid Click Handler
+            const numBoxes = document.querySelectorAll(".lms-number-box");
+            numBoxes.forEach(function(box) {
+                box.addEventListener("click", function() {
+                    numBoxes.forEach(function(b) {
+                        if (b.classList.contains("current")) {
+                            b.classList.remove("current");
+                            b.classList.add("answered");
+                        }
+                    });
+                    box.classList.remove("answered");
+                    box.classList.add("current");
+                    const no = box.getAttribute("data-no");
+                    document.getElementById("progressText").textContent = "Soal " + no + " dari 10";
+                    document.getElementById("quizProgressBar").style.width = (parseInt(no, 10) * 10) + "%";
+                });
+            });
+
+            // Modal Logout Handlers
+            const openModalBtn = document.getElementById("openLogoutModal");
+            const modalBackdrop = document.getElementById("logoutModalBackdrop");
+            const btnBatalLogout = document.getElementById("btnBatalLogout");
+            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
+            const realLogoutBtn = document.getElementById("logoutButton");
+
+            if (openModalBtn && modalBackdrop) {
+                openModalBtn.addEventListener("click", function() {
+                    modalBackdrop.classList.add("show");
+                });
+            }
+            if (btnBatalLogout && modalBackdrop) {
+                btnBatalLogout.addEventListener("click", function() {
+                    modalBackdrop.classList.remove("show");
+                });
+            }
+            if (btnKonfirmasiLogout) {
+                btnKonfirmasiLogout.addEventListener("click", function() {
+                    if (typeof logout === "function") {
+                        logout();
+                    } else if (realLogoutBtn) {
+                        realLogoutBtn.click();
+                    }
+                });
+            }
+
+            // Mobile menu drawer
+            const toggleBtn = document.getElementById("menuToggle");
+            const sidebar = document.getElementById("appSidebar");
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener("click", function() {
+                    sidebar.classList.toggle("open");
+                });
+            }
+        })();
+    </script>
 </body>
 </html>
