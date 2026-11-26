@@ -4,10 +4,11 @@ LOKASI FILE : frontend/siswa/profil.html
 GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
               Desain Master Layout Desktop Web sesuai Figma (Modul Siswa - Profil & Ubah Password).
               - Kartu Profil Utama: Avatar, Badge Siswa, Info NISN & Kelas tidak dapat diubah
-              - Form Informasi Pribadi: Nama Lengkap, NISN, Kelas, Email
-              - Form Ubah Password: Password Lama, Password Baru, Konfirmasi Password
-              - Kartu Foto Profil Samping: Preview Foto & Tombol Ubah Foto
-              - Modal Konfirmasi Logout Siswa
+              - Form Informasi Pribadi: Nama Lengkap, NISN, Kelas, Email + Tombol Simpan Perubahan (btn-primary)
+              - Form Ubah Password: Terintegrasi menyatu di Card bagian bawah halaman profil
+              - Kartu Foto Profil Samping: Preview Foto & Tombol Ubah Foto (Memicu Modal #modalUbahFoto)
+              - Modal #modalUbahFoto & Modal #modalLogout
+              - Master Sidebar Uniform (8 Menu Utama) + Topbar Dropdowns
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -22,7 +23,7 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
 
     <!-- Custom CSS Siswa (meng-import kelas-detail.css) -->
-    <link rel="stylesheet" href="../assets/css/siswa.css?v=2">
+    <link rel="stylesheet" href="../assets/css/siswa.css?v=4">
 </head>
 <body data-role="siswa">
 
@@ -42,12 +43,12 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                         </svg>
                     </div>
                     <div class="lms-sidebar-userinfo">
-                        <p class="lms-sidebar-username" id="welcomeText">Memuat...</p>
-                        <p class="lms-sidebar-role">Siswa LMS</p>
+                        <p class="lms-sidebar-username" id="welcomeText">Budi Santoso</p>
+                        <p class="lms-sidebar-role">budisansss@gmail.com</p>
                     </div>
                 </a>
 
-                <!-- Navigasi Menu Siswa Sesuai Figma -->
+                <!-- Navigasi Menu Siswa Master Uniform (8 Menu Utama) -->
                 <nav>
                     <ul class="lms-sidebar-nav">
                         <li>
@@ -64,17 +65,6 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                             </a>
                         </li>
                         <li>
-                            <a href="profil.html" class="lms-sidebar-link active">
-                                <span class="lms-sidebar-icon">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                                        <circle cx="12" cy="7" r="4"/>
-                                    </svg>
-                                </span>
-                                <span>Profil Saya</span>
-                            </a>
-                        </li>
-                        <li>
                             <a href="mapel.html" class="lms-sidebar-link">
                                 <span class="lms-sidebar-icon">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -83,11 +73,22 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                                         <path d="M6 10h10"/>
                                     </svg>
                                 </span>
-                                <span>Materi</span>
+                                <span>Kelas Saya</span>
                             </a>
                         </li>
                         <li>
-                            <a href="tugas-detail.html" class="lms-sidebar-link">
+                            <a href="materi.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                                    </svg>
+                                </span>
+                                <span>Materi Pembelajaran</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tugas.html" class="lms-sidebar-link">
                                 <span class="lms-sidebar-icon">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
@@ -96,18 +97,18 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                                         <path d="M9 15h4"/>
                                     </svg>
                                 </span>
-                                <span>Tugas</span>
+                                <span>Tugas &amp; Latihan</span>
                             </a>
                         </li>
                         <li>
                             <a href="kuis.html" class="lms-sidebar-link">
                                 <span class="lms-sidebar-icon">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect width="18" height="18" x="3" y="3" rx="2"/>
-                                        <path d="m9 12 2 2 4-4"/>
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12 6 12 12 16 14"/>
                                     </svg>
                                 </span>
-                                <span>Kuis</span>
+                                <span>Kuis &amp; Ujian</span>
                             </a>
                         </li>
                         <li>
@@ -120,45 +121,48 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                                         <line x1="3" x2="21" y1="10" y2="10"/>
                                     </svg>
                                 </span>
-                                <span>Absensi</span>
+                                <span>Absensi Presensi</span>
                             </a>
                         </li>
                         <li>
                             <a href="report.html" class="lms-sidebar-link">
                                 <span class="lms-sidebar-icon">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M3 3v18h18"/>
-                                        <path d="m19 9-5 5-4-4-3 3"/>
+                                        <line x1="18" x2="18" y1="20" y2="10"/>
+                                        <line x1="12" x2="12" y1="20" y2="4"/>
+                                        <line x1="6" x2="6" y1="20" y2="14"/>
                                     </svg>
                                 </span>
-                                <span>Rekap Capaian Siswa</span>
+                                <span>Rekap Capaian</span>
                             </a>
                         </li>
                         <li>
-                            <a href="ubah-password.html" class="lms-sidebar-link">
+                            <a href="profil.html" class="lms-sidebar-link active">
                                 <span class="lms-sidebar-icon">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
-                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
                                     </svg>
                                 </span>
-                                <span>Ubah Password</span>
+                                <span>Profil Saya</span>
                             </a>
                         </li>
                     </ul>
                 </nav>
 
-                <!-- Tombol Logout di Bawah Sidebar (Memicu Modal Konfirmasi) -->
+                <!-- Tombol Logout di Bawah Sidebar (Trigger Modal) -->
                 <div class="lms-sidebar-footer">
-                    <button type="button" class="lms-logout-btn" id="openLogoutModal">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                            <polyline points="16 17 21 12 16 7"/>
-                            <line x1="21" y1="12" x2="9" y2="12"/>
-                        </svg>
+                    <button type="button" class="lms-sidebar-logout-btn" id="openLogoutModal" data-bs-toggle="modal" data-bs-target="#modalLogout">
+                        <span class="lms-sidebar-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                        </span>
                         <span>Keluar</span>
                     </button>
-                    <!-- Tombol logout asli yang diikat oleh listener auth.js -->
+                    <!-- Tombol logout tersembunyi untuk auth.js -->
                     <button type="button" id="logoutButton" class="d-none">Keluar</button>
                 </div>
 
@@ -168,7 +172,7 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
         <!-- ================= 2. AREA KONTEN (Topbar + Main) ================= -->
         <div class="lms-main-content">
 
-            <!-- Topbar Navigasi -->
+            <!-- Topbar Navigasi Interaktif dengan Dropdown -->
             <header class="lms-topbar">
                 <div class="lms-topbar-left">
                     <button class="lms-menu-toggle" id="menuToggle" aria-label="Toggle menu">
@@ -182,27 +186,77 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                 </div>
 
                 <div class="lms-topbar-right">
-                    <button class="lms-topbar-btn" title="Notifikasi">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
-                        </svg>
-                    </button>
-                    <a href="profil.html" class="lms-topbar-avatar" title="Lihat Profil">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
-                        </svg>
-                    </a>
+                    <!-- Dropdown Notifikasi -->
+                    <div class="dropdown lms-topbar-dropdown">
+                        <button class="lms-topbar-btn position-relative" type="button" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Notifikasi">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2" aria-labelledby="notifDropdown" style="width: 320px;">
+                            <li class="px-3 py-2 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="fw-bold small text-dark">Notifikasi</span>
+                                <span class="badge bg-primary-subtle text-primary small">3 Baru</span>
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2 px-3 d-flex flex-column text-wrap" href="tugas.html">
+                                    <span class="fw-semibold small text-dark">Tugas Baru: Matematika Bab 3</span>
+                                    <span class="text-muted" style="font-size: 0.75rem;">Deadline: 25 Agustus 2026</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2 px-3 d-flex flex-column text-wrap" href="kuis.html">
+                                    <span class="fw-semibold small text-dark">Kuis Tersedia: Persamaan Linear</span>
+                                    <span class="text-muted" style="font-size: 0.75rem;">Durasi 30 Menit</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Dropdown Avatar Pengguna -->
+                    <div class="dropdown lms-topbar-dropdown">
+                        <button class="lms-topbar-avatar border-0 p-0 bg-transparent" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Menu Pengguna">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2" aria-labelledby="userDropdown" style="min-width: 210px;">
+                            <li class="px-3 py-2 border-bottom">
+                                <div class="fw-bold text-dark small">Budi Santoso</div>
+                                <div class="text-muted" style="font-size: 0.78rem;">budisansss@gmail.com</div>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 small" href="profil.html">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    Profil Saya
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 small" href="report.html">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+                                    Rekap Capaian
+                                </a>
+                            </li>
+                            <li class="border-top my-1"></li>
+                            <li>
+                                <button type="button" class="dropdown-item text-danger d-flex align-items-center gap-2 py-2 small" data-bs-toggle="modal" data-bs-target="#modalLogout">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                    Keluar
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </header>
 
             <!-- Main Content Area -->
-            <main class="lms-body-area">
+            <main class="lms-content-body p-4">
 
                 <!-- Header Halaman Sesuai Figma -->
                 <div class="mb-4">
-                    <h1 class="lms-page-title mb-1">Profil</h1>
+                    <h1 class="h5 fw-bold text-dark mb-1">Profil</h1>
                 </div>
 
                 <!-- Alert Pesan Profil (Dipakai oleh profil.js) -->
@@ -222,15 +276,15 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                                         <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
                                         <circle cx="12" cy="7" r="4"/>
                                     </svg>
-                                    <span class="lms-siswa-camera-btn" title="Ubah Foto">
+                                    <button type="button" class="lms-siswa-camera-btn border-0" data-bs-toggle="modal" data-bs-target="#modalUbahFoto" title="Ubah Foto">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                                             <circle cx="12" cy="13" r="4"/>
                                         </svg>
-                                    </span>
+                                    </button>
                                 </div>
                                 <div>
-                                    <h2 class="h5 fw-bold text-dark mb-1" id="profilNamaDisplay">Memuat...</h2>
+                                    <h2 class="h5 fw-bold text-dark mb-1" id="profilNamaDisplay">Budi Santoso</h2>
                                     <span class="badge bg-primary-subtle text-primary fw-bold px-2 py-1" id="profilRole">Siswa</span>
                                 </div>
                             </div>
@@ -255,9 +309,9 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                                     <input
                                         type="text"
                                         id="inputNamaLengkap"
-                                        class="form-control lms-input-readonly"
+                                        class="form-control"
+                                        value="Budi Santoso"
                                         readonly
-                                        value="Memuat..."
                                     >
                                 </div>
 
@@ -269,7 +323,7 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                                             id="inputNisn"
                                             class="form-control lms-input-readonly"
                                             readonly
-                                            value="Memuat..."
+                                            value="0075286"
                                         >
                                         <span class="text-muted small text-nowrap">(Tidak dapat diubah)</span>
                                     </div>
@@ -298,7 +352,8 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                                         required
                                         maxlength="100"
                                         autocomplete="email"
-                                        placeholder="nama@email.com"
+                                        placeholder="budisansss@gmail.com"
+                                        value="budisansss@gmail.com"
                                         class="form-control"
                                     >
                                 </div>
@@ -308,8 +363,8 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                                 <span id="profilKode" class="d-none"></span>
                                 <span id="profilEmailSaatIni" class="d-none"></span>
 
-                                <!-- Tombol Aksi Sesuai Figma -->
-                                <div class="d-flex align-items-center gap-2 mt-4">
+                                <!-- Tombol Aksi Simpan Perubahan (Sesuai Checklist 5) -->
+                                <div class="d-flex align-items-center gap-2 mt-4 pt-2 border-top">
                                     <button type="submit" id="saveEmailButton" class="btn btn-primary fw-bold px-4 py-2 d-inline-flex align-items-center gap-2" style="border-radius: 8px;">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
@@ -326,7 +381,7 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                             </form>
                         </div>
 
-                        <!-- Form Ubah Password di Halaman Profil -->
+                        <!-- Form Ubah Password Terintegrasi Langsung di Bawah Profil (Sesuai Checklist 6) -->
                         <div class="lms-data-card p-4">
                             <h3 class="h6 fw-bold text-dark mb-2">Ubah Password</h3>
                             <p class="text-muted small mb-3">Jaga keamanan akun Anda dengan mengganti kata sandi secara berkala.</p>
@@ -337,7 +392,7 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                             <form id="formPasswordProfil" novalidate>
                                 
                                 <div class="form-field mb-3">
-                                    <label for="passwordLama" class="form-label text-dark fw-bold mb-1">Password Lama</label>
+                                    <label for="passwordLama" class="form-label text-dark fw-bold mb-1 small">Password Lama</label>
                                     <div class="lms-password-input-wrap">
                                         <input
                                             type="password"
@@ -356,7 +411,7 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                                 </div>
 
                                 <div class="form-field mb-3">
-                                    <label for="passwordBaruProfil" class="form-label text-dark fw-bold mb-1">Password Baru</label>
+                                    <label for="passwordBaruProfil" class="form-label text-dark fw-bold mb-1 small">Password Baru</label>
                                     <div class="lms-password-input-wrap">
                                         <input
                                             type="password"
@@ -376,7 +431,7 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                                 </div>
 
                                 <div class="form-field mb-4">
-                                    <label for="konfirmasiPasswordProfil" class="form-label text-dark fw-bold mb-1">Konfirmasi Password Baru</label>
+                                    <label for="konfirmasiPasswordProfil" class="form-label text-dark fw-bold mb-1 small">Konfirmasi Password Baru</label>
                                     <div class="lms-password-input-wrap">
                                         <input
                                             type="password"
@@ -394,7 +449,7 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                                     </div>
                                 </div>
 
-                                <div class="d-flex justify-content-end align-items-center gap-2">
+                                <div class="d-flex justify-content-end align-items-center gap-2 pt-2 border-top">
                                     <button type="button" id="requestPasswordButton" class="btn btn-outline-primary fw-semibold px-3 py-2" style="border-radius: 8px;">
                                         Kirim Tautan Reset Email
                                     </button>
@@ -412,14 +467,15 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
                         <div class="lms-data-card p-4 text-center">
                             <h3 class="h6 fw-bold text-dark text-start mb-3">Foto Profil</h3>
                             
-                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 82px; height: 82px; border: 2px solid #e2e8f0;">
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 86px; height: 86px; border: 2px solid #e2e8f0; overflow: hidden;">
                                 <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2">
                                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
                                     <circle cx="12" cy="7" r="4"/>
                                 </svg>
                             </div>
 
-                            <button type="button" class="btn btn-outline-primary btn-sm fw-bold px-3 py-2 mb-2 w-100" style="border-radius: 8px;">
+                            <!-- Tombol Ubah Foto Memicu Modal (Sesuai Checklist 4) -->
+                            <button type="button" class="btn btn-outline-primary btn-sm fw-bold px-3 py-2 mb-2 w-100" style="border-radius: 8px;" data-bs-toggle="modal" data-bs-target="#modalUbahFoto">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
                                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                                     <circle cx="12" cy="13" r="4"/>
@@ -438,24 +494,56 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
 
     </div>
 
-    <!-- ================= MODAL KONFIRMASI LOGOUT SISWA ================= -->
-    <div class="lms-modal-backdrop" id="logoutModalBackdrop">
-        <div class="lms-logout-modal-card">
-            <div class="lms-logout-icon-wrap">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" y1="12" x2="9" y2="12"/>
-                </svg>
-            </div>
-            <h3 class="lms-logout-modal-title">Konfirmasi Logout</h3>
-            <p class="lms-logout-modal-text">Apakah Anda yakin ingin keluar dari akun LMS ?</p>
-            <div class="lms-logout-modal-actions">
-                <button type="button" class="btn-lms-modal-cancel" id="btnBatalLogout">Batal</button>
-                <button type="button" class="btn-lms-modal-confirm" id="btnKonfirmasiLogout">Ya, Logout</button>
+    <!-- ================= MODAL UBAH FOTO PROFIL (Sesuai Checklist 4) ================= -->
+    <div class="modal fade" id="modalUbahFoto" tabindex="-1" aria-labelledby="modalUbahFotoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
+            <div class="modal-content p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="modal-title fw-bold text-dark h6 mb-0" id="modalUbahFotoLabel">Ubah Foto Profil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="text-center my-3">
+                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3" id="avatarPreviewContainer" style="width: 100px; height: 100px; border: 2px dashed #0088ff; overflow: hidden;">
+                        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" id="avatarPreviewDefault">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <img id="avatarPreviewImg" src="" alt="Pratinjau" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <p class="text-muted small mb-3">Pilih berkas gambar JPG, JPEG, atau PNG (Maks 2MB).</p>
+                    <input type="file" id="inputFotoProfil" class="form-control mb-3" accept="image/png, image/jpeg, image/jpg">
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary w-50 py-2 fw-semibold" data-bs-dismiss="modal" style="border-radius: 8px;">Batal</button>
+                    <button type="button" class="btn btn-primary w-50 py-2 fw-bold" id="btnSimpanFoto" style="border-radius: 8px;">Simpan Foto</button>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- ================= MODAL KONFIRMASI LOGOUT SISWA ================= -->
+    <div class="modal fade" id="modalLogout" tabindex="-1" aria-labelledby="modalLogoutLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+            <div class="modal-content text-center p-4">
+                <div class="lms-logout-icon-wrap mx-auto mb-3">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </div>
+                <h3 class="lms-logout-modal-title h5 fw-bold mb-2" id="modalLogoutLabel">Konfirmasi Logout</h3>
+                <p class="lms-logout-modal-text text-muted small mb-4">Apakah Anda yakin ingin keluar dari akun LMS ?</p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary fw-semibold px-4 py-2 w-50" data-bs-dismiss="modal" id="btnBatalLogout" style="border-radius: 8px;">Batal</button>
+                    <button type="button" class="btn btn-primary fw-bold px-4 py-2 w-50" id="btnKonfirmasiLogout" style="border-radius: 8px;">Ya, Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle JS Lokal -->
+    <script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Scripts Logika Siswa -->
     <script src="../assets/js/api.js"></script>
@@ -463,7 +551,7 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
     <script src="../assets/js/profil.js"></script>
     <script src="../assets/js/profil-password.js"></script>
 
-    <!-- Script UI Sinkronisasi Data, Toggle Sandi & Modal Logout -->
+    <!-- Script UI Sinkronisasi Data, Toggle Sandi, Modal Ubah Foto & Logout -->
     <script>
         (function() {
             // Sinkronisasi data dari elemen profil.js ke input visual formulir
@@ -488,6 +576,41 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
             const target = document.getElementById("profilNama");
             if (target) {
                 observer.observe(target, { childList: true, characterData: true, subtree: true });
+            }
+
+            // Pratinjau Foto Profil
+            const inputFoto = document.getElementById("inputFotoProfil");
+            const previewImg = document.getElementById("avatarPreviewImg");
+            const defaultSvg = document.getElementById("avatarPreviewDefault");
+            const btnSimpanFoto = document.getElementById("btnSimpanFoto");
+
+            if (inputFoto) {
+                inputFoto.addEventListener("change", function() {
+                    const file = inputFoto.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            previewImg.src = e.target.result;
+                            previewImg.style.display = "block";
+                            defaultSvg.style.display = "none";
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            if (btnSimpanFoto) {
+                btnSimpanFoto.addEventListener("click", function() {
+                    const modalEl = document.getElementById("modalUbahFoto");
+                    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                    if (modalInstance) modalInstance.hide();
+                    const alertBox = document.getElementById("profilMessage");
+                    if (alertBox) {
+                        alertBox.hidden = false;
+                        alertBox.className = "alert alert-success";
+                        alertBox.textContent = "Foto profil berhasil diperbarui!";
+                    }
+                });
             }
 
             // Toggle Tampilkan / Sembunyikan Password
@@ -544,27 +667,15 @@ GUNA FILE   : Halaman profil Siswa LMS & Form Ubah Password.
             }
 
             // Modal Logout Konfirmasi
-            const openModalBtn = document.getElementById("openLogoutModal");
-            const modalBackdrop = document.getElementById("logoutModalBackdrop");
-            const btnBatalLogout = document.getElementById("btnBatalLogout");
             const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
             const realLogoutBtn = document.getElementById("logoutButton");
-
-            if (openModalBtn && modalBackdrop) {
-                openModalBtn.addEventListener("click", function() {
-                    modalBackdrop.classList.add("show");
-                });
-            }
-
-            if (btnBatalLogout && modalBackdrop) {
-                btnBatalLogout.addEventListener("click", function() {
-                    modalBackdrop.classList.remove("show");
-                });
-            }
-
-            if (btnKonfirmasiLogout && realLogoutBtn) {
+            if (btnKonfirmasiLogout) {
                 btnKonfirmasiLogout.addEventListener("click", function() {
-                    logout();
+                    if (typeof logout === "function") {
+                        logout();
+                    } else if (realLogoutBtn) {
+                        realLogoutBtn.click();
+                    }
                 });
             }
 

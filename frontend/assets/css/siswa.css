@@ -905,3 +905,40 @@
     border-radius: 12px;
     font-size: 0.82rem;
 }
+
+
+/* ==========================================================================
+   AUDIT & POLISHING: MASTER THEME & INTERACTIVE COMPONENTS
+   ========================================================================== */
+
+:root {
+    --lms-sidebar-bg: #07193b;
+}
+
+/* Stat Cards Indicator Numbers on Dashboard */
+.lms-stat-number-large {
+    font-size: 1.85rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 0.2rem;
+    display: block;
+}
+
+/* Topbar Dropdowns */
+.lms-topbar-dropdown .dropdown-menu {
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    border: 1px solid #e2e8f0;
+    z-index: 1050;
+}
+
+.lms-topbar-dropdown .dropdown-item:active {
+    background-color: #0088ff;
+}
+
+/* Standardized Modal Dialogs */
+.modal-content {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+}
