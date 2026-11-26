@@ -21,18 +21,22 @@ $database = new Database();
 $db = $database->getConnection();
 
 try {
-    $statement = $db->prepare(
-        'SELECT id_kelas, nama_kelas
-         FROM kelas
-         ORDER BY nama_kelas ASC'
+       $statement = $db->prepare(
+        'SELECT k.id_kelas, k.nama_kelas, k.id_tahun_ajaran, ta.nama_tahun_ajaran, k.semester
+         FROM kelas k
+         LEFT JOIN tahun_ajaran ta ON ta.id_tahun_ajaran = k.id_tahun_ajaran
+         ORDER BY k.nama_kelas ASC'
     );
     $statement->execute();
 
     $list = [];
     foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
         $list[] = [
-            'id_kelas'   => (int) $row['id_kelas'],
-            'nama_kelas' => $row['nama_kelas'],
+            'id_kelas'          => (int) $row['id_kelas'],
+            'nama_kelas'        => $row['nama_kelas'],
+            'id_tahun_ajaran'   => $row['id_tahun_ajaran'] === null ? null : (int) $row['id_tahun_ajaran'],
+            'nama_tahun_ajaran' => $row['nama_tahun_ajaran'],
+            'semester'          => $row['semester'],
         ];
     }
 

@@ -1,0 +1,105 @@
+<!--
+================================================================================
+LOKASI FILE : frontend/admin/tahun-ajaran.html
+GUNA FILE   : Halaman admin kelola tahun ajaran.
+              - Form tambah / ubah tahun ajaran
+              - Tabel daftar tahun ajaran (dari tahun_ajaran/list.php)
+              - Aksi: ubah, aktifkan/nonaktifkan, hapus
+              Beberapa tahun ajaran boleh aktif bersamaan. Status hanya penanda;
+              pengajar dan siswa tetap bisa memilih tahun ajaran apa pun.
+              - Logika halaman : assets/js/admin-tahun-ajaran.js
+              - Salam pembuka & tombol keluar : assets/js/admin.js
+================================================================================
+-->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Kelola Tahun Ajaran - Admin LMS</title>
+</head>
+<body>
+
+    <header>
+        <h1>Kelola Tahun Ajaran</h1>
+        <p id="welcomeText">Memuat...</p>
+        <button type="button" id="logoutButton">Keluar</button>
+    </header>
+
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="kelas.html">Kelas</a>
+        <a href="tahun-ajaran.html">Tahun Ajaran</a>
+        <a href="pengguna.html">Pengguna</a>
+        <a href="anggota-kelas.html">Anggota Kelas</a>
+    </nav>
+
+    <main>
+        <section>
+            <h2 id="formTitle">Tambah Tahun Ajaran</h2>
+            <div id="tahunMessage" role="alert" aria-live="polite" hidden></div>
+
+            <form id="tahunAjaranForm" novalidate>
+                <input type="hidden" id="idTahunAjaran" value="">
+
+                <div>
+                    <label for="namaTahunAjaran">Nama Tahun Ajaran</label>
+                    <input
+                        type="text"
+                        id="namaTahunAjaran"
+                        required
+                        maxlength="20"
+                        placeholder="Contoh: 2026/2027"
+                        autocomplete="off"
+                    >
+                </div>
+                <div>
+                    <label for="tanggalMulai">Tanggal Mulai</label>
+                    <input type="date" id="tanggalMulai" required>
+                </div>
+                <div>
+                    <label for="tanggalSelesai">Tanggal Selesai</label>
+                    <input type="date" id="tanggalSelesai" required>
+                </div>
+                <div>
+                    <label for="statusTahun">Status</label>
+                    <select id="statusTahun">
+                        <option value="aktif" selected>Aktif</option>
+                        <option value="nonaktif">Nonaktif</option>
+                    </select>
+                </div>
+                <button type="submit" id="simpanTahunButton">Simpan</button>
+                <button type="button" id="batalUbahButton" hidden>Batal</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Daftar Tahun Ajaran</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Mulai</th>
+                        <th>Selesai</th>
+                        <th>Status</th>
+                        <th>Jumlah Kelas</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tahunTableBody">
+                    <tr>
+                        <td colspan="7">Memuat data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/admin.js"></script>
+    <script src="../assets/js/admin-tahun-ajaran.js"></script>
+</body>
+</html>

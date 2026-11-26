@@ -26,6 +26,7 @@ GUNA FILE   : Halaman admin kelola kelas.
     <nav>
         <a href="dashboard.html">Dashboard</a>
         <a href="kelas.html">Kelas</a>
+                <a href="tahun-ajaran.html">Tahun Ajaran</a>
         <a href="pengguna.html">Pengguna</a>
         <a href="anggota-kelas.html">Anggota Kelas</a>
     </nav>
@@ -47,6 +48,20 @@ GUNA FILE   : Halaman admin kelola kelas.
                         autocomplete="off"
                     >
                 </div>
+                                <div>
+                    <label for="kelasTahunAjaran">Tahun Ajaran</label>
+                    <select id="kelasTahunAjaran">
+                        <option value="">-- Belum diatur --</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="kelasSemester">Semester</label>
+                    <select id="kelasSemester">
+                        <option value="">-- Belum diatur --</option>
+                        <option value="ganjil">Ganjil</option>
+                        <option value="genap">Genap</option>
+                    </select>
+                </div>
                 <button type="submit" id="createKelasButton">Simpan Kelas</button>
             </form>
         </section>
@@ -55,9 +70,11 @@ GUNA FILE   : Halaman admin kelola kelas.
             <h2>Daftar Kelas</h2>
             <table>
                 <thead>
-                    <tr>
+                                       <tr>
                         <th>No</th>
                         <th>Nama Kelas</th>
+                        <th>Tahun Ajaran</th>
+                        <th>Semester</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -68,10 +85,34 @@ GUNA FILE   : Halaman admin kelola kelas.
                 </tbody>
             </table>
         </section>
+                <section id="aturTahunPanel" hidden>
+            <h2>Atur Tahun Ajaran Kelas</h2>
+            <p>Kelas: <strong id="aturKelasNama">-</strong></p>
+            <div id="aturTahunMessage" role="alert" aria-live="polite" hidden></div>
+
+            <form id="aturTahunForm" novalidate>
+                <input type="hidden" id="aturIdKelas" value="">
+                <div>
+                    <label for="aturTahunAjaran">Tahun Ajaran</label>
+                    <select id="aturTahunAjaran"></select>
+                </div>
+                <div>
+                    <label for="aturSemester">Semester</label>
+                    <select id="aturSemester">
+                        <option value="">-- Belum diatur --</option>
+                        <option value="ganjil">Ganjil</option>
+                        <option value="genap">Genap</option>
+                    </select>
+                </div>
+                <button type="submit" id="aturTahunSimpan">Simpan</button>
+                <button type="button" id="aturTahunBatal">Batal</button>
+            </form>
+        </section>
     </main>
 
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/admin.js"></script>
+     <script src="../assets/js/admin-kelas-tahun.js"></script>
 </body>
 </html>

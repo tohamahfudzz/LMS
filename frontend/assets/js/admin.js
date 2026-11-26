@@ -107,7 +107,7 @@ GUNA FILE   : Logika bersama halaman admin:
         const tbody = document.getElementById("kelasTableBody");
         if (!tbody) return;
 
-        tbody.innerHTML = '<tr><td colspan="3">Memuat data...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5">Memuat data...</td></tr>';
 
         try {
             const result = await apiRequest(API.kelasList, {
@@ -118,19 +118,25 @@ GUNA FILE   : Logika bersama halaman admin:
 
             if (rows.length === 0) {
                 tbody.innerHTML =
-                    '<tr><td colspan="3">Belum ada data kelas.</td></tr>';
+                    '<tr><td colspan="5">Belum ada data kelas.</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = rows.map(function (item, index) {
+                       tbody.innerHTML = rows.map(function (item, index) {
                 return (
                     "<tr>" +
                     "<td>" + (index + 1) + "</td>" +
                     "<td>" + escapeHtml(item.nama_kelas) + "</td>" +
+                    "<td>" + escapeHtml(item.nama_tahun_ajaran || "-") + "</td>" +
+                    "<td>" + escapeHtml(item.semester || "-") + "</td>" +
                     "<td>" +
                     '<a href="anggota-kelas.html?id_kelas=' +
                     encodeURIComponent(item.id_kelas) +
                     '">Atur Anggota</a>' +
+                    ' | <button type="button" class="btn-atur-tahun"' +
+                    ' data-id="' + Number(item.id_kelas) + '"' +
+                    ' data-tahun="' + (item.id_tahun_ajaran ? Number(item.id_tahun_ajaran) : "") + '"' +
+                    ' data-semester="' + escapeHtml(item.semester || "") + '">Atur Tahun Ajaran</button>' +
                     "</td>" +
                     "</tr>"
                 );
@@ -138,7 +144,7 @@ GUNA FILE   : Logika bersama halaman admin:
 
         } catch (error) {
             tbody.innerHTML =
-                '<tr><td colspan="3">Gagal memuat: ' +
+                '<tr><td colspan="5">Gagal memuat: ' +
                 escapeHtml(error.message) +
                 "</td></tr>";
         }
@@ -303,6 +309,7 @@ GUNA FILE   : Logika bersama halaman admin:
     }
 
     // ---------- Jalankan loader ----------
+    window.adminRefreshKelasList = loadKelasList;
     loadKelasList();
     loadPengajarList();
     loadSiswaList();
@@ -333,8 +340,12 @@ GUNA FILE   : Logika bersama halaman admin:
             try {
                 const result = await apiRequest(API.kelasCreate, {
                     method: "POST",
-                    body: {
-                        nama_kelas: namaKelas
+                                        body: {
+                        nama_kelas: namaKelas,
+                        id_tahun_ajaran: document.getElementById("kelasTahunAjaran").value
+                            ? parseInt(document.getElementById("kelasTahunAjaran").value, 10)
+                            : null,
+                        semester: document.getElementById("kelasSemester").value || null
                     }
                 });
 
