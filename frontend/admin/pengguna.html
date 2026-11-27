@@ -1,10 +1,11 @@
+
 <!--
 ================================================================================
 LOKASI FILE : frontend/admin/pengguna.html
-GUNA FILE   : Halaman admin kelola pengguna.
-              - Form buat pengajar & siswa
-              - Tabel daftar pengajar (admin/pengajar/list.php)
-              - Tabel daftar siswa (admin/siswa/list.php)
+GUNA FILE   : Halaman admin untuk mengelola pengguna.
+              - Form tambah pengajar dan siswa.
+              - Tabel daftar siswa dan pengajar.
+              - Navigasi admin dan konfirmasi logout.
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -13,107 +14,432 @@ GUNA FILE   : Halaman admin kelola pengguna.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
+
     <title>Kelola Pengguna - Admin LMS</title>
+
+    <!-- Bootstrap 5 CSS Lokal -->
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
+    <!-- CSS Khusus Halaman Pengguna -->
+    <link rel="stylesheet" href="../assets/css/admin-pengguna.css">
 </head>
-<body>
 
-    <header>
-        <h1>Kelola Pengguna</h1>
-        <p id="welcomeText">Memuat...</p>
-        <button type="button" id="logoutButton">Keluar</button>
-    </header>
+<body class="admin-pengguna-page">
 
-    <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="kelas.html">Kelas</a>
-                <a href="tahun-ajaran.html">Tahun Ajaran</a>
-        <a href="pengguna.html">Pengguna</a>
-        <a href="anggota-kelas.html">Anggota Kelas</a>
-    </nav>
+    <div class="lms-app-wrapper">
 
-    <main>
-       <!-- Form pengajar -->
-<section>
-    <h2>Tambah Pengajar</h2>
-    <div id="pengajarMessage" role="alert" aria-live="polite" hidden></div>
+        <!-- SIDEBAR -->
+        <aside class="lms-sidebar" id="appSidebar">
+            <div class="lms-sidebar-stars"></div>
 
-    <form id="createPengajarForm" novalidate>
-        <div>
-            <label for="kodePengajar">Kode Pengajar</label>
-            <input type="text" id="kodePengajar" required maxlength="20" autocomplete="off" placeholder="Contoh: P001">
+            <div class="lms-sidebar-inner">
+
+                <a href="profil.html" class="lms-sidebar-user">
+                    <div class="lms-sidebar-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+
+                    <div class="lms-sidebar-userinfo">
+                        <p class="lms-sidebar-username" id="welcomeText">Memuat...</p>
+                        <p class="lms-sidebar-role">Administrator LMS</p>
+                    </div>
+                </a>
+
+                <nav>
+                    <ul class="lms-sidebar-nav">
+                        <li>
+                            <a href="dashboard.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="9" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="5" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="9" x="14" y="12" rx="1"/>
+                                        <rect width="7" height="5" x="3" y="16" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="kelas.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                                        <path d="M6 6h10"/>
+                                        <path d="M6 10h10"/>
+                                    </svg>
+                                </span>
+                                <span>Data Kelas</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="tahun-ajaran.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="17" rx="2"/>
+                                        <path d="M16 2v4M8 2v4M3 10h18"/>
+                                    </svg>
+                                </span>
+                                <span>Tahun Ajaran</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="pengguna.html" class="lms-sidebar-link active">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                </span>
+                                <span>Data Pengguna</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="anggota-kelas.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                        <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
+                                        <path d="m9 14 2 2 4-4"/>
+                                    </svg>
+                                </span>
+                                <span>Anggota Kelas</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="lms-sidebar-footer">
+                    <button type="button" class="lms-logout-btn" id="openLogoutModal">
+                        <svg width="18" height="18" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        <span>Keluar</span>
+                    </button>
+
+                    <!-- Tombol logout asli untuk admin.js -->
+                    <button type="button" id="logoutButton" class="d-none">
+                        Keluar
+                    </button>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- KONTEN UTAMA -->
+        <div class="lms-main-content">
+
+            <!-- TOPBAR -->
+            <header class="lms-topbar">
+                <div class="lms-topbar-left">
+                    <button type="button" class="lms-menu-toggle"
+                            id="menuToggle" aria-label="Buka menu">
+                        <svg width="24" height="24" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" x2="20" y1="12" y2="12"/>
+                            <line x1="4" x2="20" y1="6" y2="6"/>
+                            <line x1="4" x2="20" y1="18" y2="18"/>
+                        </svg>
+                    </button>
+
+                    <span class="lms-topbar-meta">
+                        Kelola Pengguna • Portal Administrator LMS
+                    </span>
+                </div>
+
+                <div class="lms-topbar-right">
+                    <a href="profil.html" class="lms-topbar-avatar"
+                       title="Lihat Profil Admin">
+                        <svg width="22" height="22" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </a>
+                </div>
+            </header>
+
+            <main class="lms-body-area">
+
+                <!-- PESAN SISTEM -->
+                <div id="pengajarMessage" class="message"
+                     role="alert" aria-live="polite" hidden></div>
+
+                <div id="siswaMessage" class="message"
+                     role="alert" aria-live="polite" hidden></div>
+
+                <!-- JUDUL HALAMAN -->
+                <section class="lms-page-heading">
+                    <div>
+                        <h1 class="lms-greeting-title">Data Pengguna</h1>
+                        <p class="lms-greeting-subtitle">
+                            Kelola akun pengajar dan siswa dalam LMS.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- FORM TAMBAH PENGAJAR -->
+                <section class="lms-card">
+                    <div class="lms-card-header">
+                        <div>
+                            <h2 class="lms-card-title">Tambah Pengajar</h2>
+                            <p class="lms-card-subtitle">
+                                Masukkan informasi akun pengajar baru.
+                            </p>
+                        </div>
+                        <span class="badge-role-pengajar">Pengajar</span>
+                    </div>
+
+                    <div class="lms-card-body">
+                        <form id="createPengajarForm" novalidate>
+                            <div class="lms-form-grid">
+
+                                <div class="form-field">
+                                    <label for="kodePengajar">Kode Pengajar</label>
+                                    <input type="text" id="kodePengajar"
+                                           required maxlength="20"
+                                           autocomplete="off"
+                                           placeholder="Contoh: P001">
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="namaPengajar">Nama</label>
+                                    <input type="text" id="namaPengajar"
+                                           required maxlength="100"
+                                           autocomplete="off"
+                                           placeholder="Masukkan nama pengajar">
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="emailPengajar">Email</label>
+                                    <input type="email" id="emailPengajar"
+                                           required maxlength="255"
+                                           autocomplete="email"
+                                           placeholder="Contoh: pengajar@email.com">
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="passwordPengajar">Password</label>
+                                    <input type="password" id="passwordPengajar"
+                                           required minlength="4" maxlength="100"
+                                           autocomplete="new-password"
+                                           placeholder="Masukkan password">
+                                </div>
+
+                            </div>
+
+                            <div class="lms-form-actions">
+                                <button type="submit" id="createPengajarButton"
+                                        class="btn-lms-simpan">
+                                    Simpan Pengajar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- FORM TAMBAH SISWA -->
+                <section class="lms-card">
+                    <div class="lms-card-header">
+                        <div>
+                            <h2 class="lms-card-title">Tambah Siswa</h2>
+                            <p class="lms-card-subtitle">
+                                Masukkan informasi akun siswa baru.
+                            </p>
+                        </div>
+                        <span class="badge-role-siswa">Siswa</span>
+                    </div>
+
+                    <div class="lms-card-body">
+                        <form id="createSiswaForm" novalidate>
+                            <div class="lms-form-grid">
+
+                                <div class="form-field">
+                                    <label for="kodeSiswa">Kode Siswa</label>
+                                    <input type="text" id="kodeSiswa"
+                                           required maxlength="20"
+                                           autocomplete="off"
+                                           placeholder="Contoh: S001">
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="namaSiswa">Nama</label>
+                                    <input type="text" id="namaSiswa"
+                                           required maxlength="100"
+                                           autocomplete="off"
+                                           placeholder="Masukkan nama siswa">
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="emailSiswa">Email</label>
+                                    <input type="email" id="emailSiswa"
+                                           required maxlength="255"
+                                           autocomplete="email"
+                                           placeholder="Contoh: siswa@email.com">
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="passwordSiswa">Password</label>
+                                    <input type="password" id="passwordSiswa"
+                                           required minlength="4" maxlength="100"
+                                           autocomplete="new-password"
+                                           placeholder="Masukkan password">
+                                </div>
+
+                            </div>
+
+                            <div class="lms-form-actions">
+                                <button type="submit" id="createSiswaButton"
+                                        class="btn-lms-simpan">
+                                    Simpan Siswa
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- TABEL SISWA -->
+                <section class="lms-card" id="sectionTabelSiswa">
+                    <div class="lms-card-header">
+                        <div>
+                            <h2 class="lms-card-title">Daftar Siswa</h2>
+                            <p class="lms-card-subtitle">
+                                Daftar akun siswa yang terdaftar.
+                            </p>
+                        </div>
+                        <span class="badge-role-siswa">Siswa</span>
+                    </div>
+
+                    <div class="lms-card-body p-0">
+                        <div class="lms-table-wrapper">
+                            <table class="lms-table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kode</th>
+                                        <th>Nama</th>
+                                        <th>Role</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="siswaTableBody">
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">
+                                            Memuat data...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TABEL PENGAJAR -->
+                <section class="lms-card" id="sectionTabelPengajar">
+                    <div class="lms-card-header">
+                        <div>
+                            <h2 class="lms-card-title">Daftar Pengajar</h2>
+                            <p class="lms-card-subtitle">
+                                Daftar akun pengajar yang terdaftar.
+                            </p>
+                        </div>
+                        <span class="badge-role-pengajar">Pengajar</span>
+                    </div>
+
+                    <div class="lms-card-body p-0">
+                        <div class="lms-table-wrapper">
+                            <table class="lms-table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kode</th>
+                                        <th>Nama</th>
+                                        <th>Role</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="pengajarTableBody">
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">
+                                            Memuat data...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
         </div>
+    </div>
 
-        <div>
-            <label for="namaPengajar">Nama</label>
-            <input type="text" id="namaPengajar" required maxlength="100" autocomplete="off">
+    <!-- OVERLAY SIDEBAR MOBILE -->
+    <div class="lms-sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MODAL KONFIRMASI LOGOUT -->
+    <div class="lms-modal-backdrop" id="logoutModalBackdrop">
+        <div class="lms-modal-card">
+            <div class="lms-modal-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </div>
+
+            <h3 class="lms-modal-title">Konfirmasi Keluar</h3>
+            <p class="lms-modal-desc">
+                Apakah Anda yakin ingin keluar dari akun Administrator LMS?
+            </p>
+
+            <div class="lms-modal-buttons">
+                <button type="button" class="btn-modal-cancel" id="btnBatalLogout">
+                    Batal
+                </button>
+                <button type="button" class="btn-modal-confirm" id="btnKonfirmasiLogout">
+                    Ya, Keluar
+                </button>
+            </div>
         </div>
+    </div>
 
-        <div>
-            <label for="emailPengajar">Email</label>
-            <input type="email" id="emailPengajar" required maxlength="255" autocomplete="email" placeholder="Contoh: pengajar@email.com">
-        </div>
-
-        <div>
-            <label for="passwordPengajar">Password</label>
-            <input type="password" id="passwordPengajar" required minlength="4" maxlength="100" autocomplete="new-password">
-        </div>
-
-        <button type="submit" id="createPengajarButton">Simpan Pengajar</button>
-    </form>
-</section>
-
-<!-- Form siswa -->
-<section>
-    <h2>Tambah Siswa</h2>
-    <div id="siswaMessage" role="alert" aria-live="polite" hidden></div>
-
-    <form id="createSiswaForm" novalidate>
-        <div>
-            <label for="kodeSiswa">Kode Siswa</label>
-            <input type="text" id="kodeSiswa" required maxlength="20" autocomplete="off" placeholder="Contoh: S001">
-        </div>
-
-        <div>
-            <label for="namaSiswa">Nama</label>
-            <input type="text" id="namaSiswa" required maxlength="100" autocomplete="off">
-        </div>
-
-        <div>
-            <label for="emailSiswa">Email</label>
-            <input type="email" id="emailSiswa" required maxlength="255" autocomplete="email" placeholder="Contoh: siswa@email.com">
-        </div>
-
-        <div>
-            <label for="passwordSiswa">Password</label>
-            <input type="password" id="passwordSiswa" required minlength="4" maxlength="100" autocomplete="new-password">
-        </div>
-
-        <button type="submit" id="createSiswaButton">Simpan Siswa</button>
-    </form>
-</section>
-        <!-- Tabel siswa -->
-        <section>
-            <h2>Daftar Siswa</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Kode</th>
-                        <th>Nama</th>
-                        <th>Role</th>
-                    </tr>
-                </thead>
-                <tbody id="siswaTableBody">
-                    <tr>
-                        <td colspan="4">Memuat data...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-    </main>
-
+    <!-- JavaScript Fungsionalitas Utama -->
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/admin.js"></script>
+
+    <!-- JavaScript Khusus Tampilan -->
+    <script src="../assets/js_style/admin-pengguna-style.js"></script>
+
 </body>
 </html>

@@ -1,9 +1,10 @@
+
 <!--
 ================================================================================
 LOKASI FILE : frontend/login.html
-GUNA FILE   : Halaman login. Menampilkan pesan error/sukses dari backend
-              langsung di halaman agar user paham (bukan hanya di Network).
-              Role tidak dipilih manual; ditentukan backend dari kode.
+GUNA FILE   : Halaman login LMS dengan desain PELITA / EduSiswa.
+              Seluruh ID dan atribut form dipertahankan agar tetap kompatibel
+              dengan frontend/assets/js/auth.js.
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -13,76 +14,251 @@ GUNA FILE   : Halaman login. Menampilkan pesan error/sukses dari backend
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Login - LMS</title>
+
+    <!-- Bootstrap 5 CSS Lokal -->
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+
+    <!-- CSS khusus halaman Login -->
+    <link rel="stylesheet" href="assets/css/auth.css">
+
+    <!-- Cloudflare Turnstile CAPTCHA API -->
     <script
-    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-    async
-    defer>
-</script>
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        async
+        defer>
+    </script>
 </head>
-<body>
-    <!-- Cloudflare Turnstile CAPTCHA -->
 
+<body class="auth-page">
 
-    <main>
-        <section>
-            <h1>LMS — Login</h1>
-            <p>Masukkan kode dan password.</p>
+    <div class="container-fluid p-0 auth-wrapper">
+        <div class="row g-0 w-100 min-vh-100">
 
-            <!-- Area pesan untuk user (error / sukses) -->
-            <div
-                id="loginMessage"
-                role="alert"
-                aria-live="polite"
-                hidden
-                style="margin: 12px 0; padding: 12px; border: 1px solid #ccc; background: #f8f8f8;"
-            ></div>
+            <!-- SISI KIRI: HERO DAN BRANDING -->
+            <div class="col-lg-6 col-xl-7 d-none d-lg-flex auth-hero-section">
 
-            <form id="loginForm" novalidate>
-                <div
-    class="cf-turnstile"
-    data-sitekey="1x00000000000000000000AA">
-</div>
-                <div>
-                    <label for="kode">Kode</label><br>
-                    <input
-                        type="text"
-                        id="kode"
-                        name="kode"
-                        autocomplete="username"
-                        required
-                        maxlength="20"
-                        placeholder="Contoh: 7777"
-                    >
+                <div class="auth-hero-pattern"></div>
+
+                <!-- Logo dan identitas LMS -->
+                <div class="auth-hero-content">
+                    <div class="auth-brand">
+                        <div class="auth-brand-icon">
+                            <svg width="42" height="42" viewBox="0 0 24 24"
+                                fill="none" stroke="#ffffff" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                                <path d="M6 6h10"/>
+                                <path d="M6 10h10"/>
+                                <path d="M6 14h6"/>
+                            </svg>
+                        </div>
+
+                        <div class="auth-brand-text">
+                            <h2>PELITA</h2>
+                            <p>Learning Management System</p>
+                        </div>
+                    </div>
                 </div>
-                <br>
-                <div>
-                    <label for="password">Password</label><br>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        autocomplete="current-password"
-                        required
-                        minlength="4"
-                        maxlength="100"
-                    >
+
+                <!-- Sambutan -->
+                <div class="auth-hero-content my-auto">
+                    <h1 class="auth-hero-title">
+                        Selamat Datang di<br>
+                        <span>EduSiswa</span>
+                    </h1>
+
+                    <p class="auth-hero-desc">
+                        Tempat terbaik untuk belajar, mengerjakan tugas,
+                        dan meraih prestasi bersama pengajar dan rekan kelas Anda.
+                    </p>
                 </div>
-                <br>
-                <button type="submit" id="loginButton">Masuk</button>
-            </form>
-             <p><a href="lupa-password.html">Lupa password?</a></p>
 
-            <hr>
-            <p><small>
-                Contoh akun:<br>
-                Admin — kode <strong>7777</strong>, password <strong>admin</strong><br>
-                Pengajar — kode <strong>4444</strong>, password <strong>pengajar</strong><br>
-                Siswa — kode <strong>3333</strong>, password <strong>siswa</strong>
-            </small></p>
-        </section>
-    </main>
+                <!-- Footer -->
+                <div class="auth-hero-content text-white-50">
+                    <small>&copy; LMS EduSiswa. Hak cipta dilindungi.</small>
+                </div>
 
+                <!-- Separator lengkung -->
+                <svg class="auth-curve-separator"
+                    viewBox="0 0 100 1000"
+                    preserveAspectRatio="none">
+                    <path
+                        d="M 0,0 C 70,300 95,450 65,700 C 45,850 10,950 0,1000 L 100,1000 L 100,0 Z"
+                        fill="#06142e"/>
+                    <path
+                        d="M 0,0 C 70,300 95,450 65,700 C 45,850 10,950 0,1000"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-width="12"
+                        opacity="0.9"/>
+                </svg>
+            </div>
+
+            <!-- SISI KANAN: FORM LOGIN -->
+            <div class="col-12 col-lg-6 col-xl-5 auth-form-section">
+
+                <!-- Tagline -->
+                <div class="auth-tagline d-none d-sm-block">
+                    Belajar <span>&bull;</span>
+                    Berkembang <span>&bull;</span>
+                    Meraih Masa Depan
+                </div>
+
+                <!-- Logo untuk perangkat mobile -->
+                <div class="d-lg-none text-center mb-4">
+                    <div class="d-inline-flex align-items-center gap-2 mb-2">
+                        <svg width="34" height="34" viewBox="0 0 24 24"
+                            fill="none" stroke="#ffffff" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                            <path d="M6 6h10"/>
+                            <path d="M6 10h10"/>
+                            <path d="M6 14h6"/>
+                        </svg>
+
+                        <span class="fs-4 fw-bold text-white tracking-wide">
+                            PELITA LMS
+                        </span>
+                    </div>
+
+                    <p class="text-white-50 small m-0">
+                        Selamat Datang di EduSiswa
+                    </p>
+                </div>
+
+                <!-- Kartu login -->
+                <main class="auth-card">
+
+                    <header class="auth-card-header">
+                        <h2 class="auth-card-title">Sign In</h2>
+                        <p class="auth-card-subtitle">
+                            Masukkan kode dan password akun Anda
+                        </p>
+                    </header>
+
+                    <!-- Pesan error atau sukses dari backend -->
+                    <div
+                        id="loginMessage"
+                        role="alert"
+                        aria-live="polite"
+                        hidden
+                        class="p-3 mb-3">
+                    </div>
+
+                    <!-- Form login -->
+                    <form id="loginForm" novalidate>
+
+                        <!-- Cloudflare Turnstile CAPTCHA -->
+                        <div class="mb-4 d-flex justify-content-center">
+                            <div
+                                class="cf-turnstile"
+                                data-sitekey="1x00000000000000000000AA">
+                            </div>
+                        </div>
+
+                        <!-- Kode akun -->
+                        <div class="mb-3">
+                            <label for="kode" class="auth-label">
+                                Kode Akun
+                            </label>
+
+                            <div class="auth-input-group">
+                                <span class="auth-input-icon">
+                                    <svg width="20" height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                </span>
+
+                                <input
+                                    type="text"
+                                    id="kode"
+                                    name="kode"
+                                    class="auth-input-control"
+                                    autocomplete="username"
+                                    required
+                                    maxlength="20"
+                                    placeholder="Contoh: 7777">
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label for="password" class="auth-label m-0">
+                                    Password
+                                </label>
+
+                                <a href="lupa-password.html"
+                                    class="auth-link small">
+                                    Lupa password?
+                                </a>
+                            </div>
+
+                            <div class="auth-input-group">
+                                <span class="auth-input-icon">
+                                    <svg width="20" height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect width="18" height="11"
+                                            x="3" y="11" rx="2" ry="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                </span>
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="auth-input-control"
+                                    autocomplete="current-password"
+                                    required
+                                    minlength="4"
+                                    maxlength="100"
+                                    placeholder="Masukkan password">
+                            </div>
+                        </div>
+
+                        <!-- Tombol login -->
+                        <button
+                            type="submit"
+                            id="loginButton"
+                            class="auth-btn-submit">
+                            Sign In
+                        </button>
+                    </form>
+
+                    <!-- Informasi akun contoh -->
+                    <div class="auth-demo-accounts">
+                        <strong>Akun contoh:</strong><br>
+                        Admin &mdash; kode: <strong>7777</strong>,
+                        pass: <strong>admin</strong><br>
+
+                        Pengajar &mdash; kode: <strong>4444</strong>,
+                        pass: <strong>pengajar</strong><br>
+
+                        Siswa &mdash; kode: <strong>3333</strong>,
+                        pass: <strong>siswa</strong>
+                    </div>
+
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script fungsionalitas login: urutan dipertahankan -->
     <script src="assets/js/api.js"></script>
     <script src="assets/js/auth.js"></script>
+
 </body>
 </html>

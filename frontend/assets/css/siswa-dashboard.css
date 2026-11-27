@@ -1,0 +1,612 @@
+
+/*
+================================================================================
+LOKASI FILE : frontend/assets/css/siswa-dashboard.css
+GUNA FILE   : Styling khusus halaman Dashboard Siswa.
+              Tidak mengubah logika JavaScript maupun komponen fungsional.
+================================================================================
+*/
+
+/* ================= 1. VARIABEL DAN DASAR ================= */
+
+.siswa-dashboard-page {
+    --lms-sidebar-width: 260px;
+    --lms-sidebar-gradient: linear-gradient(180deg, #07193b 0%, #0d2858 100%);
+    --lms-bg-main: #f1f5f9;
+    --lms-card-bg: #ffffff;
+    --lms-card-radius: 14px;
+    --lms-border-color: #e2e8f0;
+    --lms-text-dark: #0f172a;
+    --lms-text-muted: #64748b;
+
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: var(--lms-bg-main);
+    color: var(--lms-text-dark);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.siswa-dashboard-page *,
+.siswa-dashboard-page *::before,
+.siswa-dashboard-page *::after {
+    box-sizing: border-box;
+}
+
+/* ================= 2. LAYOUT UTAMA ================= */
+
+.siswa-dashboard-page .lms-app-wrapper {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* ================= 3. SIDEBAR ================= */
+
+.siswa-dashboard-page .lms-sidebar {
+    position: sticky;
+    top: 0;
+    width: var(--lms-sidebar-width);
+    min-width: var(--lms-sidebar-width);
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    background: var(--lms-sidebar-gradient);
+    color: #ffffff;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+.siswa-dashboard-page .lms-sidebar-stars {
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(#ffffff 1px, transparent 1px),
+        radial-gradient(#ffffff 1.5px, transparent 1.5px);
+    background-size: 35px 35px, 70px 70px;
+    background-position: 0 0, 15px 15px;
+    opacity: 0.18;
+    pointer-events: none;
+}
+
+.siswa-dashboard-page .lms-sidebar-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 1.5rem 1.15rem;
+}
+
+/* Profil Siswa */
+
+.siswa-dashboard-page .lms-sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.85rem;
+    margin-bottom: 1.8rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.siswa-dashboard-page .lms-sidebar-user:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+}
+
+.siswa-dashboard-page .lms-sidebar-avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0f172a;
+    border: 2px solid #ffffff;
+}
+
+.siswa-dashboard-page .lms-sidebar-userinfo {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.siswa-dashboard-page .lms-sidebar-username {
+    margin: 0;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.siswa-dashboard-page .lms-sidebar-role {
+    margin: 3px 0 0;
+    color: #94a3b8;
+    font-size: 0.78rem;
+}
+
+/* Navigasi */
+
+.siswa-dashboard-page .lms-sidebar-heading {
+    margin: 0 0 12px 10px;
+    color: #94a3b8;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.siswa-dashboard-page .lms-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.siswa-dashboard-page .lms-sidebar-nav li {
+    margin: 0;
+    padding: 0;
+}
+
+.siswa-dashboard-page .lms-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    color: #cbd5e1;
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.18s ease;
+}
+
+.siswa-dashboard-page .lms-sidebar-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.siswa-dashboard-page .lms-sidebar-link.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.22);
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.siswa-dashboard-page .lms-sidebar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+/* Logout */
+
+.siswa-dashboard-page .lms-sidebar-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.siswa-dashboard-page .lms-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 14px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    color: #fda4af;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.siswa-dashboard-page .lms-logout-btn:hover {
+    background: rgba(225, 29, 72, 0.18);
+    color: #ff4d6d;
+}
+
+/* ================= 4. KONTEN UTAMA ================= */
+
+.siswa-dashboard-page .lms-main-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--lms-bg-main);
+}
+
+/* ================= 5. TOPBAR ================= */
+
+.siswa-dashboard-page .lms-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    min-height: 68px;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border-bottom: 1px solid var(--lms-border-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.siswa-dashboard-page .lms-topbar-left,
+.siswa-dashboard-page .lms-topbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.siswa-dashboard-page .lms-topbar-meta {
+    color: var(--lms-text-muted);
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+.siswa-dashboard-page .lms-topbar-avatar {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: var(--lms-text-dark);
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.siswa-dashboard-page .lms-topbar-avatar:hover {
+    background: #cbd5e1;
+    color: var(--lms-text-dark);
+}
+
+/* ================= 6. AREA KONTEN ================= */
+
+.siswa-dashboard-page .lms-body-area {
+    flex: 1;
+    padding: 2rem;
+}
+
+/* Header Sambutan */
+
+.siswa-dashboard-page .lms-greeting-section {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.siswa-dashboard-page .lms-page-eyebrow {
+    margin: 0 0 8px;
+    color: #2563eb;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+}
+
+.siswa-dashboard-page .lms-greeting-title {
+    margin: 0 0 8px;
+    color: var(--lms-text-dark);
+    font-size: 1.85rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.siswa-dashboard-page .lms-greeting-subtitle {
+    margin: 0;
+    color: var(--lms-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ================= 7. STAT CARDS SISWA ================= */
+
+.siswa-dashboard-page .lms-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.siswa-dashboard-page .lms-stat-card-vibrant {
+    min-width: 0;
+    border-radius: var(--lms-card-radius);
+    padding: 1.25rem;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.15s ease;
+}
+
+.siswa-dashboard-page .lms-stat-card-vibrant:hover {
+    transform: translateY(-2px);
+}
+
+.siswa-dashboard-page .lms-stat-card-blue {
+    background: linear-gradient(135deg, #1d61d8 0%, #2563eb 100%);
+}
+
+.siswa-dashboard-page .lms-stat-card-green {
+    background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+}
+
+.siswa-dashboard-page .lms-stat-card-purple {
+    background: linear-gradient(135deg, #a855f7 0%, #c026d3 100%);
+}
+
+.siswa-dashboard-page .lms-stat-card-gold {
+    background: linear-gradient(135deg, #ca8a04 0%, #d97706 100%);
+}
+
+.siswa-dashboard-page .lms-stat-vibrant-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.siswa-dashboard-page .lms-stat-vibrant-info {
+    min-width: 0;
+}
+
+.siswa-dashboard-page .lms-stat-vibrant-info .label {
+    margin: 0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+}
+
+.siswa-dashboard-page .lms-stat-vibrant-info .val {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+/* ================= 8. KARTU KELAS SAYA ================= */
+
+.siswa-dashboard-page .lms-card {
+    margin-bottom: 1.75rem;
+    overflow: hidden;
+    background: var(--lms-card-bg);
+    border: 1px solid var(--lms-border-color);
+    border-radius: var(--lms-card-radius);
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+}
+
+.siswa-dashboard-page .lms-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.2rem 1.5rem;
+    background: #ffffff;
+    border-bottom: 1px solid var(--lms-border-color);
+}
+
+.siswa-dashboard-page .lms-card-title {
+    margin: 0;
+    color: var(--lms-text-dark);
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.siswa-dashboard-page .lms-card-subtitle {
+    margin: 5px 0 0;
+    color: var(--lms-text-muted);
+    font-size: 0.85rem;
+}
+
+.siswa-dashboard-page .lms-card-link {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.siswa-dashboard-page .lms-card-link:hover {
+    color: #1e40af;
+    text-decoration: underline;
+}
+
+.siswa-dashboard-page .lms-card-body {
+    padding: 1.5rem;
+}
+
+.siswa-dashboard-page .lms-card-description {
+    margin: 0 0 1.25rem;
+    color: var(--lms-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+/* Tombol Masuk Kelas */
+
+.siswa-dashboard-page .btn-lms-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #0d234d;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.siswa-dashboard-page .btn-lms-primary:hover {
+    background: #163b7e;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* ================= 9. RESPONSIVE ================= */
+
+@media (max-width: 991.98px) {
+
+    .siswa-dashboard-page .lms-app-wrapper {
+        flex-direction: column;
+    }
+
+    .siswa-dashboard-page .lms-sidebar {
+        position: relative;
+        top: auto;
+        width: 100%;
+        min-width: 0;
+        height: auto;
+        overflow: visible;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-inner {
+        min-height: auto;
+        padding: 1rem;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-user {
+        max-width: 320px;
+        margin-bottom: 1rem;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-heading {
+        margin-top: 0.5rem;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-nav li {
+        flex: 0 0 auto;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-link {
+        padding: 9px 11px;
+        font-size: 0.85rem;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-footer {
+        margin-top: 1rem;
+        padding-top: 0.75rem;
+    }
+
+    .siswa-dashboard-page .lms-logout-btn {
+        width: auto;
+    }
+
+    .siswa-dashboard-page .lms-topbar {
+        min-height: 60px;
+        padding: 0 1.25rem;
+    }
+
+    .siswa-dashboard-page .lms-body-area {
+        padding: 1.25rem;
+    }
+
+    .siswa-dashboard-page .lms-greeting-title {
+        font-size: 1.55rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    .siswa-dashboard-page .lms-sidebar-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .siswa-dashboard-page .lms-sidebar-nav li {
+        min-width: 0;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-link {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .siswa-dashboard-page .lms-body-area {
+        padding: 1rem;
+    }
+
+    .siswa-dashboard-page .lms-greeting-title {
+        font-size: 1.35rem;
+    }
+
+    .siswa-dashboard-page .lms-greeting-subtitle {
+        font-size: 0.88rem;
+    }
+
+    .siswa-dashboard-page .lms-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .siswa-dashboard-page .lms-stat-card-vibrant {
+        padding: 0.9rem;
+        gap: 10px;
+    }
+
+    .siswa-dashboard-page .lms-stat-vibrant-icon {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+    }
+
+    .siswa-dashboard-page .lms-stat-vibrant-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .siswa-dashboard-page .lms-stat-vibrant-info .label {
+        font-size: 0.7rem;
+    }
+
+    .siswa-dashboard-page .lms-stat-vibrant-info .val {
+        font-size: 0.95rem;
+    }
+
+    .siswa-dashboard-page .lms-card-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .siswa-dashboard-page .lms-card-body {
+        padding: 1rem;
+    }
+}

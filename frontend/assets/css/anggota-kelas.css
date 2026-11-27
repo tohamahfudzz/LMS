@@ -1,0 +1,308 @@
+
+/*
+================================================================================
+LOKASI FILE : frontend/assets/css/anggota-kelas.css
+GUNA FILE   : Styling khusus halaman Anggota Kelas Admin.
+              Mengikuti desain master LMS dengan penyesuaian untuk halaman ini.
+              Seluruh selector dibatasi menggunakan .anggota-kelas-page.
+================================================================================
+*/
+
+/* ================= DASAR HALAMAN ================= */
+
+.anggota-kelas-page {
+    min-height: 100vh;
+    background: var(--lms-bg-main, #f1f5f9);
+}
+
+.anggota-kelas-page .lms-body-area {
+    padding: 2rem;
+}
+
+.anggota-kelas-page .anggota-page-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+}
+
+/* ================= KARTU KONTEN ================= */
+
+.anggota-kelas-page .anggota-card {
+    min-width: 0;
+    padding: 1.5rem;
+    background: #ffffff;
+    border: 1px solid var(--lms-border-color, #e2e8f0);
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+}
+
+.anggota-kelas-page .anggota-kelas-selector {
+    margin-bottom: 1.5rem;
+}
+
+.anggota-kelas-page .anggota-card-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 1.4rem;
+}
+
+.anggota-kelas-page .anggota-card-heading h2 {
+    margin: 0 0 4px;
+    color: #0f172a;
+    font-size: 1.05rem;
+    font-weight: 750;
+}
+
+.anggota-kelas-page .anggota-card-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.86rem;
+    line-height: 1.5;
+}
+
+/* ================= IKON KARTU ================= */
+
+.anggota-kelas-page .anggota-heading-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 12px;
+}
+
+.anggota-kelas-page .anggota-icon-blue {
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+.anggota-kelas-page .anggota-icon-purple {
+    color: #9333ea;
+    background: #faf5ff;
+}
+
+/* ================= FORM DAN INPUT ================= */
+
+.anggota-kelas-page .anggota-field {
+    width: 100%;
+}
+
+.anggota-kelas-page .anggota-field label {
+    display: block;
+    margin-bottom: 7px;
+    color: #334155;
+    font-size: 0.9rem;
+    font-weight: 650;
+}
+
+.anggota-kelas-page .anggota-field select {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 38px 10px 13px;
+    color: #0f172a;
+    background-color: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    box-sizing: border-box;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.anggota-kelas-page .anggota-field select:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+/* ================= GRID FORM ================= */
+
+.anggota-kelas-page .anggota-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.anggota-kelas-page .anggota-form-grid .anggota-card {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.anggota-kelas-page .anggota-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+/* ================= TOMBOL SIMPAN ================= */
+
+.anggota-kelas-page .btn-lms-simpan {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 20px;
+    color: #ffffff;
+    background: #1668e3;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.anggota-kelas-page .btn-lms-simpan:hover {
+    color: #ffffff;
+    background: #0f52b8;
+    transform: translateY(-1px);
+}
+
+.anggota-kelas-page .btn-lms-simpan:active {
+    transform: translateY(0);
+}
+
+.anggota-kelas-page .btn-lms-simpan:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.3);
+    outline-offset: 2px;
+}
+
+/* ================= PESAN SUKSES / ERROR ================= */
+
+.anggota-kelas-page .anggota-message {
+    margin-bottom: 1.2rem;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+/* Pastikan atribut hidden tetap menyembunyikan pesan. */
+.anggota-kelas-page .anggota-message[hidden] {
+    display: none !important;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 991.98px) {
+    .anggota-kelas-page .lms-body-area {
+        padding: 1.5rem;
+    }
+
+    .anggota-kelas-page .anggota-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .anggota-kelas-page .lms-body-area {
+        padding: 1rem;
+    }
+
+    .anggota-kelas-page .anggota-page-heading {
+        margin-bottom: 1.25rem;
+    }
+
+    .anggota-kelas-page .lms-greeting-title {
+        font-size: 1.45rem;
+    }
+
+    .anggota-kelas-page .anggota-card {
+        padding: 1.1rem;
+    }
+
+    .anggota-kelas-page .anggota-card-heading {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .anggota-kelas-page .anggota-heading-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .anggota-kelas-page .anggota-form-actions {
+        justify-content: stretch;
+    }
+
+    .anggota-kelas-page .btn-lms-simpan {
+        width: 100%;
+    }
+}
+
+/* ================= SIDEBAR RESPONSIVE TANPA JAVASCRIPT ================= */
+
+@media (max-width: 991.98px) {
+    .anggota-kelas-page .lms-app-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .anggota-kelas-page .lms-sidebar {
+        position: relative;
+        top: auto;
+        left: auto;
+        bottom: auto;
+        width: 100%;
+        min-width: 0;
+        height: auto;
+        max-height: none;
+        overflow: visible;
+        transform: none;
+        margin: 0;
+    }
+
+    .anggota-kelas-page .lms-sidebar-inner {
+        height: auto;
+        padding: 1rem;
+    }
+
+    .anggota-kelas-page .lms-sidebar-user {
+        margin-bottom: 1rem;
+    }
+
+    .anggota-kelas-page .lms-sidebar-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .anggota-kelas-page .lms-sidebar-nav li {
+        flex: 1 1 auto;
+    }
+
+    .anggota-kelas-page .lms-sidebar-link {
+        justify-content: center;
+        padding: 9px 10px;
+        font-size: 0.82rem;
+    }
+
+    .anggota-kelas-page .lms-sidebar-footer {
+        margin-top: 1rem;
+        padding-top: 0.75rem;
+    }
+
+    .anggota-kelas-page .lms-main-content {
+        width: 100%;
+    }
+
+    .anggota-kelas-page .lms-topbar {
+        position: relative;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .anggota-kelas-page .lms-sidebar-link {
+        justify-content: flex-start;
+    }
+
+    .anggota-kelas-page .lms-sidebar-nav li {
+        flex: 1 1 45%;
+    }
+}

@@ -1,158 +1,407 @@
+
+/*
+================================================================================
+LOKASI FILE : frontend/assets/css/auth.css
+GUNA FILE   : Styling khusus halaman Login LMS.
+              Menggunakan Bootstrap 5 untuk layout dan utility,
+              sedangkan file ini mengatur tampilan khusus autentikasi.
+================================================================================
+*/
+
 :root {
-    color-scheme: light;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #1e293b;
-    background: #f1f5f9;
+    --auth-navy-deep: #06142e;
+    --auth-navy-main: #0c2552;
+    --auth-navy-light: #163b7e;
+    --auth-btn-bg: #0d234d;
+    --auth-btn-hover: #13336d;
+    --auth-card-radius: 20px;
+    --auth-input-radius: 10px;
+    --auth-text-dark: #0f172a;
+    --auth-text-muted: #64748b;
+    --auth-border-color: #dbe3ee;
 }
 
-* {
-    box-sizing: border-box;
-}
+/* =========================================================
+   BACKGROUND UTAMA
+========================================================= */
 
 body.auth-page {
-    min-width: 320px;
     min-height: 100vh;
     margin: 0;
-    background: #f1f5f9;
+    padding: 0;
+    background-color: var(--auth-navy-deep);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+    color: #ffffff;
+    overflow-x: hidden;
 }
 
-.auth-page__main {
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    position: relative;
+    background:
+        radial-gradient(
+            circle at 20% 30%,
+            rgba(22, 59, 126, 0.4) 0%,
+            transparent 60%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(13, 37, 82, 0.5) 0%,
+            transparent 50%
+        ),
+        var(--auth-navy-deep);
+}
+
+/* =========================================================
+   BAGIAN HERO / KIRI
+========================================================= */
+
+.auth-hero-section {
+    position: relative;
+    background: linear-gradient(
+        145deg,
+        #081a3d 0%,
+        #0d2858 60%,
+        #081736 100%
+    );
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3.5rem 3rem;
+}
+
+.auth-hero-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.25;
+    background-image:
+        radial-gradient(#ffffff 1px, transparent 1px),
+        radial-gradient(#ffffff 1.5px, transparent 1.5px);
+    background-size: 40px 40px, 80px 80px;
+    background-position: 0 0, 20px 20px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.auth-hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Logo brand */
+
+.auth-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: #ffffff;
+    margin-bottom: 2rem;
+}
+
+.auth-brand-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    padding: 24px;
+    flex-shrink: 0;
 }
+
+.auth-brand-text h2 {
+    font-size: 1.45rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin: 0;
+    color: #ffffff;
+}
+
+.auth-brand-text p {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+
+/* Teks sambutan */
+
+.auth-hero-title {
+    font-size: 2.75rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+    color: #ffffff;
+}
+
+.auth-hero-title span {
+    color: #60a5fa;
+}
+
+.auth-hero-desc {
+    font-size: 1.15rem;
+    color: #cbd5e1;
+    max-width: 460px;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* Separator lengkung */
+
+.auth-curve-separator {
+    position: absolute;
+    top: 0;
+    right: -1px;
+    bottom: 0;
+    width: 90px;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* =========================================================
+   BAGIAN FORM / KANAN
+========================================================= */
+
+.auth-form-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2.5rem 1.5rem;
+    z-index: 2;
+}
+
+/* Tagline */
+
+.auth-tagline {
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.auth-tagline span {
+    display: inline-block;
+    margin: 0 8px;
+    color: #60a5fa;
+    font-weight: bold;
+}
+
+/* =========================================================
+   KARTU LOGIN
+========================================================= */
 
 .auth-card {
-    width: min(100%, 440px);
-    padding: 32px;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    background: #ffffff;
-    box-shadow: 0 18px 45px rgb(15 23 42 / 10%);
-}
-
-.auth-card h1 {
-    margin: 0 0 8px;
-    color: #0f172a;
-    font-size: 1.65rem;
-}
-
-.auth-card p {
-    margin: 0 0 24px;
-    color: #64748b;
-    line-height: 1.6;
-}
-
-.auth-card form {
-    display: grid;
-    gap: 18px;
-}
-
-.auth-card__field {
-    display: grid;
-    gap: 8px;
-}
-
-.auth-card label {
-    color: #334155;
-    font-size: 0.95rem;
-    font-weight: 600;
-}
-
-.auth-card input,
-.auth-card select {
     width: 100%;
-    min-height: 46px;
-    padding: 10px 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
+    max-width: 440px;
     background: #ffffff;
-    color: #0f172a;
-    font: inherit;
+    border-radius: var(--auth-card-radius);
+    padding: 2.5rem 2.25rem;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+    color: var(--auth-text-dark);
+    position: relative;
 }
 
-.auth-card input:focus,
-.auth-card select:focus {
+.auth-card-header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+
+.auth-card-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--auth-navy-deep);
+    margin-bottom: 0.35rem;
+    letter-spacing: -0.5px;
+}
+
+.auth-card-subtitle {
+    font-size: 0.9rem;
+    color: var(--auth-text-muted);
+    margin: 0;
+}
+
+/* =========================================================
+   INPUT FORM
+========================================================= */
+
+.auth-input-group {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    border: 1.5px solid var(--auth-border-color);
+    border-radius: var(--auth-input-radius);
+    background-color: #f8fafc;
+    transition: all 0.2s ease-in-out;
+}
+
+.auth-input-group:focus-within {
     border-color: #2563eb;
-    outline: 3px solid rgb(37 99 235 / 15%);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.15);
 }
 
-.auth-card button {
+.auth-input-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 14px;
+    color: #64748b;
+    pointer-events: none;
+    flex-shrink: 0;
+}
+
+.auth-input-control {
     width: 100%;
-    min-height: 46px;
-    padding: 10px 16px;
-    border: 0;
-    border-radius: 8px;
-    background: #2563eb;
-    color: #ffffff;
-    cursor: pointer;
-    font: inherit;
-    font-weight: 700;
-    transition: background-color 160ms ease;
-}
-
-.auth-card button:hover:not(:disabled) {
-    background: #1d4ed8;
-}
-
-.auth-card button:disabled {
-    cursor: wait;
-    opacity: 0.7;
-}
-
-.auth-card__link {
-    display: inline-block;
-    margin-top: 16px;
-    color: #2563eb;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 12px 14px 12px 0;
     font-size: 0.95rem;
-    text-decoration: none;
+    color: var(--auth-text-dark);
 }
 
-.auth-card__link:hover {
+.auth-input-control::placeholder {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+/* Label */
+
+.auth-label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 6px;
+}
+
+/* =========================================================
+   TOMBOL LOGIN
+========================================================= */
+
+.auth-btn-submit {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: var(--auth-btn-bg);
+    border: none;
+    border-radius: var(--auth-input-radius);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        transform 0.1s ease;
+}
+
+.auth-btn-submit:hover:not(:disabled) {
+    background-color: var(--auth-btn-hover);
+}
+
+.auth-btn-submit:active:not(:disabled) {
+    transform: scale(0.99);
+}
+
+.auth-btn-submit:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+/* =========================================================
+   PESAN LOGIN
+========================================================= */
+
+#loginMessage {
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* =========================================================
+   LINK
+========================================================= */
+
+.auth-extra-links {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.auth-link {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: color 0.15s ease;
+}
+
+.auth-link:hover {
+    color: #1d4ed8;
     text-decoration: underline;
 }
 
-.auth-message {
-    margin: 16px 0;
-    padding: 12px;
-    border: 1px solid #cbd5e1;
+/* =========================================================
+   AKUN CONTOH
+========================================================= */
+
+.auth-demo-accounts {
+    margin-top: 1.25rem;
+    padding: 10px 14px;
+    background-color: #f1f5f9;
+    border: 1px dashed #cbd5e1;
     border-radius: 8px;
-    background: #f8fafc;
-    color: #334155;
+    font-size: 0.8rem;
+    color: #475569;
     line-height: 1.5;
 }
 
-.auth-message--success {
-    border-color: #86efac;
-    background: #f0fdf4;
-    color: #166534;
+.auth-demo-accounts strong {
+    color: #0f172a;
 }
 
-.auth-message--error {
-    border-color: #fca5a5;
-    background: #fef2f2;
-    color: #b91c1c;
-}
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
-.auth-card hr {
-    margin: 24px 0;
-    border: 0;
-    border-top: 1px solid #e2e8f0;
-}
+@media (max-width: 991.98px) {
+    .auth-curve-separator {
+        display: none;
+    }
 
-.auth-card small {
-    color: #64748b;
-    line-height: 1.6;
-}
-
-@media (max-width: 480px) {
-    .auth-page__main {
-        padding: 16px;
+    .auth-form-section {
+        min-height: 100vh;
+        padding: 2.5rem 1.5rem;
     }
 
     .auth-card {
-        padding: 24px;
+        padding: 2rem 1.5rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .auth-form-section {
+        padding: 1.75rem 1rem;
+    }
+
+    .auth-card {
+        padding: 1.75rem 1.25rem;
+        border-radius: 16px;
+    }
+
+    .auth-card-title {
+        font-size: 1.65rem;
+    }
+
+    .auth-demo-accounts {
+        font-size: 0.75rem;
+        padding: 10px;
     }
 }

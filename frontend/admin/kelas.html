@@ -1,10 +1,12 @@
+
 <!--
 ================================================================================
 LOKASI FILE : frontend/admin/kelas.html
-GUNA FILE   : Halaman admin kelola kelas.
-              - Form buat kelas
-              - Tabel daftar kelas (dari admin/kelas/list.php)
-              - Link ke anggota-kelas
+GUNA FILE   : Halaman admin untuk mengelola data kelas.
+              - Membuat kelas baru.
+              - Menampilkan daftar kelas.
+              - Mengatur tahun ajaran dan semester kelas.
+              - Navigasi sidebar dan konfirmasi logout.
 ================================================================================
 -->
 <!DOCTYPE html>
@@ -13,106 +15,495 @@ GUNA FILE   : Halaman admin kelola kelas.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Kelola Kelas - Admin LMS</title>
+
+    <title>Data Kelas - Admin LMS</title>
+
+    <!-- Bootstrap 5 CSS Lokal -->
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
+    <!-- CSS Khusus Halaman Data Kelas -->
+    <link rel="stylesheet" href="../assets/css/admin-kelas.css">
 </head>
-<body>
 
-    <header>
-        <h1>Kelola Kelas</h1>
-        <p id="welcomeText">Memuat...</p>
-        <button type="button" id="logoutButton">Keluar</button>
-    </header>
+<body class="admin-kelas-page">
 
-    <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="kelas.html">Kelas</a>
-                <a href="tahun-ajaran.html">Tahun Ajaran</a>
-        <a href="pengguna.html">Pengguna</a>
-        <a href="anggota-kelas.html">Anggota Kelas</a>
-    </nav>
+    <div class="lms-app-wrapper">
 
-    <main>
-        <section>
-            <h2>Buat Kelas Baru</h2>
-            <div id="kelasMessage" role="alert" aria-live="polite" hidden></div>
+        <!-- SIDEBAR -->
+        <aside class="lms-sidebar" id="appSidebar">
 
-            <form id="createKelasForm" novalidate>
-                <div>
-                    <label for="namaKelas">Nama Kelas</label>
-                    <input
-                        type="text"
-                        id="namaKelas"
-                        required
-                        maxlength="100"
-                        placeholder="Contoh: Pemrograman Web"
-                        autocomplete="off"
-                    >
+            <div class="lms-sidebar-stars"></div>
+
+            <div class="lms-sidebar-inner">
+
+                <!-- Profil Admin -->
+                <a href="profil.html" class="lms-sidebar-user">
+                    <div class="lms-sidebar-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+
+                    <div class="lms-sidebar-userinfo">
+                        <p class="lms-sidebar-username" id="welcomeText">
+                            Memuat...
+                        </p>
+                        <p class="lms-sidebar-role">Administrator LMS</p>
+                    </div>
+                </a>
+
+                <!-- Navigasi Admin -->
+                <nav aria-label="Navigasi Admin">
+                    <ul class="lms-sidebar-nav">
+
+                        <li>
+                            <a href="dashboard.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect width="7" height="9" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="5" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="9" x="14" y="12" rx="1"/>
+                                        <rect width="7" height="5" x="3" y="16" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="kelas.html" class="lms-sidebar-link active">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                                        <path d="M6 6h10"/>
+                                        <path d="M6 10h10"/>
+                                    </svg>
+                                </span>
+                                <span>Data Kelas</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="tahun-ajaran.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="17" rx="2"/>
+                                        <path d="M16 2v4M8 2v4M3 10h18"/>
+                                    </svg>
+                                </span>
+                                <span>Tahun Ajaran</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="pengguna.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                </span>
+                                <span>Data Pengguna</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="anggota-kelas.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                        <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
+                                        <path d="m9 14 2 2 4-4"/>
+                                    </svg>
+                                </span>
+                                <span>Anggota Kelas</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+
+                <!-- Logout -->
+                <div class="lms-sidebar-footer">
+                    <button type="button" class="lms-logout-btn" id="openLogoutModal">
+                        <svg width="18" height="18" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" x2="9" y1="12" y2="12"/>
+                        </svg>
+                        <span>Keluar</span>
+                    </button>
+
+                    <!-- Tombol logout yang digunakan admin.js -->
+                    <button type="button" id="logoutButton" class="d-none">
+                        Keluar
+                    </button>
                 </div>
-                                <div>
-                    <label for="kelasTahunAjaran">Tahun Ajaran</label>
-                    <select id="kelasTahunAjaran">
-                        <option value="">-- Belum diatur --</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="kelasSemester">Semester</label>
-                    <select id="kelasSemester">
-                        <option value="">-- Belum diatur --</option>
-                        <option value="ganjil">Ganjil</option>
-                        <option value="genap">Genap</option>
-                    </select>
-                </div>
-                <button type="submit" id="createKelasButton">Simpan Kelas</button>
-            </form>
-        </section>
 
-        <section>
-            <h2>Daftar Kelas</h2>
-            <table>
-                <thead>
-                                       <tr>
-                        <th>No</th>
-                        <th>Nama Kelas</th>
-                        <th>Tahun Ajaran</th>
-                        <th>Semester</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="kelasTableBody">
-                    <tr>
-                        <td colspan="3">Memuat data...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-                <section id="aturTahunPanel" hidden>
-            <h2>Atur Tahun Ajaran Kelas</h2>
-            <p>Kelas: <strong id="aturKelasNama">-</strong></p>
-            <div id="aturTahunMessage" role="alert" aria-live="polite" hidden></div>
+            </div>
+        </aside>
 
-            <form id="aturTahunForm" novalidate>
-                <input type="hidden" id="aturIdKelas" value="">
-                <div>
-                    <label for="aturTahunAjaran">Tahun Ajaran</label>
-                    <select id="aturTahunAjaran"></select>
-                </div>
-                <div>
-                    <label for="aturSemester">Semester</label>
-                    <select id="aturSemester">
-                        <option value="">-- Belum diatur --</option>
-                        <option value="ganjil">Ganjil</option>
-                        <option value="genap">Genap</option>
-                    </select>
-                </div>
-                <button type="submit" id="aturTahunSimpan">Simpan</button>
-                <button type="button" id="aturTahunBatal">Batal</button>
-            </form>
-        </section>
-    </main>
+        <!-- Overlay untuk sidebar mobile -->
+        <div class="lms-sidebar-overlay" id="sidebarOverlay"></div>
 
+        <!-- AREA KONTEN -->
+        <div class="lms-main-content">
+
+            <!-- TOPBAR -->
+            <header class="lms-topbar">
+
+                <div class="lms-topbar-left">
+                    <button
+                        type="button"
+                        class="lms-menu-toggle"
+                        id="menuToggle"
+                        aria-label="Buka menu navigasi"
+                        aria-expanded="false"
+                        aria-controls="appSidebar">
+
+                        <svg width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" x2="20" y1="12" y2="12"/>
+                            <line x1="4" x2="20" y1="6" y2="6"/>
+                            <line x1="4" x2="20" y1="18" y2="18"/>
+                        </svg>
+                    </button>
+
+                    <span class="lms-topbar-meta">
+                        Kelola Kelas &bull; Portal Administrator LMS
+                    </span>
+                </div>
+
+                <div class="lms-topbar-right">
+                    <a href="profil.html"
+                        class="lms-topbar-avatar"
+                        title="Lihat Profil Admin"
+                        aria-label="Lihat Profil Admin">
+
+                        <svg width="22" height="22" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </a>
+                </div>
+
+            </header>
+
+            <!-- KONTEN UTAMA -->
+            <main class="lms-body-area">
+
+                <!-- Pesan dari JavaScript -->
+                <div
+                    id="kelasMessage"
+                    class="message"
+                    role="alert"
+                    aria-live="polite"
+                    hidden>
+                </div>
+
+                <!-- FORM BUAT KELAS BARU -->
+                <section class="lms-section">
+
+                    <div class="lms-section-heading">
+                        <div>
+                            <h1 class="lms-greeting-title">Data Kelas</h1>
+                            <p class="lms-greeting-subtitle">
+                                Kelola kelas dan pengaturan tahun ajaran.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="lms-form-container">
+
+                        <div class="lms-section-title">
+                            <div class="lms-section-title-icon">
+                                <svg width="21" height="21" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M12 5v14M5 12h14"/>
+                                </svg>
+                            </div>
+
+                            <div>
+                                <h2>Buat Kelas Baru</h2>
+                                <p>Masukkan informasi kelas yang akan dibuat.</p>
+                            </div>
+                        </div>
+
+                        <div class="lms-info-banner">
+                            <svg width="21" height="21" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                            </svg>
+
+                            <span>
+                                Pastikan nama kelas, tahun ajaran, dan semester
+                                sudah sesuai sebelum menyimpan.
+                            </span>
+                        </div>
+
+                        <form id="createKelasForm" novalidate>
+
+                            <div class="form-field">
+                                <label for="namaKelas">Nama Kelas</label>
+                                <input
+                                    type="text"
+                                    id="namaKelas"
+                                    required
+                                    maxlength="100"
+                                    placeholder="Contoh: Pemrograman Web"
+                                    autocomplete="off">
+                            </div>
+
+                            <div class="lms-form-grid">
+
+                                <div class="form-field">
+                                    <label for="kelasTahunAjaran">
+                                        Tahun Ajaran
+                                    </label>
+
+                                    <select id="kelasTahunAjaran">
+                                        <option value="">-- Belum diatur --</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="kelasSemester">Semester</label>
+
+                                    <select id="kelasSemester">
+                                        <option value="">-- Belum diatur --</option>
+                                        <option value="ganjil">Ganjil</option>
+                                        <option value="genap">Genap</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="lms-form-actions">
+                                <button
+                                    type="submit"
+                                    id="createKelasButton"
+                                    class="btn-lms-simpan">
+                                    Simpan Kelas
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </section>
+
+                <!-- DAFTAR KELAS -->
+                <section class="lms-section">
+
+                    <div class="lms-section-heading">
+                        <div>
+                            <h2 class="lms-section-heading-title">
+                                Daftar Kelas
+                            </h2>
+                            <p class="lms-greeting-subtitle">
+                                Daftar kelas yang telah terdaftar di LMS.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="lms-card">
+                        <div class="lms-card-header">
+                            <h3 class="lms-card-title">Data Kelas</h3>
+                        </div>
+
+                        <div class="lms-card-body p-0">
+                            <div class="lms-table-wrapper">
+                                <table class="lms-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="column-number">No</th>
+                                            <th>Nama Kelas</th>
+                                            <th>Tahun Ajaran</th>
+                                            <th>Semester</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="kelasTableBody">
+                                        <tr>
+                                            <td colspan="5" class="table-empty">
+                                                Memuat data kelas...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- PANEL ATUR TAHUN AJARAN -->
+                <section id="aturTahunPanel" class="lms-section lms-form-container" hidden>
+
+                    <div class="lms-section-title">
+                        <div class="lms-section-title-icon">
+                            <svg width="21" height="21" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="17" rx="2"/>
+                                <path d="M16 2v4M8 2v4M3 10h18"/>
+                            </svg>
+                        </div>
+
+                        <div>
+                            <h2>Atur Tahun Ajaran Kelas</h2>
+                            <p>Ubah tahun ajaran dan semester untuk kelas terpilih.</p>
+                        </div>
+                    </div>
+
+                    <div class="lms-selected-class">
+                        <span>Kelas yang dipilih</span>
+                        <strong id="aturKelasNama">-</strong>
+                    </div>
+
+                    <div
+                        id="aturTahunMessage"
+                        class="message"
+                        role="alert"
+                        aria-live="polite"
+                        hidden>
+                    </div>
+
+                    <form id="aturTahunForm" novalidate>
+
+                        <input type="hidden" id="aturIdKelas" value="">
+
+                        <div class="lms-form-grid">
+
+                            <div class="form-field">
+                                <label for="aturTahunAjaran">Tahun Ajaran</label>
+                                <select id="aturTahunAjaran"></select>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="aturSemester">Semester</label>
+                                <select id="aturSemester">
+                                    <option value="">-- Belum diatur --</option>
+                                    <option value="ganjil">Ganjil</option>
+                                    <option value="genap">Genap</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="lms-form-actions">
+                            <button
+                                type="button"
+                                id="aturTahunBatal"
+                                class="btn-lms-batal">
+                                Batal
+                            </button>
+
+                            <button
+                                type="submit"
+                                id="aturTahunSimpan"
+                                class="btn-lms-simpan">
+                                Simpan Perubahan
+                            </button>
+                        </div>
+
+                    </form>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- MODAL KONFIRMASI LOGOUT -->
+    <div
+        class="lms-modal-backdrop"
+        id="logoutModalBackdrop"
+        aria-hidden="true">
+
+        <div
+            class="lms-modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="logoutModalTitle"
+            aria-describedby="logoutModalDescription">
+
+            <div class="lms-modal-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </div>
+
+            <h3 class="lms-modal-title" id="logoutModalTitle">
+                Konfirmasi Keluar
+            </h3>
+
+            <p class="lms-modal-desc" id="logoutModalDescription">
+                Apakah Anda yakin ingin keluar dari akun Administrator LMS?
+            </p>
+
+            <div class="lms-modal-buttons">
+                <button
+                    type="button"
+                    class="btn-modal-cancel"
+                    id="btnBatalLogout">
+                    Batal
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-modal-confirm"
+                    id="btnKonfirmasiLogout">
+                    Ya, Keluar
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript Fungsionalitas Utama -->
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/admin.js"></script>
-     <script src="../assets/js/admin-kelas-tahun.js"></script>
+    <script src="../assets/js/admin-kelas-tahun.js"></script>
+
+    <!-- JavaScript Khusus Interaksi Tampilan -->
+    <script src="../assets/js_style/admin-kelas-style.js"></script>
+
 </body>
 </html>

@@ -1,0 +1,914 @@
+
+/*
+================================================================================
+FILE        : frontend/assets/css/admin-dashboard.css
+FUNGSI      : Styling khusus halaman Dashboard Admin LMS.
+KETERANGAN  : Menggunakan Bootstrap sebagai dasar layout.
+              Tidak mengubah logika JavaScript halaman.
+================================================================================
+*/
+
+/* =========================
+   1. VARIABEL DAN DASAR
+========================= */
+
+:root {
+    --lms-sidebar-bg: #07193b;
+    --lms-sidebar-gradient: linear-gradient(180deg, #07193b 0%, #0d2858 100%);
+    --lms-sidebar-width: 260px;
+
+    --lms-bg-main: #f1f5f9;
+    --lms-card-bg: #ffffff;
+
+    --lms-card-radius: 14px;
+    --lms-border-color: #e2e8f0;
+
+    --lms-text-dark: #0f172a;
+    --lms-text-muted: #64748b;
+
+    --lms-primary-blue: #1e40af;
+}
+
+.admin-dashboard-page {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: var(--lms-bg-main);
+    color: var(--lms-text-dark);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.admin-dashboard-page * {
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   2. LAYOUT UTAMA
+========================= */
+
+.admin-dashboard-page .lms-app-wrapper {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+
+/* =========================
+   3. SIDEBAR
+========================= */
+
+.admin-dashboard-page .lms-sidebar {
+    width: var(--lms-sidebar-width);
+    min-width: var(--lms-sidebar-width);
+
+    background: var(--lms-sidebar-gradient);
+    color: #ffffff;
+
+    display: flex;
+    flex-direction: column;
+
+    position: sticky;
+    top: 0;
+
+    height: 100vh;
+    overflow-y: auto;
+
+    z-index: 100;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.admin-dashboard-page .lms-sidebar-stars {
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        radial-gradient(#ffffff 1px, transparent 1px),
+        radial-gradient(#ffffff 1.5px, transparent 1.5px);
+
+    background-size: 35px 35px, 70px 70px;
+    background-position: 0 0, 15px 15px;
+
+    opacity: 0.18;
+    pointer-events: none;
+}
+
+.admin-dashboard-page .lms-sidebar-inner {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100%;
+    padding: 1.5rem 1.15rem;
+}
+
+
+/* =========================
+   4. PROFIL SIDEBAR
+========================= */
+
+.admin-dashboard-page .lms-sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 0.85rem;
+    margin-bottom: 2rem;
+
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+
+    text-decoration: none;
+    color: inherit;
+
+    transition: background 0.2s ease;
+}
+
+.admin-dashboard-page .lms-sidebar-user:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+}
+
+.admin-dashboard-page .lms-sidebar-avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+
+    border-radius: 50%;
+    background: #e2e8f0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #0f172a;
+    border: 2px solid #ffffff;
+}
+
+.admin-dashboard-page .lms-sidebar-avatar svg {
+    width: 24px;
+    height: 24px;
+}
+
+.admin-dashboard-page .lms-sidebar-userinfo {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.admin-dashboard-page .lms-sidebar-username {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    margin: 0;
+}
+
+.admin-dashboard-page .lms-sidebar-role {
+    font-size: 0.78rem;
+    color: #94a3b8;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    margin: 4px 0 0;
+}
+
+.admin-dashboard-page .lms-sidebar-section-title {
+    color: #94a3b8;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+
+    padding: 0 12px;
+    margin-bottom: 12px;
+}
+
+
+/* =========================
+   5. NAVIGASI SIDEBAR
+========================= */
+
+.admin-dashboard-page .lms-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-dashboard-page .lms-sidebar-nav li {
+    list-style: none;
+}
+
+.admin-dashboard-page .lms-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 11px 14px;
+
+    color: #cbd5e1;
+    text-decoration: none;
+
+    font-size: 0.92rem;
+    font-weight: 500;
+
+    border-radius: 10px;
+
+    transition: all 0.18s ease;
+}
+
+.admin-dashboard-page .lms-sidebar-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.admin-dashboard-page .lms-sidebar-link.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.22);
+
+    font-weight: 700;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.admin-dashboard-page .lms-sidebar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+.admin-dashboard-page .lms-sidebar-icon svg {
+    width: 19px;
+    height: 19px;
+}
+
+
+/* =========================
+   6. TOMBOL LOGOUT
+========================= */
+
+.admin-dashboard-page .lms-sidebar-footer {
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+    margin-top: auto;
+    padding-bottom: 5px;
+}
+
+.admin-dashboard-page .lms-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    width: 100%;
+    padding: 11px 14px;
+
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+
+    color: #fda4af;
+
+    font-size: 0.92rem;
+    font-weight: 600;
+
+    cursor: pointer;
+    text-align: left;
+
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.admin-dashboard-page .lms-logout-btn svg {
+    width: 19px;
+    height: 19px;
+}
+
+.admin-dashboard-page .lms-logout-btn:hover {
+    background: rgba(225, 29, 72, 0.18);
+    color: #ff4d6d;
+}
+
+
+/* =========================
+   7. AREA KONTEN KANAN
+========================= */
+
+.admin-dashboard-page .lms-main-content {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: var(--lms-bg-main);
+}
+
+
+/* =========================
+   8. TOPBAR
+========================= */
+
+.admin-dashboard-page .lms-topbar {
+    min-height: 68px;
+
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--lms-border-color);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 2rem;
+
+    position: sticky;
+    top: 0;
+    z-index: 50;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.admin-dashboard-page .lms-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.admin-dashboard-page .lms-topbar-meta {
+    font-size: 0.88rem;
+    color: var(--lms-text-muted);
+    font-weight: 500;
+}
+
+.admin-dashboard-page .lms-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.admin-dashboard-page .lms-topbar-avatar {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+
+    border-radius: 50%;
+    background: #e2e8f0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+    color: var(--lms-text-dark);
+
+    border: 1.5px solid #cbd5e1;
+
+    transition: background 0.2s ease;
+}
+
+.admin-dashboard-page .lms-topbar-avatar:hover {
+    background: #cbd5e1;
+}
+
+.admin-dashboard-page .lms-topbar-avatar svg {
+    width: 22px;
+    height: 22px;
+}
+
+
+/* =========================
+   9. AREA BODY
+========================= */
+
+.admin-dashboard-page .lms-body-area {
+    padding: 2rem;
+    flex: 1;
+}
+
+
+/* =========================
+   10. GREETING
+========================= */
+
+.admin-dashboard-page .lms-greeting-section {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.admin-dashboard-page .lms-greeting-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+
+    color: var(--lms-text-dark);
+
+    margin: 0 0 8px;
+    letter-spacing: -0.5px;
+}
+
+.admin-dashboard-page .lms-greeting-heading {
+    font-size: 1.15rem;
+    font-weight: 700;
+
+    color: #334155;
+    margin: 0 0 6px;
+}
+
+.admin-dashboard-page .lms-greeting-subtitle {
+    font-size: 0.95rem;
+    color: var(--lms-text-muted);
+    margin: 0;
+}
+
+
+/* =========================
+   11. BADGE INFORMASI
+========================= */
+
+.admin-dashboard-page .lms-date-badge {
+    background: #e9f0fe;
+    border: 1px solid #d0e1fd;
+    border-radius: 12px;
+
+    padding: 0.75rem 1.15rem;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: #1e40af;
+}
+
+.admin-dashboard-page .lms-date-badge svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+.admin-dashboard-page .lms-date-badge-text small {
+    display: block;
+
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 700;
+
+    color: #3b82f6;
+    letter-spacing: 0.5px;
+}
+
+.admin-dashboard-page .lms-date-badge-text strong {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1e3a8a;
+}
+
+
+/* =========================
+   12. KARTU STATISTIK
+========================= */
+
+.admin-dashboard-page .lms-stat-card-vibrant {
+    min-height: 112px;
+
+    border-radius: var(--lms-card-radius);
+    padding: 1.25rem;
+
+    color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+    transition: transform 0.15s ease;
+}
+
+.admin-dashboard-page .lms-stat-card-vibrant:hover {
+    transform: translateY(-2px);
+}
+
+.admin-dashboard-page .lms-stat-card-blue {
+    background: linear-gradient(135deg, #1d61d8 0%, #2563eb 100%);
+}
+
+.admin-dashboard-page .lms-stat-card-green {
+    background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+}
+
+.admin-dashboard-page .lms-stat-card-purple {
+    background: linear-gradient(135deg, #a855f7 0%, #c026d3 100%);
+}
+
+.admin-dashboard-page .lms-stat-vibrant-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-dashboard-page .lms-stat-vibrant-icon svg {
+    width: 25px;
+    height: 25px;
+}
+
+.admin-dashboard-page .lms-stat-vibrant-info .label {
+    font-size: 0.82rem;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    opacity: 0.9;
+    margin: 0 0 4px;
+}
+
+.admin-dashboard-page .lms-stat-vibrant-info .val {
+    font-size: 1.6rem;
+    font-weight: 800;
+
+    margin: 0;
+    line-height: 1.2;
+}
+
+
+/* =========================
+   13. TOMBOL KARTU STATISTIK
+========================= */
+
+.admin-dashboard-page .lms-stat-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 44px;
+
+    margin-top: 10px;
+    padding: 10px 16px;
+
+    background-color: #1668e3;
+    color: #ffffff;
+
+    border-radius: 10px;
+
+    font-size: 0.92rem;
+    font-weight: 700;
+
+    text-align: center;
+    text-decoration: none;
+
+    box-shadow: 0 4px 12px rgba(22, 104, 227, 0.28);
+
+    transition: all 0.2s ease;
+}
+
+.admin-dashboard-page .lms-stat-action-btn:hover {
+    background-color: #0f52b8;
+    color: #ffffff;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 6px 16px rgba(22, 104, 227, 0.38);
+}
+
+
+/* =========================
+   14. GRID DASHBOARD
+========================= */
+
+.admin-dashboard-page .lms-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 1.5rem;
+}
+
+
+/* =========================
+   15. KARTU PANEL
+========================= */
+
+.admin-dashboard-page .lms-card {
+    min-width: 0;
+
+    background: var(--lms-card-bg);
+    border: 1px solid var(--lms-border-color);
+    border-radius: var(--lms-card-radius);
+
+    overflow: hidden;
+
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+}
+
+.admin-dashboard-page .lms-card-header {
+    min-height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 1rem 1.25rem;
+
+    border-bottom: 1px solid var(--lms-border-color);
+}
+
+.admin-dashboard-page .lms-card-title {
+    font-size: 1rem;
+    font-weight: 800;
+
+    color: var(--lms-text-dark);
+    margin: 0;
+}
+
+.admin-dashboard-page .lms-card-body {
+    padding: 1.25rem;
+}
+
+
+/* =========================
+   16. MENU ADMIN
+========================= */
+
+.admin-dashboard-page .lms-menu-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 15px;
+
+    margin-bottom: 12px;
+
+    background: #ffffff;
+    border: 1px solid var(--lms-border-color);
+    border-radius: 12px;
+
+    text-decoration: none;
+    color: var(--lms-text-dark);
+
+    transition: all 0.2s ease;
+}
+
+.admin-dashboard-page .lms-menu-card:last-child {
+    margin-bottom: 0;
+}
+
+.admin-dashboard-page .lms-menu-card:hover {
+    background: #f8fafc;
+    border-color: #bfdbfe;
+
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.06);
+
+    color: var(--lms-text-dark);
+}
+
+.admin-dashboard-page .lms-menu-card-icon {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+}
+
+.admin-dashboard-page .lms-menu-card-icon svg {
+    width: 23px;
+    height: 23px;
+}
+
+.admin-dashboard-page .lms-menu-card-icon.blue {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.admin-dashboard-page .lms-menu-card-icon.green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.admin-dashboard-page .lms-menu-card-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.admin-dashboard-page .lms-menu-card-content h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    margin: 0 0 4px;
+}
+
+.admin-dashboard-page .lms-menu-card-content p {
+    font-size: 0.82rem;
+    color: var(--lms-text-muted);
+
+    margin: 0;
+    line-height: 1.5;
+}
+
+.admin-dashboard-page .lms-menu-card-arrow {
+    font-size: 1.4rem;
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+
+/* =========================
+   17. INFORMASI KOSONG
+========================= */
+
+.admin-dashboard-page .lms-info-empty {
+    min-height: 220px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    padding: 20px;
+}
+
+.admin-dashboard-page .lms-info-empty-icon {
+    width: 54px;
+    height: 54px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.admin-dashboard-page .lms-info-empty-icon svg {
+    width: 27px;
+    height: 27px;
+}
+
+.admin-dashboard-page .lms-info-empty h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    color: var(--lms-text-dark);
+    margin: 0 0 7px;
+}
+
+.admin-dashboard-page .lms-info-empty p {
+    max-width: 280px;
+
+    font-size: 0.85rem;
+    line-height: 1.6;
+
+    color: var(--lms-text-muted);
+    margin: 0;
+}
+
+
+/* =========================
+   18. RESPONSIVE TABLET
+========================= */
+
+@media (max-width: 991.98px) {
+
+    .admin-dashboard-page .lms-sidebar {
+        width: 230px;
+        min-width: 230px;
+    }
+
+    .admin-dashboard-page .lms-body-area {
+        padding: 1.5rem;
+    }
+
+    .admin-dashboard-page .lms-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================
+   19. RESPONSIVE MOBILE
+========================= */
+
+@media (max-width: 767.98px) {
+
+    .admin-dashboard-page .lms-app-wrapper {
+        flex-direction: column;
+    }
+
+    .admin-dashboard-page .lms-sidebar {
+        position: relative;
+
+        width: 100%;
+        min-width: 100%;
+        height: auto;
+
+        overflow: visible;
+    }
+
+    .admin-dashboard-page .lms-sidebar-inner {
+        min-height: auto;
+        padding: 1rem;
+    }
+
+    .admin-dashboard-page .lms-sidebar-user {
+        margin-bottom: 1rem;
+    }
+
+    .admin-dashboard-page .lms-sidebar-section-title {
+        margin-bottom: 8px;
+    }
+
+    .admin-dashboard-page .lms-sidebar-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .admin-dashboard-page .lms-sidebar-link {
+        padding: 10px;
+        font-size: 0.83rem;
+    }
+
+    .admin-dashboard-page .lms-sidebar-footer {
+        margin-top: 1rem;
+    }
+
+    .admin-dashboard-page .lms-topbar {
+        min-height: 58px;
+        padding: 0 1rem;
+    }
+
+    .admin-dashboard-page .lms-body-area {
+        padding: 1rem;
+    }
+
+    .admin-dashboard-page .lms-greeting-section {
+        flex-direction: column;
+        margin-bottom: 1.5rem;
+    }
+
+    .admin-dashboard-page .lms-greeting-title {
+        font-size: 1.6rem;
+    }
+
+    .admin-dashboard-page .lms-date-badge {
+        width: 100%;
+    }
+
+    .admin-dashboard-page .lms-dashboard-grid {
+        gap: 1rem;
+    }
+
+}
+
+@media (max-width: 400px) {
+
+    .admin-dashboard-page .lms-sidebar-nav {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-dashboard-page .lms-greeting-title {
+        font-size: 1.4rem;
+    }
+
+    .admin-dashboard-page .lms-stat-card-vibrant {
+        padding: 1rem;
+    }
+
+}

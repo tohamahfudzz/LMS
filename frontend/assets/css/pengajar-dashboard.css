@@ -1,0 +1,549 @@
+
+/*
+================================================================================
+LOKASI FILE : frontend/assets/css/pengajar-dashboard.css
+GUNA FILE   : Styling khusus halaman Dashboard Pengajar.
+              Tidak mengubah logika JavaScript maupun komponen fungsional.
+================================================================================
+*/
+
+/* ================= 1. VARIABEL DAN DASAR ================= */
+
+.pengajar-dashboard-page {
+    --lms-sidebar-width: 260px;
+    --lms-sidebar-bg: #07193b;
+    --lms-sidebar-gradient: linear-gradient(180deg, #07193b 0%, #0d2858 100%);
+    --lms-bg-main: #f1f5f9;
+    --lms-card-bg: #ffffff;
+    --lms-border-color: #e2e8f0;
+    --lms-text-dark: #0f172a;
+    --lms-text-muted: #64748b;
+    --lms-primary-blue: #2563eb;
+
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: var(--lms-bg-main);
+    color: var(--lms-text-dark);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.pengajar-dashboard-page *,
+.pengajar-dashboard-page *::before,
+.pengajar-dashboard-page *::after {
+    box-sizing: border-box;
+}
+
+/* ================= 2. LAYOUT UTAMA ================= */
+
+.pengajar-dashboard-page .lms-app-wrapper {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* ================= 3. SIDEBAR ================= */
+
+.pengajar-dashboard-page .lms-sidebar {
+    position: sticky;
+    top: 0;
+    width: var(--lms-sidebar-width);
+    min-width: var(--lms-sidebar-width);
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    background: var(--lms-sidebar-gradient);
+    color: #ffffff;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+.pengajar-dashboard-page .lms-sidebar-stars {
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(#ffffff 1px, transparent 1px),
+        radial-gradient(#ffffff 1.5px, transparent 1.5px);
+    background-size: 35px 35px, 70px 70px;
+    background-position: 0 0, 15px 15px;
+    opacity: 0.18;
+    pointer-events: none;
+}
+
+.pengajar-dashboard-page .lms-sidebar-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 1.5rem 1.15rem;
+}
+
+/* Profil pada sidebar */
+
+.pengajar-dashboard-page .lms-sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.85rem;
+    margin-bottom: 1.8rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.pengajar-dashboard-page .lms-sidebar-user:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+}
+
+.pengajar-dashboard-page .lms-sidebar-avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0f172a;
+    border: 2px solid #ffffff;
+}
+
+.pengajar-dashboard-page .lms-sidebar-userinfo {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.pengajar-dashboard-page .lms-sidebar-username {
+    margin: 0;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pengajar-dashboard-page .lms-sidebar-role {
+    margin: 3px 0 0;
+    color: #94a3b8;
+    font-size: 0.78rem;
+}
+
+/* Judul navigasi */
+
+.pengajar-dashboard-page .lms-sidebar-heading {
+    margin: 0 0 12px 10px;
+    color: #94a3b8;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* Navigasi */
+
+.pengajar-dashboard-page .lms-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pengajar-dashboard-page .lms-sidebar-nav li {
+    margin: 0;
+    padding: 0;
+}
+
+.pengajar-dashboard-page .lms-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    color: #cbd5e1;
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.18s ease;
+}
+
+.pengajar-dashboard-page .lms-sidebar-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.pengajar-dashboard-page .lms-sidebar-link.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.22);
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.pengajar-dashboard-page .lms-sidebar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+/* Tombol logout */
+
+.pengajar-dashboard-page .lms-sidebar-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.pengajar-dashboard-page .lms-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 14px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    color: #fda4af;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.pengajar-dashboard-page .lms-logout-btn:hover {
+    background: rgba(225, 29, 72, 0.18);
+    color: #ff4d6d;
+}
+
+/* ================= 4. KONTEN UTAMA ================= */
+
+.pengajar-dashboard-page .lms-main-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--lms-bg-main);
+}
+
+/* ================= 5. TOPBAR ================= */
+
+.pengajar-dashboard-page .lms-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    min-height: 68px;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border-bottom: 1px solid var(--lms-border-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.pengajar-dashboard-page .lms-topbar-left,
+.pengajar-dashboard-page .lms-topbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.pengajar-dashboard-page .lms-topbar-meta {
+    color: var(--lms-text-muted);
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+.pengajar-dashboard-page .lms-topbar-avatar {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: var(--lms-text-dark);
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.pengajar-dashboard-page .lms-topbar-avatar:hover {
+    background: #cbd5e1;
+    color: var(--lms-text-dark);
+}
+
+/* ================= 6. AREA KONTEN ================= */
+
+.pengajar-dashboard-page .lms-body-area {
+    flex: 1;
+    padding: 2rem;
+}
+
+/* Header halaman */
+
+.pengajar-dashboard-page .lms-greeting-section {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.pengajar-dashboard-page .lms-page-eyebrow {
+    margin: 0 0 8px;
+    color: #2563eb;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+}
+
+.pengajar-dashboard-page .lms-greeting-title {
+    margin: 0 0 8px;
+    color: var(--lms-text-dark);
+    font-size: 1.85rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.pengajar-dashboard-page .lms-greeting-subtitle {
+    margin: 0;
+    color: var(--lms-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ================= 7. KARTU KELAS ================= */
+
+.pengajar-dashboard-page .lms-card {
+    margin-bottom: 1.75rem;
+    overflow: hidden;
+    background: var(--lms-card-bg);
+    border: 1px solid var(--lms-border-color);
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+}
+
+.pengajar-dashboard-page .lms-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.5rem;
+    background: #ffffff;
+    border-bottom: 1px solid var(--lms-border-color);
+}
+
+.pengajar-dashboard-page .lms-card-title {
+    margin: 0;
+    color: var(--lms-text-dark);
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.pengajar-dashboard-page .lms-card-subtitle {
+    margin: 5px 0 0;
+    color: var(--lms-text-muted);
+    font-size: 0.85rem;
+}
+
+.pengajar-dashboard-page .lms-card-body {
+    padding: 1.5rem;
+}
+
+/* ================= 8. TABEL KELAS ================= */
+
+.pengajar-dashboard-page .lms-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.pengajar-dashboard-page .lms-table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.pengajar-dashboard-page .lms-table thead th {
+    padding: 14px 16px;
+    background: #f8fafc;
+    color: #475569;
+    border-bottom: 1.5px solid var(--lms-border-color);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+}
+
+.pengajar-dashboard-page .lms-table tbody td {
+    padding: 14px 16px;
+    color: var(--lms-text-dark);
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.92rem;
+    vertical-align: middle;
+}
+
+.pengajar-dashboard-page .lms-table tbody tr:hover td {
+    background: #f8fafc;
+}
+
+.pengajar-dashboard-page .lms-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.pengajar-dashboard-page .lms-table .column-number {
+    width: 80px;
+}
+
+.pengajar-dashboard-page .lms-table .column-action {
+    width: 140px;
+}
+
+.pengajar-dashboard-page .lms-table .table-loading {
+    padding: 2rem 1rem;
+    color: var(--lms-text-muted);
+    text-align: center;
+}
+
+/*
+ * Styling tombol/link aksi di tabel.
+ * Tidak mengubah href, atribut, atau event yang dibuat JavaScript.
+ */
+
+.pengajar-dashboard-page .lms-table tbody td a {
+    display: inline-block;
+    padding: 7px 13px;
+    border-radius: 7px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.pengajar-dashboard-page .lms-table tbody td a:hover {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+/* ================= 9. RESPONSIVE ================= */
+
+@media (max-width: 991.98px) {
+
+    .pengajar-dashboard-page .lms-app-wrapper {
+        flex-direction: column;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar {
+        position: relative;
+        top: auto;
+        width: 100%;
+        min-width: 0;
+        height: auto;
+        overflow: visible;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-inner {
+        min-height: auto;
+        padding: 1rem;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-user {
+        max-width: 320px;
+        margin-bottom: 1rem;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-heading {
+        margin-top: 0.5rem;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-nav li {
+        flex: 0 0 auto;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-link {
+        padding: 9px 11px;
+        font-size: 0.85rem;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-footer {
+        margin-top: 1rem;
+        padding-top: 0.75rem;
+    }
+
+    .pengajar-dashboard-page .lms-logout-btn {
+        width: auto;
+    }
+
+    .pengajar-dashboard-page .lms-topbar {
+        min-height: 60px;
+        padding: 0 1.25rem;
+    }
+
+    .pengajar-dashboard-page .lms-body-area {
+        padding: 1.25rem;
+    }
+
+    .pengajar-dashboard-page .lms-greeting-title {
+        font-size: 1.55rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    .pengajar-dashboard-page .lms-sidebar-nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-nav li {
+        min-width: 0;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-link {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .pengajar-dashboard-page .lms-body-area {
+        padding: 1rem;
+    }
+
+    .pengajar-dashboard-page .lms-card-header {
+        padding: 1rem;
+    }
+
+    .pengajar-dashboard-page .lms-greeting-title {
+        font-size: 1.35rem;
+    }
+
+    .pengajar-dashboard-page .lms-greeting-subtitle {
+        font-size: 0.88rem;
+    }
+
+    .pengajar-dashboard-page .lms-table thead th,
+    .pengajar-dashboard-page .lms-table tbody td {
+        padding: 11px 12px;
+        font-size: 0.82rem;
+    }
+}

@@ -1,58 +1,408 @@
-<!--
-================================================================================
-LOKASI FILE : frontend/admin/dashboard.html
-GUNA FILE   : Halaman utama setelah admin berhasil login.
-              Menampilkan sambutan, menu navigasi (Kelas, Pengguna),
-              dan tombol logout. Melakukan pengecekan role di sisi UI
-              (proteksi sesungguhnya tetap di backend via session PHP).
-              Tombol "Profil" di header menuju profil.html (ganti email).
-================================================================================
--->
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
+
     <title>Dashboard Admin - LMS</title>
+
+    <!-- Bootstrap 5 CSS Lokal -->
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
+    <!-- CSS khusus Dashboard Admin -->
+    <link rel="stylesheet" href="../assets/css/admin-dashboard.css">
 </head>
-<body>
 
-    <header>
-        <h1>Dashboard Admin</h1>
-        <p id="welcomeText">Memuat data pengguna...</p>
-        <a href="profil.html" id="profilLink">Profil</a>
-        <button type="button" id="logoutButton">Keluar</button>
-    </header>
+<body class="admin-dashboard-page">
 
-    <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="kelas.html">Kelas</a>
-                <a href="tahun-ajaran.html">Tahun Ajaran</a>
-        <a href="pengguna.html">Pengguna</a>
-    </nav>
+    <div class="lms-app-wrapper">
 
-    <main>
-        <section>
-            <h2>Menu Admin</h2>
+        <!-- SIDEBAR -->
+        <aside class="lms-sidebar">
 
-            <article>
-                <h3>Kelola Kelas</h3>
-                <p>Buat kelas baru dan atur anggota (pengajar &amp; siswa).</p>
-                <a href="kelas.html">Buka Halaman Kelas</a>
-            </article>
+            <div class="lms-sidebar-stars"></div>
 
-            <article>
-                <h3>Kelola Pengguna</h3>
-                <p>Lihat dan tambah data pengajar serta siswa.</p>
-                <a href="pengguna.html">Buka Halaman Pengguna</a>
-            </article>
-        </section>
-    </main>
+            <div class="lms-sidebar-inner">
 
-    <!-- Path relatif dari folder admin/ ke assets/ -->
+                <!-- Profil Admin -->
+                <a href="profil.html" class="lms-sidebar-user">
+
+                    <div class="lms-sidebar-avatar">
+                        <svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+
+                    <div class="lms-sidebar-userinfo">
+                        <p class="lms-sidebar-username" id="welcomeText">
+                            Memuat data pengguna...
+                        </p>
+                        <p class="lms-sidebar-role">Administrator LMS</p>
+                    </div>
+
+                </a>
+
+                <!-- Navigasi -->
+                <div class="lms-sidebar-section-title">
+                    MENU UTAMA
+                </div>
+
+                <nav>
+                    <ul class="lms-sidebar-nav">
+
+                        <li>
+                            <a href="dashboard.html" class="lms-sidebar-link active">
+                                <span class="lms-sidebar-icon">
+                                    <svg viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="9" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="5" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="9" x="14" y="12" rx="1"/>
+                                        <rect width="7" height="5" x="3" y="16" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="kelas.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                                        <path d="M6 6h10"/>
+                                        <path d="M6 10h10"/>
+                                    </svg>
+                                </span>
+                                <span>Data Kelas</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="tahun-ajaran.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="17" rx="2"/>
+                                        <path d="M16 2v4M8 2v4M3 10h18"/>
+                                        <path d="m9 15 2 2 4-4"/>
+                                    </svg>
+                                </span>
+                                <span>Tahun Ajaran</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="pengguna.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                </span>
+                                <span>Data Pengguna</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+
+                <!-- Logout -->
+                <div class="lms-sidebar-footer">
+                    <button type="button" id="logoutButton" class="lms-logout-btn">
+                        <svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" x2="9" y1="12" y2="12"/>
+                        </svg>
+                        <span>Keluar</span>
+                    </button>
+                </div>
+
+            </div>
+        </aside>
+
+
+        <!-- AREA KONTEN UTAMA -->
+        <div class="lms-main-content">
+
+            <!-- TOPBAR -->
+            <header class="lms-topbar">
+
+                <div class="lms-topbar-left">
+                    <span class="lms-topbar-meta">
+                        Panel Administrator LMS
+                    </span>
+                </div>
+
+                <div class="lms-topbar-right">
+                    <a href="profil.html"
+                        id="profilLink"
+                        class="lms-topbar-avatar"
+                        title="Lihat Profil Admin">
+
+                        <svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+
+                    </a>
+                </div>
+
+            </header>
+
+
+            <!-- KONTEN DASHBOARD -->
+            <main class="lms-body-area">
+
+                <!-- Sambutan -->
+                <section class="lms-greeting-section">
+
+                    <div>
+                        <h1 class="lms-greeting-title">
+                            Dashboard
+                        </h1>
+
+                        <h2 class="lms-greeting-heading">
+                            Selamat Datang, Admin
+                        </h2>
+
+                        <p class="lms-greeting-subtitle">
+                            Kelola Data Kelas, Pengguna, dan Aktivitas LMS Dengan Mudah.
+                        </p>
+                    </div>
+
+                    <div class="lms-date-badge">
+
+                        <svg viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="4" rx="2"/>
+                            <line x1="16" x2="16" y1="2" y2="6"/>
+                            <line x1="8" x2="8" y1="2" y2="6"/>
+                            <line x1="3" x2="21" y1="10" y2="10"/>
+                        </svg>
+
+                        <div class="lms-date-badge-text">
+                            <small>Dashboard Admin</small>
+                            <strong>Panel Administrasi</strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- KARTU STATISTIK -->
+                <section class="row g-3 mb-4">
+
+                    <!-- Total Kelas -->
+                    <div class="col-md-4">
+                        <div class="lms-stat-card-vibrant lms-stat-card-blue">
+
+                            <div class="lms-stat-vibrant-icon">
+                                <svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <rect width="18" height="12" x="3" y="4" rx="2"/>
+                                    <circle cx="8" cy="10" r="1"/>
+                                    <circle cx="12" cy="10" r="1"/>
+                                    <circle cx="16" cy="10" r="1"/>
+                                </svg>
+                            </div>
+
+                            <div class="lms-stat-vibrant-info">
+                                <p class="label">Total Kelas</p>
+                                <p class="val">—</p>
+                            </div>
+
+                        </div>
+
+                        <a href="kelas.html" class="lms-stat-action-btn">
+                            Kelola Kelas
+                        </a>
+                    </div>
+
+
+                    <!-- Total Pengajar -->
+                    <div class="col-md-4">
+                        <div class="lms-stat-card-vibrant lms-stat-card-green">
+
+                            <div class="lms-stat-vibrant-icon">
+                                <svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                            </div>
+
+                            <div class="lms-stat-vibrant-info">
+                                <p class="label">Total Pengajar</p>
+                                <p class="val">—</p>
+                            </div>
+
+                        </div>
+
+                        <a href="pengguna.html" class="lms-stat-action-btn">
+                            Kelola Pengguna
+                        </a>
+                    </div>
+
+
+                    <!-- Total Siswa -->
+                    <div class="col-md-4">
+                        <div class="lms-stat-card-vibrant lms-stat-card-purple">
+
+                            <div class="lms-stat-vibrant-icon">
+                                <svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                    <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
+                                    <path d="m9 14 2 2 4-4"/>
+                                </svg>
+                            </div>
+
+                            <div class="lms-stat-vibrant-info">
+                                <p class="label">Total Siswa</p>
+                                <p class="val">—</p>
+                            </div>
+
+                        </div>
+
+                        <a href="kelas.html" class="lms-stat-action-btn">
+                            Lihat Data Kelas
+                        </a>
+                    </div>
+
+                </section>
+
+
+                <!-- PANEL DASHBOARD -->
+                <section class="lms-dashboard-grid">
+
+                    <!-- Menu Admin -->
+                    <div class="lms-card">
+
+                        <div class="lms-card-header">
+                            <h2 class="lms-card-title">
+                                Menu Admin
+                            </h2>
+                        </div>
+
+                        <div class="lms-card-body">
+
+                            <a href="kelas.html" class="lms-menu-card">
+
+                                <div class="lms-menu-card-icon blue">
+                                    <svg viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                                        <path d="M6 6h10M6 10h10"/>
+                                    </svg>
+                                </div>
+
+                                <div class="lms-menu-card-content">
+                                    <h3>Kelola Kelas</h3>
+                                    <p>Buat kelas baru dan atur anggota pengajar serta siswa.</p>
+                                </div>
+
+                                <span class="lms-menu-card-arrow">→</span>
+
+                            </a>
+
+
+                            <a href="pengguna.html" class="lms-menu-card">
+
+                                <div class="lms-menu-card-icon green">
+                                    <svg viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                                    </svg>
+                                </div>
+
+                                <div class="lms-menu-card-content">
+                                    <h3>Kelola Pengguna</h3>
+                                    <p>Lihat dan tambah data pengajar serta siswa.</p>
+                                </div>
+
+                                <span class="lms-menu-card-arrow">→</span>
+
+                            </a>
+
+                        </div>
+                    </div>
+
+
+                    <!-- Informasi Dashboard -->
+                    <div class="lms-card">
+
+                        <div class="lms-card-header">
+                            <h2 class="lms-card-title">
+                                Informasi Dashboard
+                            </h2>
+                        </div>
+
+                        <div class="lms-card-body">
+
+                            <div class="lms-info-empty">
+
+                                <div class="lms-info-empty-icon">
+                                    <svg viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="1.7"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 16v-4M12 8h.01"/>
+                                    </svg>
+                                </div>
+
+                                <h3>Belum Ada Informasi</h3>
+
+                                <p>
+                                    Informasi aktivitas dan ringkasan data
+                                    akan ditampilkan di bagian ini.
+                                </p>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </section>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- Script Autentikasi dan Logika Halaman Admin -->
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>
+
     <script>
         (function () {
             "use strict";
@@ -64,18 +414,23 @@ GUNA FILE   : Halaman utama setelah admin berhasil login.
 
             // Tampilkan nama admin
             const welcomeEl = document.getElementById("welcomeText");
+
             if (welcomeEl) {
-                welcomeEl.textContent = "Selamat datang, " + (user.nama || "Admin") + ".";
+                welcomeEl.textContent =
+                    "Selamat datang, " + (user.nama || "Admin") + ".";
             }
 
             // Tombol logout
             const logoutBtn = document.getElementById("logoutButton");
+
             if (logoutBtn) {
                 logoutBtn.addEventListener("click", function () {
                     logout();
                 });
             }
+
         })();
     </script>
+
 </body>
 </html>
