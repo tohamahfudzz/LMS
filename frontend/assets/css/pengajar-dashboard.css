@@ -547,3 +547,281 @@ GUNA FILE   : Styling khusus halaman Dashboard Pengajar.
         font-size: 0.82rem;
     }
 }
+
+/* ================================================================
+   10. SIDEBAR INTERAKTIF DAN RESPONSIVE
+   ================================================================ */
+
+/* Tombol toggle sidebar */
+
+.pengajar-dashboard-page .lms-topbar-left {
+    gap: 16px;
+}
+
+.pengajar-dashboard-page .lms-sidebar-toggle {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0;
+    border: 1px solid var(--lms-border-color);
+    border-radius: 9px;
+    background: #ffffff;
+    color: #334155;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.pengajar-dashboard-page .lms-sidebar-toggle:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.pengajar-dashboard-page .lms-sidebar-toggle:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.3);
+    outline-offset: 2px;
+}
+
+/* Transisi sidebar */
+
+.pengajar-dashboard-page .lms-sidebar {
+    flex-shrink: 0;
+    transition:
+        width 0.25s ease,
+        min-width 0.25s ease,
+        transform 0.25s ease;
+}
+
+/* Sidebar desktop ketika diciutkan */
+
+@media (min-width: 992px) {
+
+    .pengajar-dashboard-page.sidebar-collapsed .lms-sidebar {
+        width: 82px;
+        min-width: 82px;
+    }
+
+    .pengajar-dashboard-page.sidebar-collapsed .lms-sidebar-inner {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .pengajar-dashboard-page.sidebar-collapsed .lms-sidebar-user {
+        justify-content: center;
+        padding: 10px 0;
+    }
+
+    .pengajar-dashboard-page.sidebar-collapsed .lms-sidebar-userinfo,
+    .pengajar-dashboard-page.sidebar-collapsed .lms-sidebar-heading,
+    .pengajar-dashboard-page.sidebar-collapsed .lms-sidebar-link > span:last-child,
+    .pengajar-dashboard-page.sidebar-collapsed .lms-logout-btn span {
+        display: none;
+    }
+
+    .pengajar-dashboard-page.sidebar-collapsed .lms-sidebar-link {
+        justify-content: center;
+        padding: 12px 8px;
+    }
+
+    .pengajar-dashboard-page.sidebar-collapsed .lms-sidebar-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .pengajar-dashboard-page.sidebar-collapsed .lms-logout-btn {
+        justify-content: center;
+        padding: 12px 8px;
+    }
+
+    .pengajar-dashboard-page.sidebar-collapsed .lms-sidebar-footer {
+        padding-top: 12px;
+    }
+
+    .pengajar-dashboard-page.sidebar-collapsed .lms-sidebar-user {
+        margin-bottom: 1.5rem;
+    }
+
+    .pengajar-dashboard-page.sidebar-collapsed .lms-sidebar-link,
+    .pengajar-dashboard-page.sidebar-collapsed .lms-logout-btn {
+        position: relative;
+    }
+
+}
+
+/* Backdrop disembunyikan pada desktop */
+
+.pengajar-dashboard-page .lms-sidebar-backdrop {
+    display: none;
+    padding: 0;
+    border: 0;
+}
+
+/* ================================================================
+   TABLET DAN MOBILE
+   Sidebar tetap berada di samping kiri
+   ================================================================ */
+
+@media (max-width: 991.98px) {
+
+    .pengajar-dashboard-page .lms-app-wrapper {
+        flex-direction: row;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 260px;
+        min-width: 260px;
+        height: 100vh;
+        height: 100dvh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        z-index: 1050;
+    }
+
+    /* Sidebar ketika dibuka */
+
+    .pengajar-dashboard-page.sidebar-open .lms-sidebar {
+        transform: translateX(0);
+    }
+
+    /* Backdrop di belakang sidebar */
+
+    .pengajar-dashboard-page .lms-sidebar-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.55);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        z-index: 1040;
+        cursor: pointer;
+        transition:
+            opacity 0.25s ease,
+            visibility 0.25s ease;
+    }
+
+    .pengajar-dashboard-page.sidebar-open .lms-sidebar-backdrop {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    /* Konten utama tetap memenuhi layar */
+
+    .pengajar-dashboard-page .lms-main-content {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-inner {
+        min-height: 100%;
+        padding: 1.5rem 1.15rem;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-user {
+        max-width: none;
+        margin-bottom: 1.8rem;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-userinfo {
+        display: block;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-heading {
+        margin-top: 0;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: 6px;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-nav li {
+        flex: initial;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-link {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 11px 14px;
+        font-size: 0.92rem;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-link > span:last-child {
+        display: inline;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-footer {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+
+    .pengajar-dashboard-page .lms-logout-btn {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .pengajar-dashboard-page .lms-logout-btn span {
+        display: inline;
+    }
+
+    /* Ketika menu terbuka, halaman tidak ikut scroll */
+
+    .pengajar-dashboard-page.sidebar-open {
+        overflow: hidden;
+    }
+
+}
+
+/* Penyesuaian handphone */
+
+@media (max-width: 575.98px) {
+
+    .pengajar-dashboard-page .lms-topbar {
+        min-height: 60px;
+        padding: 0 1rem;
+    }
+
+    .pengajar-dashboard-page .lms-topbar-left {
+        gap: 12px;
+    }
+
+    .pengajar-dashboard-page .lms-sidebar-toggle {
+        width: 38px;
+        height: 38px;
+    }
+
+    .pengajar-dashboard-page .lms-body-area {
+        padding: 1rem;
+    }
+
+    .pengajar-dashboard-page .lms-card-header {
+        padding: 1rem;
+    }
+
+    .pengajar-dashboard-page .lms-greeting-title {
+        font-size: 1.35rem;
+    }
+
+    .pengajar-dashboard-page .lms-greeting-subtitle {
+        font-size: 0.88rem;
+    }
+
+    .pengajar-dashboard-page .lms-table thead th,
+    .pengajar-dashboard-page .lms-table tbody td {
+        padding: 11px 12px;
+        font-size: 0.82rem;
+    }
+
+}

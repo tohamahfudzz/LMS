@@ -610,3 +610,360 @@ GUNA FILE   : Styling khusus halaman Dashboard Siswa.
         padding: 1rem;
     }
 }
+
+
+/* ================================================================
+   10. SIDEBAR INTERAKTIF DAN RESPONSIVE
+   Desktop : Collapsible Sidebar
+   Mobile  : Off-canvas Sidebar
+   ================================================================ */
+
+/* Tombol hamburger */
+
+.siswa-dashboard-page .lms-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.siswa-dashboard-page .lms-sidebar-toggle {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    padding: 0;
+    border: 1px solid var(--lms-border-color);
+    border-radius: 9px;
+
+    background: #ffffff;
+    color: #334155;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.siswa-dashboard-page .lms-sidebar-toggle:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.siswa-dashboard-page .lms-sidebar-toggle:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.3);
+    outline-offset: 2px;
+}
+
+/* Transisi sidebar */
+
+.siswa-dashboard-page .lms-sidebar {
+    flex-shrink: 0;
+
+    transition:
+        width 0.25s ease,
+        min-width 0.25s ease,
+        transform 0.25s ease;
+}
+
+/* Backdrop default */
+
+.siswa-dashboard-page .lms-sidebar-backdrop {
+    display: none;
+    padding: 0;
+    border: none;
+}
+
+/* ================================================================
+   DESKTOP: SIDEBAR COLLAPSIBLE
+   ================================================================ */
+
+@media (min-width: 992px) {
+
+    .siswa-dashboard-page.sidebar-collapsed .lms-sidebar {
+        width: 82px;
+        min-width: 82px;
+    }
+
+    .siswa-dashboard-page.sidebar-collapsed .lms-sidebar-inner {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    /* Profil siswa */
+
+    .siswa-dashboard-page.sidebar-collapsed .lms-sidebar-user {
+        justify-content: center;
+        padding: 10px 0;
+    }
+
+    .siswa-dashboard-page.sidebar-collapsed .lms-sidebar-userinfo {
+        display: none;
+    }
+
+    /* Judul navigasi */
+
+    .siswa-dashboard-page.sidebar-collapsed .lms-sidebar-heading {
+        display: none;
+    }
+
+    /* Navigasi hanya menampilkan ikon */
+
+    .siswa-dashboard-page.sidebar-collapsed .lms-sidebar-link {
+        justify-content: center;
+        padding: 12px 8px;
+    }
+
+    .siswa-dashboard-page.sidebar-collapsed .lms-sidebar-link > span:last-child {
+        display: none;
+    }
+
+    .siswa-dashboard-page.sidebar-collapsed .lms-sidebar-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Logout */
+
+    .siswa-dashboard-page.sidebar-collapsed .lms-logout-btn {
+        justify-content: center;
+        padding: 12px 8px;
+    }
+
+    .siswa-dashboard-page.sidebar-collapsed .lms-logout-btn span {
+        display: none;
+    }
+
+}
+
+/* ================================================================
+   TABLET DAN HANDPHONE
+   Sidebar tetap di samping kiri
+   ================================================================ */
+
+@media (max-width: 991.98px) {
+
+    /* Layout utama tetap horizontal */
+
+    .siswa-dashboard-page .lms-app-wrapper {
+        flex-direction: row;
+    }
+
+    /* Sidebar off-canvas */
+
+    .siswa-dashboard-page .lms-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 260px;
+        min-width: 260px;
+
+        height: 100vh;
+        height: 100dvh;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        transform: translateX(-100%);
+        z-index: 1050;
+    }
+
+    /* Sidebar terbuka */
+
+    .siswa-dashboard-page.sidebar-open .lms-sidebar {
+        transform: translateX(0);
+    }
+
+    /* Backdrop */
+
+    .siswa-dashboard-page .lms-sidebar-backdrop {
+        display: block;
+
+        position: fixed;
+        inset: 0;
+
+        width: 100%;
+        height: 100%;
+
+        background: rgba(15, 23, 42, 0.55);
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+
+        z-index: 1040;
+
+        cursor: pointer;
+
+        transition:
+            opacity 0.25s ease,
+            visibility 0.25s ease;
+    }
+
+    .siswa-dashboard-page.sidebar-open .lms-sidebar-backdrop {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    /* Konten utama */
+
+    .siswa-dashboard-page .lms-main-content {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Isi sidebar tetap vertikal */
+
+    .siswa-dashboard-page .lms-sidebar-inner {
+        min-height: 100%;
+        padding: 1.5rem 1.15rem;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-user {
+        max-width: none;
+        margin-bottom: 1.8rem;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-userinfo {
+        display: block;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-heading {
+        display: block;
+        margin: 0 0 12px 10px;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: 6px;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-nav li {
+        flex: initial;
+        min-width: 0;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-link {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 11px 14px;
+        font-size: 0.92rem;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-link > span:last-child {
+        display: inline;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-footer {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+
+    .siswa-dashboard-page .lms-logout-btn {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .siswa-dashboard-page .lms-logout-btn span {
+        display: inline;
+    }
+
+    /* Kunci scroll halaman ketika sidebar terbuka */
+
+    .siswa-dashboard-page.sidebar-open {
+        overflow: hidden;
+    }
+
+    /* Topbar */
+
+    .siswa-dashboard-page .lms-topbar {
+        min-height: 60px;
+        padding: 0 1.25rem;
+    }
+
+    /* Area konten */
+
+    .siswa-dashboard-page .lms-body-area {
+        padding: 1.25rem;
+    }
+
+    .siswa-dashboard-page .lms-greeting-title {
+        font-size: 1.55rem;
+    }
+
+}
+
+/* ================================================================
+   HANDPHONE KECIL
+   ================================================================ */
+
+@media (max-width: 575.98px) {
+
+    .siswa-dashboard-page .lms-topbar {
+        min-height: 60px;
+        padding: 0 1rem;
+    }
+
+    .siswa-dashboard-page .lms-topbar-left {
+        gap: 12px;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-toggle {
+        width: 38px;
+        height: 38px;
+    }
+
+    .siswa-dashboard-page .lms-body-area {
+        padding: 1rem;
+    }
+
+    .siswa-dashboard-page .lms-greeting-title {
+        font-size: 1.35rem;
+    }
+
+    .siswa-dashboard-page .lms-greeting-subtitle {
+        font-size: 0.88rem;
+    }
+
+    /* Grid navigasi sidebar tetap vertikal,
+       bukan grid horizontal seperti aturan lama. */
+
+    .siswa-dashboard-page .lms-sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .siswa-dashboard-page .lms-sidebar-link {
+        width: 100%;
+        padding: 11px 14px;
+    }
+
+    /* Kartu statistik tetap mengikuti desain asli */
+
+    .siswa-dashboard-page .lms-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .siswa-dashboard-page .lms-stat-card-vibrant {
+        padding: 0.9rem;
+        gap: 10px;
+    }
+
+    .siswa-dashboard-page .lms-stat-vibrant-icon {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+    }
+
+    .siswa-dashboard-page .lms-stat-vibrant-info .val {
+        font-size: 0.95rem;
+    }
+
+}

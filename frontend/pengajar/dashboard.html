@@ -20,8 +20,11 @@
     <div class="lms-app-wrapper">
 
         <!-- ================= SIDEBAR ================= -->
-        <aside class="lms-sidebar" id="appSidebar">
-
+        <aside
+    class="lms-sidebar"
+    id="appSidebar"
+    aria-label="Navigasi utama pengajar"
+>
             <div class="lms-sidebar-stars"></div>
 
             <div class="lms-sidebar-inner">
@@ -161,16 +164,45 @@
             </div>
         </aside>
 
+<button
+    type="button"
+    class="lms-sidebar-backdrop"
+    id="sidebarBackdrop"
+    aria-label="Tutup menu navigasi"
+    tabindex="-1"
+></button>
+
+
+
         <!-- ================= KONTEN UTAMA ================= -->
         <div class="lms-main-content">
 
             <!-- Topbar -->
             <header class="lms-topbar">
-                <div class="lms-topbar-left">
-                    <span class="lms-topbar-meta">
-                        Portal Pembelajaran
-                    </span>
-                </div>
+               <div class="lms-topbar-left">
+
+    <button
+        type="button"
+        class="lms-sidebar-toggle"
+        id="sidebarToggle"
+        aria-label="Buka menu navigasi"
+        aria-controls="appSidebar"
+        aria-expanded="false"
+    >
+        <svg width="22" height="22" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+    </button>
+
+    <span class="lms-topbar-meta">
+        Portal Pembelajaran
+    </span>
+
+</div>
 
                 <div class="lms-topbar-right">
                     <a href="profil.html" id="profilLink"
@@ -256,6 +288,7 @@
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/pengajar-common.js"></script>
     <script src="../assets/js/pengajar-dashboard.js"></script>
+    <script src="../assets/js_style/pengajar-sidebar.js"></script>
 
 </body>
 </html>

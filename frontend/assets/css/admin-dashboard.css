@@ -912,3 +912,323 @@ KETERANGAN  : Menggunakan Bootstrap sebagai dasar layout.
     }
 
 }
+
+/* ================================================================
+   20. SIDEBAR INTERAKTIF DAN RESPONSIVE
+   Desktop : Collapsible Sidebar
+   Mobile  : Off-canvas Sidebar
+   ================================================================ */
+
+/* Tombol hamburger */
+
+.admin-dashboard-page .lms-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.admin-dashboard-page .lms-sidebar-toggle {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    padding: 0;
+    border: 1px solid var(--lms-border-color);
+    border-radius: 9px;
+
+    background: #ffffff;
+    color: #334155;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-dashboard-page .lms-sidebar-toggle:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.admin-dashboard-page .lms-sidebar-toggle:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.3);
+    outline-offset: 2px;
+}
+
+/* Transisi sidebar */
+
+.admin-dashboard-page .lms-sidebar {
+    flex-shrink: 0;
+
+    transition:
+        width 0.25s ease,
+        min-width 0.25s ease,
+        transform 0.25s ease;
+}
+
+/* Backdrop default */
+
+.admin-dashboard-page .lms-sidebar-backdrop {
+    display: none;
+    padding: 0;
+    border: none;
+}
+
+/* ================================================================
+   DESKTOP: SIDEBAR COLLAPSIBLE
+   ================================================================ */
+
+@media (min-width: 768px) {
+
+    .admin-dashboard-page.sidebar-collapsed .lms-sidebar {
+        width: 82px;
+        min-width: 82px;
+    }
+
+    .admin-dashboard-page.sidebar-collapsed .lms-sidebar-inner {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    /* Profil */
+
+    .admin-dashboard-page.sidebar-collapsed .lms-sidebar-user {
+        justify-content: center;
+        padding: 10px 0;
+    }
+
+    .admin-dashboard-page.sidebar-collapsed .lms-sidebar-userinfo {
+        display: none;
+    }
+
+    /* Judul menu */
+
+    .admin-dashboard-page.sidebar-collapsed .lms-sidebar-section-title {
+        display: none;
+    }
+
+    /* Navigasi */
+
+    .admin-dashboard-page.sidebar-collapsed .lms-sidebar-link {
+        justify-content: center;
+        padding: 12px 8px;
+    }
+
+    .admin-dashboard-page.sidebar-collapsed .lms-sidebar-link > span:last-child {
+        display: none;
+    }
+
+    .admin-dashboard-page.sidebar-collapsed .lms-sidebar-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Logout */
+
+    .admin-dashboard-page.sidebar-collapsed .lms-logout-btn {
+        justify-content: center;
+        padding: 12px 8px;
+    }
+
+    .admin-dashboard-page.sidebar-collapsed .lms-logout-btn span {
+        display: none;
+    }
+
+}
+
+/* ================================================================
+   TABLET DAN HANDPHONE
+   Sidebar berada di samping kiri
+   ================================================================ */
+
+@media (max-width: 767.98px) {
+
+    /* Layout tetap horizontal */
+
+    .admin-dashboard-page .lms-app-wrapper {
+        flex-direction: row;
+    }
+
+    /* Sidebar off-canvas */
+
+    .admin-dashboard-page .lms-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 260px;
+        min-width: 260px;
+
+        height: 100vh;
+        height: 100dvh;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        transform: translateX(-100%);
+        z-index: 1050;
+    }
+
+    /* Sidebar terbuka */
+
+    .admin-dashboard-page.sidebar-open .lms-sidebar {
+        transform: translateX(0);
+    }
+
+    /* Backdrop */
+
+    .admin-dashboard-page .lms-sidebar-backdrop {
+        display: block;
+
+        position: fixed;
+        inset: 0;
+
+        width: 100%;
+        height: 100%;
+
+        background: rgba(15, 23, 42, 0.55);
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+
+        z-index: 1040;
+
+        cursor: pointer;
+
+        transition:
+            opacity 0.25s ease,
+            visibility 0.25s ease;
+    }
+
+    .admin-dashboard-page.sidebar-open .lms-sidebar-backdrop {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    /* Konten utama */
+
+    .admin-dashboard-page .lms-main-content {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Isi sidebar dikembalikan ke bentuk vertikal */
+
+    .admin-dashboard-page .lms-sidebar-inner {
+        min-height: 100%;
+        padding: 1.5rem 1.15rem;
+    }
+
+    .admin-dashboard-page .lms-sidebar-user {
+        margin-bottom: 1.8rem;
+    }
+
+    .admin-dashboard-page .lms-sidebar-userinfo {
+        display: block;
+    }
+
+    .admin-dashboard-page .lms-sidebar-section-title {
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    .admin-dashboard-page .lms-sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: 6px;
+    }
+
+    .admin-dashboard-page .lms-sidebar-nav li {
+        flex: initial;
+    }
+
+    .admin-dashboard-page .lms-sidebar-link {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 11px 14px;
+        font-size: 0.92rem;
+    }
+
+    .admin-dashboard-page .lms-sidebar-link > span:last-child {
+        display: inline;
+    }
+
+    .admin-dashboard-page .lms-sidebar-footer {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+
+    .admin-dashboard-page .lms-logout-btn {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .admin-dashboard-page .lms-logout-btn span {
+        display: inline;
+    }
+
+    /* Kunci scroll halaman saat sidebar terbuka */
+
+    .admin-dashboard-page.sidebar-open {
+        overflow: hidden;
+    }
+
+    /* Topbar dan konten */
+
+    .admin-dashboard-page .lms-topbar {
+        min-height: 58px;
+        padding: 0 1rem;
+    }
+
+    .admin-dashboard-page .lms-body-area {
+        padding: 1rem;
+    }
+
+    .admin-dashboard-page .lms-greeting-section {
+        flex-direction: column;
+        margin-bottom: 1.5rem;
+    }
+
+    .admin-dashboard-page .lms-greeting-title {
+        font-size: 1.6rem;
+    }
+
+    .admin-dashboard-page .lms-date-badge {
+        width: 100%;
+    }
+
+    .admin-dashboard-page .lms-dashboard-grid {
+        gap: 1rem;
+    }
+
+}
+
+/* ================================================================
+   HANDPHONE KECIL
+   ================================================================ */
+
+@media (max-width: 400px) {
+
+    .admin-dashboard-page .lms-sidebar-toggle {
+        width: 38px;
+        height: 38px;
+    }
+
+    .admin-dashboard-page .lms-topbar-left {
+        gap: 10px;
+    }
+
+    .admin-dashboard-page .lms-greeting-title {
+        font-size: 1.4rem;
+    }
+
+    .admin-dashboard-page .lms-stat-card-vibrant {
+        padding: 1rem;
+    }
+
+}

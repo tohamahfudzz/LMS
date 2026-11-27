@@ -1,83 +1,442 @@
-<!--
-================================================================================
-LOKASI FILE : frontend/admin/profil.html
-GUNA FILE   : Halaman profil Admin. Dibuka dari tombol "Profil" di dashboard.html.
-              Untuk sementara hanya berisi satu pengaturan: ganti email.
-              Email baru yang dimasukkan akan menimpa email lama.
-              - Logika halaman : assets/js/profil.js (dipakai bersama oleh admin,
-                                 pengajar, dan siswa; peran dibaca dari data-role di <body>)
-              - Backend        : backend/api/profil/get.php dan update_email.php
-              Tampilan memakai assets/css/kelas-detail.css.
-================================================================================
--->
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Profil - Admin LMS</title>
-    <link rel="stylesheet" href="../assets/css/kelas-detail.css">
+    <title>Profil Admin - LMS</title>
+
+    <!-- Bootstrap 5 CSS Lokal -->
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+
+    <!-- CSS Khusus Halaman Profil Admin -->
+    <link rel="stylesheet" href="../assets/css/admin-profil.css">
 </head>
-<body data-role="admin">
 
-    <header>
-        <h1>Profil</h1>
-        <p id="welcomeText">Memuat...</p>
-        <button type="button" id="logoutButton">Keluar</button>
-    </header>
+<body data-role="admin" class="admin-profil-page">
 
-    <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="kelas.html">Kelas</a>
-                <a href="tahun-ajaran.html">Tahun Ajaran</a>
-        <a href="pengguna.html">Pengguna</a>
-        <a href="profil.html">Profil</a>
-    </nav>
+    <div class="lms-app-wrapper">
 
-    <main>
-        <div id="profilMessage" class="message" role="alert" aria-live="polite" hidden></div>
+        <!-- SIDEBAR -->
+        <aside class="lms-sidebar" id="appSidebar">
+            <div class="lms-sidebar-stars"></div>
 
-        <section class="kelas-panel__section">
-            <h2>Informasi Akun</h2>
-            <dl>
-                <dt>Nama</dt>
-                <dd id="profilNama">Memuat...</dd>
-                <dt>Kode</dt>
-                <dd id="profilKode">Memuat...</dd>
-                <dt>Peran</dt>
-                <dd id="profilRole">Memuat...</dd>
-                <dt>Email saat ini</dt>
-                <dd id="profilEmailSaatIni">Memuat...</dd>
-            </dl>
-        </section>
+            <div class="lms-sidebar-inner">
 
-        <section class="kelas-panel__section">
-            <h2>Ganti Email</h2>
-            <form id="emailForm" novalidate>
-                <div class="form-field">
-                    <label for="profilEmail">Email baru</label>
-                    <input type="email" id="profilEmail" name="email" required maxlength="100"
-                        autocomplete="email" placeholder="nama@contoh.com">
+                <!-- Profil Admin -->
+                <a href="profil.html" class="lms-sidebar-user">
+                    <div class="lms-sidebar-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+
+                    <div class="lms-sidebar-userinfo">
+                        <p class="lms-sidebar-username" id="welcomeText">Memuat...</p>
+                        <p class="lms-sidebar-role">Administrator LMS</p>
+                    </div>
+                </a>
+
+                <!-- Navigasi Admin -->
+                <nav>
+                    <ul class="lms-sidebar-nav">
+                        <li>
+                            <a href="dashboard.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="7" height="9" x="3" y="3" rx="1"/>
+                                        <rect width="7" height="5" x="14" y="3" rx="1"/>
+                                        <rect width="7" height="9" x="14" y="12" rx="1"/>
+                                        <rect width="7" height="5" x="3" y="16" rx="1"/>
+                                    </svg>
+                                </span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="kelas.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                                    </svg>
+                                </span>
+                                <span>Data Kelas</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="tahun-ajaran.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="17" rx="2"/>
+                                        <path d="M16 2v4M8 2v4M3 10h18"/>
+                                    </svg>
+                                </span>
+                                <span>Tahun Ajaran</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="pengguna.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                </span>
+                                <span>Data Pengguna</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="anggota-kelas.html" class="lms-sidebar-link">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                        <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
+                                        <path d="m9 14 2 2 4-4"/>
+                                    </svg>
+                                </span>
+                                <span>Data Penugasan</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="profil.html" class="lms-sidebar-link active" aria-current="page">
+                                <span class="lms-sidebar-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                </span>
+                                <span>Profil</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Logout -->
+                <div class="lms-sidebar-footer">
+                    <button type="button" class="lms-logout-btn" id="openLogoutModal">
+                        <svg width="18" height="18" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" x2="9" y1="12" y2="12"/>
+                        </svg>
+                        <span>Keluar</span>
+                    </button>
+
+                    <!-- Tombol logout asli untuk auth.js -->
+                    <button type="button" id="logoutButton" class="d-none">
+                        Keluar
+                    </button>
                 </div>
-                <button type="submit" id="saveEmailButton">Simpan Email</button>
-            </form>
-            <p><small>Email baru akan menggantikan email lama.</small></p>
-        </section>
 
+            </div>
+        </aside>
 
-                <section class="kelas-panel__section">
-            <h2>Ganti Password</h2>
-            <div id="passwordMessage" class="message" role="alert" aria-live="polite" hidden></div>
-            <p>Untuk keamanan, password diganti lewat tautan yang dikirim ke email akun Anda.</p>
-            <button type="button" id="requestPasswordButton">Kirim Tautan ke Email Saya</button>
-            <p><small>Pastikan email sudah diisi di bagian Ganti Email di atas. Tautan berlaku 15 menit dan hanya bisa dipakai sekali.</small></p>
-        </section>
-    </main>
+        <!-- AREA KONTEN -->
+        <div class="lms-main-content">
 
+            <!-- TOPBAR -->
+            <header class="lms-topbar">
+                <div class="lms-topbar-left">
+                    <button type="button" class="lms-menu-toggle"
+                        id="menuToggle" aria-label="Toggle menu"
+                        aria-expanded="false">
+                        <svg width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" x2="20" y1="12" y2="12"/>
+                            <line x1="4" x2="20" y1="6" y2="6"/>
+                            <line x1="4" x2="20" y1="18" y2="18"/>
+                        </svg>
+                    </button>
+
+                    <span class="lms-topbar-meta">
+                        Pengaturan Akun &bull; Portal Administrator LMS
+                    </span>
+                </div>
+
+                <div class="lms-topbar-right">
+                    <a href="profil.html" class="lms-topbar-avatar"
+                        title="Lihat Profil Admin" aria-label="Lihat Profil Admin">
+                        <svg width="22" height="22" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </a>
+                </div>
+            </header>
+
+            <!-- KONTEN UTAMA -->
+            <main class="lms-body-area">
+
+                <!-- Judul Halaman -->
+                <div class="admin-profile-heading">
+                    <h1 class="lms-page-title">Profil Administrator</h1>
+                    <p class="lms-page-subtitle">
+                        Kelola informasi akun, alamat email, dan keamanan kata sandi administrator LMS.
+                    </p>
+                </div>
+
+                <!-- Pesan Profil -->
+                <div id="profilMessage"
+                    class="alert d-none"
+                    role="alert"
+                    aria-live="polite">
+                </div>
+
+                <!-- HERO PROFIL -->
+                <section class="lms-profile-hero">
+
+                    <div class="lms-profile-avatar-large">
+                        <svg width="50" height="50" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+
+                    <div class="lms-profile-info-block">
+                        <h2 id="profilNama">Memuat Nama...</h2>
+
+                        <span class="lms-profile-role-tag">
+                            <svg width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2"
+                                class="me-1">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                            <span id="profilRole">Administrator</span>
+                        </span>
+
+                        <div class="lms-profile-meta-details">
+                            <div>
+                                <strong>Kode Admin:</strong>
+                                <span id="profilKode">-</span>
+                            </div>
+
+                            <div>
+                                <strong>Email Aktif:</strong>
+                                <span id="profilEmailSaatIni">-</span>
+                            </div>
+
+                            <div>
+                                <strong>Status:</strong>
+                                <span class="badge bg-success-subtle text-success">
+                                    Aktif
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CARD PENGATURAN PROFIL -->
+                <section class="lms-data-card">
+
+                    <div class="lms-profile-card-body">
+
+                        <!-- TAB NAVIGASI -->
+                        <div class="lms-profile-nav-tabs" role="tablist"
+                            aria-label="Pengaturan profil">
+
+                            <button type="button"
+                                class="lms-profile-tab-btn active"
+                                id="tabBtnEmail"
+                                role="tab"
+                                aria-selected="true"
+                                aria-controls="contentTabEmail">
+                                Informasi Akun &amp; Email
+                            </button>
+
+                            <button type="button"
+                                class="lms-profile-tab-btn"
+                                id="tabBtnKeamanan"
+                                role="tab"
+                                aria-selected="false"
+                                aria-controls="contentTabKeamanan">
+                                Keamanan &amp; Password
+                            </button>
+                        </div>
+
+                        <!-- TAB INFORMASI AKUN & EMAIL -->
+                        <div id="contentTabEmail"
+                            class="lms-profile-tab-content"
+                            role="tabpanel"
+                            aria-labelledby="tabBtnEmail">
+
+                            <h3 class="profile-section-title">
+                                Perbarui Email Akun Administrator
+                            </h3>
+
+                            <p class="profile-section-description">
+                                Email baru akan digunakan untuk login akun administrator
+                                serta menerima tautan reset kata sandi.
+                            </p>
+
+                            <form id="emailForm" novalidate class="profile-email-form">
+
+                                <div class="form-field">
+                                    <label for="profilEmail" class="form-label">
+                                        Email Baru
+                                        <span class="text-danger">*</span>
+                                    </label>
+
+                                    <input
+                                        type="email"
+                                        id="profilEmail"
+                                        name="email"
+                                        required
+                                        maxlength="100"
+                                        autocomplete="email"
+                                        placeholder="admin@email.com"
+                                        class="form-control">
+                                </div>
+
+                                <button type="submit"
+                                    id="saveEmailButton"
+                                    class="btn-lms-simpan">
+                                    Simpan Perubahan Email
+                                </button>
+                            </form>
+
+                            <p class="profile-note">
+                                <em>Email baru akan langsung menggantikan email lama Anda.</em>
+                            </p>
+                        </div>
+
+                        <!-- TAB KEAMANAN & PASSWORD -->
+                        <div id="contentTabKeamanan"
+                            class="lms-profile-tab-content d-none"
+                            role="tabpanel"
+                            aria-labelledby="tabBtnKeamanan"
+                            hidden>
+
+                            <h3 class="profile-section-title">
+                                Atur Ulang Kata Sandi
+                            </h3>
+
+                            <p class="profile-section-description">
+                                Untuk keamanan, penggantian kata sandi dilakukan
+                                melalui tautan rahasia yang dikirimkan ke email
+                                akun terdaftar Anda.
+                            </p>
+
+                            <div id="passwordMessage"
+                                class="alert d-none"
+                                role="alert"
+                                aria-live="polite">
+                            </div>
+
+                            <div class="profile-password-info">
+                                <p>
+                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="11" x="3" y="11" rx="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+
+                                    Tautan reset password berlaku selama
+                                    <strong>15 menit</strong> dan hanya dapat
+                                    digunakan satu kali.
+                                </p>
+
+                                <button type="button"
+                                    id="requestPasswordButton"
+                                    class="btn btn-primary fw-bold">
+                                    Kirim Tautan Reset ke Email Saya
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- OVERLAY SIDEBAR MOBILE -->
+    <div class="lms-sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MODAL KONFIRMASI LOGOUT -->
+    <div class="lms-modal-backdrop"
+        id="logoutModalBackdrop"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logoutModalTitle"
+        aria-hidden="true">
+
+        <div class="lms-modal-card">
+
+            <div class="lms-modal-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </div>
+
+            <h3 class="lms-modal-title" id="logoutModalTitle">
+                Konfirmasi Keluar
+            </h3>
+
+            <p class="lms-modal-desc">
+                Apakah Anda yakin ingin keluar dari akun Administrator LMS?
+            </p>
+
+            <div class="lms-modal-buttons">
+                <button type="button"
+                    class="btn-modal-cancel"
+                    id="btnBatalLogout">
+                    Batal
+                </button>
+
+                <button type="button"
+                    class="btn-modal-confirm"
+                    id="btnKonfirmasiLogout">
+                    Ya, Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT UTAMA LMS -->
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/profil.js"></script>
-     <script src="../assets/js/profil-password.js"></script>
+    <script src="../assets/js/profil-password.js"></script>
+
+    <!-- SCRIPT TAMBAHAN KHUSUS TAMPILAN -->
+    <script src="../assets/js_style/admin-profil-style.js"></script>
+
 </body>
 </html>
