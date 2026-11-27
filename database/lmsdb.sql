@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 02, 2026 at 03:25 AM
+-- Generation Time: Nov 27, 2026 at 02:12 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -43,7 +43,8 @@ CREATE TABLE `absensi` (
 
 INSERT INTO `absensi` (`id_absensi`, `id_kelas`, `id_pengajar`, `tanggal`, `waktu_buka`, `waktu_tutup`, `status`) VALUES
 (1, 1, 1, '2026-10-16', '2026-10-16 20:01:28', NULL, 'terbuka'),
-(2, 1, 1, '2026-10-18', '2026-10-18 19:30:21', '2026-10-18 19:57:58', 'tertutup');
+(2, 1, 1, '2026-10-18', '2026-10-18 19:30:21', '2026-10-18 19:57:58', 'tertutup'),
+(3, 1, 1, '2026-11-18', '2026-11-18 10:42:00', '2026-11-18 23:42:00', 'terbuka');
 
 -- --------------------------------------------------------
 
@@ -103,7 +104,8 @@ CREATE TABLE `kehadiran` (
 --
 
 INSERT INTO `kehadiran` (`id_kehadiran`, `id_absensi`, `id_siswa`, `waktu_absen`, `status`) VALUES
-(1, 1, 1, '2026-10-16 20:06:58', 'hadir');
+(1, 1, 1, '2026-10-16 20:06:58', 'hadir'),
+(2, 3, 1, '2026-11-18 10:43:42', 'hadir');
 
 -- --------------------------------------------------------
 
@@ -113,15 +115,17 @@ INSERT INTO `kehadiran` (`id_kehadiran`, `id_absensi`, `id_siswa`, `waktu_absen`
 
 CREATE TABLE `kelas` (
   `id_kelas` int(10) UNSIGNED NOT NULL,
-  `nama_kelas` varchar(100) NOT NULL
+  `nama_kelas` varchar(100) NOT NULL,
+  `id_tahun_ajaran` int(10) UNSIGNED DEFAULT NULL,
+  `semester` enum('ganjil','genap') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `kelas`
 --
 
-INSERT INTO `kelas` (`id_kelas`, `nama_kelas`) VALUES
-(1, 'kelas 1');
+INSERT INTO `kelas` (`id_kelas`, `nama_kelas`, `id_tahun_ajaran`, `semester`) VALUES
+(1, 'kelas 1', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -232,7 +236,8 @@ CREATE TABLE `materi` (
 --
 
 INSERT INTO `materi` (`id_materi`, `id_kelas`, `id_pengajar`, `judul`, `tipe`, `file`, `link`, `waktu_upload`) VALUES
-(1, 1, 1, 'materi 1', 'file', 'materi/45868871430c816ca71a59b1530df6a8.pdf', NULL, '2026-10-16 20:03:00');
+(1, 1, 1, 'materi 1', 'file', 'materi/45868871430c816ca71a59b1530df6a8.pdf', NULL, '2026-10-16 20:03:00'),
+(2, 1, 1, 'qadasasasadx', 'file', 'materi/182f8e1f7270b5ed7c3acdaff78efc19.pdf', NULL, '2026-11-18 10:30:49');
 
 -- --------------------------------------------------------
 
@@ -261,7 +266,32 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`, `executed_at`) VALUES
 (7, '007_email_diadmin_pengajar_siswa.sql', 7, '2026-10-20 02:39:17'),
 (8, '008_create_password_resets.sql', 8, '2026-10-24 12:04:08'),
 (9, '009_unique_key_email.sql', 9, '2026-10-24 12:23:03'),
-(10, '010_buat_tabel_kode.sql', 10, '2026-11-01 06:37:32');
+(10, '010_buat_tabel_kode.sql', 10, '2026-11-01 06:37:32'),
+(11, '011_create_password_change_token.sql', 11, '2026-11-15 09:31:11'),
+(12, '012_tabel_tahun_ajaran.sql', 12, '2026-11-24 03:59:26'),
+(13, '013_kolom_id_tahun_ajaran_di_tabel_kelas.sql', 13, '2026-11-24 03:59:28'),
+(14, '014_kolom_semester_ditabel_kelas.sql', 14, '2026-11-24 04:11:21');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_change_tokens`
+--
+
+CREATE TABLE `password_change_tokens` (
+  `id` int(11) NOT NULL,
+  `role` enum('admin','pengajar','siswa') NOT NULL,
+  `id_pengguna` int(10) UNSIGNED NOT NULL,
+  `token` char(64) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `password_change_tokens`
+--
+
+INSERT INTO `password_change_tokens` (`id`, `role`, `id_pengguna`, `token`, `created_at`) VALUES
+(6, 'siswa', 2, 'b7fe8b77544bd01a392a771b746ca3b77d3881880966ea379c516acb0ee1c798', '2026-11-17 12:46:20');
 
 -- --------------------------------------------------------
 
@@ -313,6 +343,13 @@ CREATE TABLE `pengumpulan_tugas` (
   `waktu_pengumpulan` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `pengumpulan_tugas`
+--
+
+INSERT INTO `pengumpulan_tugas` (`id_pengumpulan`, `id_tugas`, `id_siswa`, `file`, `teks`, `waktu_upload`, `waktu_pengumpulan`) VALUES
+(1, 2, 1, 'pengumpulan_tugas/a545c39f65eb1ed33fa11279c7129c51.pdf', NULL, '2026-11-18 10:40:11', '2026-11-18 10:40:11');
+
 -- --------------------------------------------------------
 
 --
@@ -351,7 +388,8 @@ CREATE TABLE `siswa` (
 --
 
 INSERT INTO `siswa` (`id_siswa`, `kode_siswa`, `nama`, `password`, `email`) VALUES
-(1, '3333', 'siswa', '$2y$10$BPA7xi3p1AkyqQ9T6gEa6eym4w0T/m57Wael2LDvCK7K8YLh284Fi', NULL);
+(1, '3333', 'siswa', '$2y$10$BPA7xi3p1AkyqQ9T6gEa6eym4w0T/m57Wael2LDvCK7K8YLh284Fi', NULL),
+(2, '3311', 'siswa siswa', '$2y$10$3TU7MhSnvQ3vvykGm8U6D.9EiRfD7peXq5zekQgBbbFl.ErSO4PqC', 'tdoctor854@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -386,6 +424,21 @@ INSERT INTO `soal_kuis` (`id_soal`, `id_kuis`, `tipe_soal`, `soal`, `pilihan_a`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tahun_ajaran`
+--
+
+CREATE TABLE `tahun_ajaran` (
+  `id_tahun_ajaran` int(10) UNSIGNED NOT NULL,
+  `nama_tahun_ajaran` varchar(20) NOT NULL,
+  `tanggal_mulai` date NOT NULL,
+  `tanggal_selesai` date NOT NULL,
+  `status` enum('aktif','nonaktif') NOT NULL DEFAULT 'nonaktif',
+  `dibuat_pada` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tugas`
 --
 
@@ -407,7 +460,8 @@ CREATE TABLE `tugas` (
 --
 
 INSERT INTO `tugas` (`id_tugas`, `id_kelas`, `id_pengajar`, `judul`, `deskripsi`, `file`, `deadline`, `status`, `waktu_dibuat`, `waktu_mulai`) VALUES
-(1, 1, 1, 'tugas 1', 'hbzhkbzkbzjnabja', NULL, '2026-10-16 21:03:00', 'terbuka', '2026-10-16 20:04:29', '2026-10-16 20:03:00');
+(1, 1, 1, 'tugas 1', 'hbzhkbzkbzjnabja', NULL, '2026-10-16 21:03:00', 'terbuka', '2026-10-16 20:04:29', '2026-10-16 20:03:00'),
+(2, 1, 1, 'aaaaaaaaa', NULL, 'tugas/51ac6acc52abd6e023faab3c1d408e2d.pdf', '2026-11-18 22:23:00', 'terbuka', '2026-11-18 10:23:29', '2026-11-18 10:23:00');
 
 --
 -- Indexes for dumped tables
@@ -450,7 +504,8 @@ ALTER TABLE `kehadiran`
 -- Indexes for table `kelas`
 --
 ALTER TABLE `kelas`
-  ADD PRIMARY KEY (`id_kelas`);
+  ADD PRIMARY KEY (`id_kelas`),
+  ADD KEY `fk_kelas_tahun_ajaran` (`id_tahun_ajaran`);
 
 --
 -- Indexes for table `kelas_pengajar`
@@ -497,6 +552,14 @@ ALTER TABLE `materi`
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `migration` (`migration`);
+
+--
+-- Indexes for table `password_change_tokens`
+--
+ALTER TABLE `password_change_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_password_change_token` (`token`),
+  ADD KEY `idx_password_change_pengguna` (`role`,`id_pengguna`);
 
 --
 -- Indexes for table `password_resets`
@@ -546,6 +609,13 @@ ALTER TABLE `soal_kuis`
   ADD UNIQUE KEY `uq_soal_kuis_urutan` (`id_kuis`,`urutan`);
 
 --
+-- Indexes for table `tahun_ajaran`
+--
+ALTER TABLE `tahun_ajaran`
+  ADD PRIMARY KEY (`id_tahun_ajaran`),
+  ADD UNIQUE KEY `nama_tahun_ajaran` (`nama_tahun_ajaran`);
+
+--
 -- Indexes for table `tugas`
 --
 ALTER TABLE `tugas`
@@ -561,7 +631,7 @@ ALTER TABLE `tugas`
 -- AUTO_INCREMENT for table `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id_absensi` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_absensi` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `admin`
@@ -579,7 +649,7 @@ ALTER TABLE `jawaban_kuis`
 -- AUTO_INCREMENT for table `kehadiran`
 --
 ALTER TABLE `kehadiran`
-  MODIFY `id_kehadiran` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_kehadiran` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `kelas`
@@ -615,13 +685,19 @@ ALTER TABLE `kuis`
 -- AUTO_INCREMENT for table `materi`
 --
 ALTER TABLE `materi`
-  MODIFY `id_materi` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_materi` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `password_change_tokens`
+--
+ALTER TABLE `password_change_tokens`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `password_resets`
@@ -639,7 +715,7 @@ ALTER TABLE `pengajar`
 -- AUTO_INCREMENT for table `pengumpulan_tugas`
 --
 ALTER TABLE `pengumpulan_tugas`
-  MODIFY `id_pengumpulan` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pengumpulan` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `percobaan_kuis`
@@ -651,7 +727,7 @@ ALTER TABLE `percobaan_kuis`
 -- AUTO_INCREMENT for table `siswa`
 --
 ALTER TABLE `siswa`
-  MODIFY `id_siswa` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_siswa` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `soal_kuis`
@@ -660,10 +736,16 @@ ALTER TABLE `soal_kuis`
   MODIFY `id_soal` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `tahun_ajaran`
+--
+ALTER TABLE `tahun_ajaran`
+  MODIFY `id_tahun_ajaran` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `tugas`
 --
 ALTER TABLE `tugas`
-  MODIFY `id_tugas` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_tugas` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -690,6 +772,12 @@ ALTER TABLE `jawaban_kuis`
 ALTER TABLE `kehadiran`
   ADD CONSTRAINT `fk_kehadiran_absensi` FOREIGN KEY (`id_absensi`) REFERENCES `absensi` (`id_absensi`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_kehadiran_siswa` FOREIGN KEY (`id_siswa`) REFERENCES `siswa` (`id_siswa`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `kelas`
+--
+ALTER TABLE `kelas`
+  ADD CONSTRAINT `fk_kelas_tahun_ajaran` FOREIGN KEY (`id_tahun_ajaran`) REFERENCES `tahun_ajaran` (`id_tahun_ajaran`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `kelas_pengajar`
