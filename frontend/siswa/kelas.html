@@ -369,28 +369,5 @@ GUNA FILE   : Daftar kelas yang diikuti siswa.
     <script src="../assets/js/siswa-common.js"></script>
     <script src="../assets/js/siswa-kelas-list.js"></script>
 
-    <!-- Script UI Logout & Mobile Drawer -->
-    <script>
-        (function() {
-            const toggleBtn = document.getElementById("menuToggle");
-            const sidebar = document.getElementById("appSidebar");
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener("click", function() {
-                    sidebar.classList.toggle("open");
-                });
-            }
-            const btnKonfirmasi = document.getElementById("btnKonfirmasiLogout");
-            const realLogoutBtn = document.getElementById("logoutButton");
-            if (btnKonfirmasi) {
-                btnKonfirmasi.addEventListener("click", function() {
-                    if (typeof logout === "function") {
-                        logout();
-                    } else if (realLogoutBtn) {
-                        realLogoutBtn.click();
-                    }
-                });
-            }
-        })();
-    </script>
 </body>
 </html>

@@ -362,43 +362,5 @@ GUNA FILE   : Halaman detail satu materi video (siswa).
     <script src="../assets/js/pengajar-kelas-download.js"></script>
     <script src="../assets/js/siswa-materi-detail.js"></script>
 
-    <!-- Interaktivitas Video Player & Modal Logout -->
-    <script>
-        (function() {
-            // Video Play Click Handler
-            const videoCover = document.getElementById("videoCover");
-            const videoIframe = document.getElementById("videoIframe");
-            if (videoCover && videoIframe) {
-                videoCover.addEventListener("click", function() {
-                    videoCover.style.display = "none";
-                    videoIframe.hidden = false;
-                    videoIframe.src += "?autoplay=1";
-                });
-            }
-
-            // Modal Logout Handlers
-            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
-            const realLogoutBtn = document.getElementById("logoutButton");
-
-            if (btnKonfirmasiLogout) {
-                btnKonfirmasiLogout.addEventListener("click", function() {
-                    if (typeof logout === "function") {
-                        logout();
-                    } else if (realLogoutBtn) {
-                        realLogoutBtn.click();
-                    }
-                });
-            }
-
-            // Mobile menu drawer
-            const toggleBtn = document.getElementById("menuToggle");
-            const sidebar = document.getElementById("appSidebar");
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener("click", function() {
-                    sidebar.classList.toggle("open");
-                });
-            }
-        })();
-    </script>
 </body>
 </html>

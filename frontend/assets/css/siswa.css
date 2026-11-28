@@ -942,3 +942,27 @@
     border: none;
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
 }
+
+/* ==========================================================================
+   SPACING & TOPBAR BREADCRUMB ALIGNMENT (ANTI-COLLISION)
+   ========================================================================== */
+
+.lms-main-content {
+    padding-top: 1.5rem !important;
+}
+
+.lms-banner-hero {
+    margin-top: 1rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.lms-content-body {
+    padding: 1.5rem 2rem 2rem 2rem;
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .lms-content-body {
+        padding: 1.25rem 1rem 1.5rem 1rem;
+    }
+}

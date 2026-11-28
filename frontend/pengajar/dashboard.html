@@ -277,51 +277,5 @@ GUNA FILE   : Halaman utama setelah pengajar login.
     <script src="../assets/js/pengajar-common.js"></script>
     <script src="../assets/js/pengajar-dashboard.js"></script>
 
-    <!-- Script UI Sederhana untuk Tanggal, Mobile Drawer & Modal Logout -->
-    <script>
-        (function() {
-            // Set tanggal hari ini secara dinamis
-            const dateEl = document.getElementById("currentDateText");
-            if (dateEl) {
-                const now = new Date();
-                const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-                dateEl.textContent = now.toLocaleDateString('id-ID', options);
-            }
-
-            // Modal Logout Konfirmasi
-            const openModalBtn = document.getElementById("openLogoutModal");
-            const modalBackdrop = document.getElementById("logoutModalBackdrop");
-            const btnBatalLogout = document.getElementById("btnBatalLogout");
-            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
-            const realLogoutBtn = document.getElementById("logoutButton");
-
-            if (openModalBtn && modalBackdrop) {
-                openModalBtn.addEventListener("click", function() {
-                    modalBackdrop.classList.add("show");
-                });
-            }
-
-            if (btnBatalLogout && modalBackdrop) {
-                btnBatalLogout.addEventListener("click", function() {
-                    modalBackdrop.classList.remove("show");
-                });
-            }
-
-            if (btnKonfirmasiLogout && realLogoutBtn) {
-                btnKonfirmasiLogout.addEventListener("click", function() {
-                    realLogoutBtn.click();
-                });
-            }
-
-            // Toggle sidebar pada mobile
-            const toggleBtn = document.getElementById("menuToggle");
-            const sidebar = document.getElementById("appSidebar");
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener("click", function() {
-                    sidebar.classList.toggle("open");
-                });
-            }
-        })();
-    </script>
 </body>
 </html>

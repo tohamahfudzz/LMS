@@ -394,34 +394,5 @@ GUNA FILE   : Halaman utama beranda siswa setelah login.
     <script src="../assets/js/siswa-common.js"></script>
     <script src="../assets/js/siswa-dashboard.js"></script>
 
-    <!-- Script UI Tanggal, Logout & Mobile Drawer -->
-    <script>
-        (function() {
-            const dateEl = document.getElementById("currentDateText");
-            if (dateEl) {
-                const now = new Date();
-                const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-                dateEl.textContent = now.toLocaleDateString('id-ID', options);
-            }
-            const toggleBtn = document.getElementById("menuToggle");
-            const sidebar = document.getElementById("appSidebar");
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener("click", function() {
-                    sidebar.classList.toggle("open");
-                });
-            }
-            const btnKonfirmasi = document.getElementById("btnKonfirmasiLogout");
-            const realLogoutBtn = document.getElementById("logoutButton");
-            if (btnKonfirmasi) {
-                btnKonfirmasi.addEventListener("click", function() {
-                    if (typeof logout === "function") {
-                        logout();
-                    } else if (realLogoutBtn) {
-                        realLogoutBtn.click();
-                    }
-                });
-            }
-        })();
-    </script>
 </body>
 </html>

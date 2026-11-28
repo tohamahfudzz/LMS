@@ -365,43 +365,5 @@ GUNA FILE   : Halaman pengajar untuk mengelola absensi kelas.
     <script src="../assets/js/pengajar-common.js"></script>
     <script src="../assets/js/pengajar-absensi.js"></script>
 
-    <!-- Interaksi UI Tambahan & Modal Logout -->
-    <script>
-        (function() {
-            // Modal Logout Konfirmasi
-            const openModalBtn = document.getElementById("openLogoutModal");
-            const modalBackdrop = document.getElementById("logoutModalBackdrop");
-            const btnBatalLogout = document.getElementById("btnBatalLogout");
-            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
-            const realLogoutBtn = document.getElementById("logoutButton");
-
-            if (openModalBtn && modalBackdrop) {
-                openModalBtn.addEventListener("click", function() {
-                    modalBackdrop.classList.add("show");
-                });
-            }
-
-            if (btnBatalLogout && modalBackdrop) {
-                btnBatalLogout.addEventListener("click", function() {
-                    modalBackdrop.classList.remove("show");
-                });
-            }
-
-            if (btnKonfirmasiLogout && realLogoutBtn) {
-                btnKonfirmasiLogout.addEventListener("click", function() {
-                    realLogoutBtn.click();
-                });
-            }
-
-            // Mobile menu drawer
-            const toggleBtn = document.getElementById("menuToggle");
-            const sidebar = document.getElementById("appSidebar");
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener("click", function() {
-                    sidebar.classList.toggle("open");
-                });
-            }
-        })();
-    </script>
 </body>
 </html>

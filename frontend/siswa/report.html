@@ -254,7 +254,7 @@ GUNA FILE   : Halaman Laporan Capaian Belajar Siswa LMS.
             <main class="lms-content-body">
 
                 <!-- Header Laporan Pencapaian Sesuai Figma -->
-                <div class="mb-4">
+                <div class="lms-banner-hero mt-4 mb-4">
                     <h2 class="h5 fw-bold text-dark mb-1">Capaian Belajar Saya</h2>
                     <p class="text-secondary small mb-0">Pantau Terus hasil Belajar, Tugas, Kuis dan Kehadiranmu.</p>
                 </div>
@@ -465,30 +465,5 @@ GUNA FILE   : Halaman Laporan Capaian Belajar Siswa LMS.
     <script src="../assets/js/siswa-common.js"></script>
     <script src="../assets/js/siswa-report.js"></script>
 
-    <!-- Modal Logout & Mobile Drawer Script -->
-    <script>
-        (function() {
-            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
-            const realLogoutBtn = document.getElementById("logoutButton");
-
-            if (btnKonfirmasiLogout) {
-                btnKonfirmasiLogout.addEventListener("click", function() {
-                    if (typeof logout === "function") {
-                        logout();
-                    } else if (realLogoutBtn) {
-                        realLogoutBtn.click();
-                    }
-                });
-            }
-
-            const toggleBtn = document.getElementById("menuToggle");
-            const sidebar = document.getElementById("appSidebar");
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener("click", function() {
-                    sidebar.classList.toggle("open");
-                });
-            }
-        })();
-    </script>
 </body>
 </html>

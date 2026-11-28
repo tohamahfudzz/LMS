@@ -256,21 +256,13 @@ GUNA FILE   : Daftar Materi Siswa per Mata Pelajaran.
                 <div id="materiMessage" class="message" role="alert" aria-live="polite" hidden></div>
 
                 <!-- 1. Header Banner Mapel Sesuai Figma -->
-                <div class="lms-subject-banner">
+                <div class="lms-subject-banner lms-banner-hero mt-4">
                     <h2>Matematika</h2>
                     <p>Tahun Ajaran 2026/2027</p>
                 </div>
 
-                <!-- 2. Sub-Navigation Tabs Sesuai Figma -->
-                <div class="lms-subnav-tabs">
-                    <a href="materi.html" class="lms-subnav-link active">Materi</a>
-                    <a href="tugas.html" class="lms-subnav-link">Tugas</a>
-                    <a href="kuis.html" class="lms-subnav-link">Kuis</a>
-                    <a href="absensi.html" class="lms-subnav-link">Absensi</a>
-                </div>
-
-                <!-- 3. Card Container Daftar Materi -->
-                <div class="lms-data-card p-4">
+                <!-- 2. Card Container Daftar Materi -->
+                <div class="lms-data-card p-4 mt-4">
                     <h3 class="h6 fw-bold text-dark mb-3">Daftar Materi</h3>
 
                     <!-- List Kartu Materi Sesuai Figma -->
@@ -384,30 +376,5 @@ GUNA FILE   : Daftar Materi Siswa per Mata Pelajaran.
     <script src="../assets/js/auth.js"></script>
     <script src="../assets/js/siswa-common.js"></script>
 
-    <!-- Modal Logout & Mobile Drawer Script -->
-    <script>
-        (function() {
-            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
-            const realLogoutBtn = document.getElementById("logoutButton");
-
-            if (btnKonfirmasiLogout) {
-                btnKonfirmasiLogout.addEventListener("click", function() {
-                    if (typeof logout === "function") {
-                        logout();
-                    } else if (realLogoutBtn) {
-                        realLogoutBtn.click();
-                    }
-                });
-            }
-
-            const toggleBtn = document.getElementById("menuToggle");
-            const sidebar = document.getElementById("appSidebar");
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener("click", function() {
-                    sidebar.classList.toggle("open");
-                });
-            }
-        })();
-    </script>
 </body>
 </html>

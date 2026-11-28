@@ -429,37 +429,5 @@ GUNA FILE   : Halaman daftar Mata Pelajaran Siswa.
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/auth.js"></script>
 
-    <!-- Script UI & Modal Logout -->
-    <script>
-        (function() {
-            // Proteksi Halaman Siswa
-            const user = requireAuth("siswa");
-            if (user) {
-                const welcomeEl = document.getElementById("welcomeText");
-                if (welcomeEl) {
-                    welcomeEl.textContent = user.nama || "Siswa";
-                }
-            }
-
-            // Modal Logout Konfirmasi
-            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
-            const realLogoutBtn = document.getElementById("logoutButton");
-
-            if (btnKonfirmasiLogout && realLogoutBtn) {
-                btnKonfirmasiLogout.addEventListener("click", function() {
-                    logout();
-                });
-            }
-
-            // Mobile menu drawer
-            const toggleBtn = document.getElementById("menuToggle");
-            const sidebar = document.getElementById("appSidebar");
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener("click", function() {
-                    sidebar.classList.toggle("open");
-                });
-            }
-        })();
-    </script>
 </body>
 </html>

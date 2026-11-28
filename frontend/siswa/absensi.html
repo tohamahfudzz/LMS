@@ -257,7 +257,9 @@ GUNA FILE   : Halaman Presensi / Absensi Siswa.
                 <div id="hadirMessage" class="message" role="alert" aria-live="polite" hidden></div>
 
                 <!-- Judul Halaman Sesuai Figma -->
-                <h2 class="h5 fw-bold text-dark mb-3">Absensi</h2>
+                <div class="lms-banner-hero mt-4 mb-3">
+                    <h2 class="h5 fw-bold text-dark mb-0">Absensi</h2>
+                </div>
 
                 <!-- Card Container Absensi Sesuai Figma -->
                 <div class="lms-data-card p-4">
@@ -438,50 +440,5 @@ GUNA FILE   : Halaman Presensi / Absensi Siswa.
     <script src="../assets/js/siswa-common.js"></script>
     <script src="../assets/js/siswa-absensi.js"></script>
 
-    <!-- Interaktivitas Presensi Hari Ini & Modal Logout -->
-    <script>
-        (function() {
-            const btnHadir = document.getElementById("btnHadirHariIni");
-            const alertBox = document.getElementById("hadirMessage");
-
-            if (btnHadir && alertBox) {
-                btnHadir.addEventListener("click", function() {
-                    btnHadir.disabled = true;
-                    btnHadir.textContent = "Tercatat Hadir ✓";
-                    btnHadir.classList.remove("btn-submit-attendance");
-                    btnHadir.classList.add("btn-sm", "btn-success");
-
-                    alertBox.hidden = false;
-                    alertBox.style.background = "#e8f8e8";
-                    alertBox.style.borderColor = "#2e7d32";
-                    alertBox.style.color = "#1b5e20";
-                    alertBox.textContent = "Kehadiran Anda pada pertemuan hari ini berhasil dicatat!";
-                });
-            }
-
-            // Modal Logout Handlers
-            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
-            const realLogoutBtn = document.getElementById("logoutButton");
-
-            if (btnKonfirmasiLogout) {
-                btnKonfirmasiLogout.addEventListener("click", function() {
-                    if (typeof logout === "function") {
-                        logout();
-                    } else if (realLogoutBtn) {
-                        realLogoutBtn.click();
-                    }
-                });
-            }
-
-            // Mobile menu drawer
-            const toggleBtn = document.getElementById("menuToggle");
-            const sidebar = document.getElementById("appSidebar");
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener("click", function() {
-                    sidebar.classList.toggle("open");
-                });
-            }
-        })();
-    </script>
 </body>
 </html>

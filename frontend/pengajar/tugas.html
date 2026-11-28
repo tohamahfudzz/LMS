@@ -381,56 +381,5 @@ GUNA FILE   : Halaman pengajar untuk mengelola tugas siswa.
     <script src="../assets/js/pengajar-common.js"></script>
     <script src="../assets/js/pengajar-tugas.js"></script>
 
-    <!-- Interaksi UI Tambahan (Dropzone label & Modal Logout) -->
-    <script>
-        (function() {
-            // Dropzone file name feedback
-            const fileInput = document.getElementById("tugasFile");
-            const labelText = document.getElementById("dropzoneTugasFileName");
-            if (fileInput && labelText) {
-                fileInput.addEventListener("change", function() {
-                    if (fileInput.files && fileInput.files.length > 0) {
-                        labelText.textContent = "File terpilih: " + fileInput.files[0].name;
-                    } else {
-                        labelText.textContent = "Pilih atau seret lembar soal/materi penunjang ke sini";
-                    }
-                });
-            }
-
-            // Modal Logout Konfirmasi
-            const openModalBtn = document.getElementById("openLogoutModal");
-            const modalBackdrop = document.getElementById("logoutModalBackdrop");
-            const btnBatalLogout = document.getElementById("btnBatalLogout");
-            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
-            const realLogoutBtn = document.getElementById("logoutButton");
-
-            if (openModalBtn && modalBackdrop) {
-                openModalBtn.addEventListener("click", function() {
-                    modalBackdrop.classList.add("show");
-                });
-            }
-
-            if (btnBatalLogout && modalBackdrop) {
-                btnBatalLogout.addEventListener("click", function() {
-                    modalBackdrop.classList.remove("show");
-                });
-            }
-
-            if (btnKonfirmasiLogout && realLogoutBtn) {
-                btnKonfirmasiLogout.addEventListener("click", function() {
-                    realLogoutBtn.click();
-                });
-            }
-
-            // Mobile menu drawer
-            const toggleBtn = document.getElementById("menuToggle");
-            const sidebar = document.getElementById("appSidebar");
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener("click", function() {
-                    sidebar.classList.toggle("open");
-                });
-            }
-        })();
-    </script>
 </body>
 </html>

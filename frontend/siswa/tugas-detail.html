@@ -383,30 +383,5 @@ GUNA FILE   : Halaman detail satu tugas (siswa).
     <script src="../assets/js/pengajar-kelas-download.js"></script>
     <script src="../assets/js/siswa-tugas-detail.js"></script>
 
-    <!-- Modal Logout & Mobile Drawer Script -->
-    <script>
-        (function() {
-            const btnKonfirmasiLogout = document.getElementById("btnKonfirmasiLogout");
-            const realLogoutBtn = document.getElementById("logoutButton");
-
-            if (btnKonfirmasiLogout) {
-                btnKonfirmasiLogout.addEventListener("click", function() {
-                    if (typeof logout === "function") {
-                        logout();
-                    } else if (realLogoutBtn) {
-                        realLogoutBtn.click();
-                    }
-                });
-            }
-
-            const toggleBtn = document.getElementById("menuToggle");
-            const sidebar = document.getElementById("appSidebar");
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener("click", function() {
-                    sidebar.classList.toggle("open");
-                });
-            }
-        })();
-    </script>
 </body>
 </html>
