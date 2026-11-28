@@ -10,16 +10,24 @@ GUNA FILE   : Data report absensi satu kelas untuk pengajar. Dipakai halaman
               Respons: data = {
                   kelas : { id_kelas, nama_kelas },
                   jumlah_sesi_dihitung : jumlah sesi yang sudah dimulai (penyebut persentase),
-                  sesi  : [ { id_absensi, tanggal, waktu_buka, waktu_tutup, status,
+                  sesi  : [ { id_absensi, tanggal, waktu_buka, waktu_tutup, status, mode,
                               belum_dimulai } ]            (urut dari yang paling lama),
                   siswa : [ { id_siswa, kode_siswa, nama,
-                              kehadiran : { "<id_absensi>": { status, waktu_absen } },
-                              jumlah_hadir, persentase } ]  (urut nama)
+                              kehadiran : { "<id_absensi>": { status, waktu_absen,
+                                            catatan_siswa, catatan_pengajar } },
+                              jumlah_hadir, jumlah_izin, jumlah_alpa,
+                              jumlah_belum_diisi, persentase } ]  (urut nama)
               }
               Semua siswa kelas ditampilkan. Siswa yang tidak punya catatan pada sebuah
-              sesi berarti tidak hadir pada sesi itu. Sesi terjadwal (belum dimulai)
-              tidak dihitung. persentase = jumlah_hadir / jumlah_sesi_dihitung * 100
-              (null bila belum ada sesi yang dimulai).
+              sesi berstatus "Belum diisi" (bukan otomatis tidak hadir); frontend
+              menampilkannya demikian. Sesi terjadwal (belum dimulai) tidak dihitung.
+              Hadir, izin, dan alpa dihitung terpisah (hanya pada sesi yang sudah dimulai).
+              jumlah_belum_diisi = jumlah_sesi_dihitung dikurangi sesi yang sudah dicatat.
+              persentase hanya dari hadir: jumlah_hadir / jumlah_sesi_dihitung * 100
+              (null bila belum ada sesi yang dimulai); izin dan alpa tidak mengubah
+              penyebut.
+              Perubahan: menambah mode sesi, catatan, serta hitungan izin, alpa, dan
+                         belum diisi per siswa.
 ================================================================================
 */
 
@@ -68,7 +76,7 @@ try {
     closeExpiredAbsensi($db, $idKelas);
 
     $sessionStatement = $db->prepare(
-        'SELECT a.id_absensi, a.tanggal, a.waktu_buka, a.waktu_tutup, a.status,
+        'SELECT a.id_absensi, a.tanggal, a.waktu_buka, a.waktu_tutup, a.status, a.mode,
                 (a.waktu_buka > NOW()) AS belum_dimulai
            FROM absensi a
           WHERE a.id_kelas = :id_kelas AND a.id_pengajar = :id_pengajar
@@ -92,6 +100,7 @@ try {
             'waktu_buka' => $row['waktu_buka'],
             'waktu_tutup' => $row['waktu_tutup'],
             'status' => $row['status'],
+            'mode' => $row['mode'],
             'belum_dimulai' => $notStarted,
         ];
 
@@ -111,7 +120,8 @@ try {
     $students = $studentStatement->fetchAll(PDO::FETCH_ASSOC);
 
     $attendanceStatement = $db->prepare(
-        'SELECT kh.id_absensi, kh.id_siswa, kh.status, kh.waktu_absen
+        'SELECT kh.id_absensi, kh.id_siswa, kh.status, kh.waktu_absen,
+                kh.catatan_siswa, kh.catatan_pengajar
            FROM kehadiran kh
           INNER JOIN absensi a ON a.id_absensi = kh.id_absensi
           WHERE a.id_kelas = :id_kelas AND a.id_pengajar = :id_pengajar'
@@ -127,6 +137,8 @@ try {
         $attendanceMap[(int) $row['id_siswa']][(int) $row['id_absensi']] = [
             'status' => $row['status'],
             'waktu_absen' => $row['waktu_absen'],
+            'catatan_siswa' => $row['catatan_siswa'],
+            'catatan_pengajar' => $row['catatan_pengajar'],
         ];
     }
 
@@ -137,13 +149,27 @@ try {
         $idSiswa = (int) $student['id_siswa'];
         $records = $attendanceMap[$idSiswa] ?? [];
         $presentCount = 0;
+        $excusedCount = 0;
+        $absentCount = 0;
+        $recordedCount = 0;
         $attendance = [];
 
         foreach ($records as $idAbsensi => $record) {
             $attendance[(string) $idAbsensi] = $record;
 
-            if ($record['status'] === 'hadir' && isset($countedSessionIds[$idAbsensi])) {
+            // Hanya sesi yang sudah dimulai yang ikut dihitung.
+            if (!isset($countedSessionIds[$idAbsensi])) {
+                continue;
+            }
+
+            $recordedCount++;
+
+            if ($record['status'] === 'hadir') {
                 $presentCount++;
+            } elseif ($record['status'] === 'izin') {
+                $excusedCount++;
+            } elseif ($record['status'] === 'alpa') {
+                $absentCount++;
             }
         }
 
@@ -153,6 +179,9 @@ try {
             'nama' => $student['nama'],
             'kehadiran' => (object) $attendance,
             'jumlah_hadir' => $presentCount,
+            'jumlah_izin' => $excusedCount,
+            'jumlah_alpa' => $absentCount,
+            'jumlah_belum_diisi' => max(0, $countedSessions - $recordedCount),
             'persentase' => $countedSessions > 0
                 ? round($presentCount / $countedSessions * 100, 1)
                 : null,

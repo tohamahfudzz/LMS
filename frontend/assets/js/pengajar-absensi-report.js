@@ -5,12 +5,15 @@ GUNA FILE   : Halaman report absensi pengajar (frontend/pengajar/absensi-report.
               - Membaca id_kelas dari URL
               - Mengambil data : GET ../../backend/api/pengajar/absensi/report.php?id_kelas=
               - Menampilkan tabel siswa x sesi:
-                  Hadir        -> siswa mengisi absensi pada sesi itu
-                  Izin/Sakit/Alpa -> status lain bila tercatat di tabel kehadiran
-                  Tidak hadir  -> sesi sudah tertutup dan siswa tidak mengisi
-                  Belum        -> sesi masih terbuka dan siswa belum mengisi
-                  -            -> sesi terjadwal (belum dimulai)
-              - Kolom akhir: total hadir dan persentase kehadiran per siswa
+                  Hadir / Izin / Alpa -> status yang tercatat di tabel kehadiran
+                                         (diisi siswa atau pengajar); tanda * dan tooltip
+                                         bila ada catatan
+                  Belum diisi         -> sesi sudah dimulai dan belum ada catatan
+                  -                   -> sesi terjadwal (belum dimulai)
+              - Kolom akhir: hadir (x / jumlah sesi), izin, alpa, belum diisi, dan
+                persentase kehadiran (hanya dari hadir) per siswa
+              Perubahan: hitungan izin/alpa/belum diisi terpisah, label "Belum diisi"
+                         menggantikan "Tidak hadir" dan "Belum", catatan sebagai tooltip.
               Bergantung pada: pengajar-common.js.
 ================================================================================
 */
@@ -25,9 +28,18 @@ GUNA FILE   : Halaman report absensi pengajar (frontend/pengajar/absensi-report.
     const STATUS_LABEL = {
         hadir: "Hadir",
         izin: "Izin",
-        sakit: "Sakit",
         alpa: "Alpa"
     };
+
+    // Escape untuk nilai atribut HTML (escapeHtml bawaan tidak meng-escape tanda kutip).
+    function escapeAttr(text) {
+        return String(text == null ? "" : text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
 
     const params = new URLSearchParams(window.location.search);
     const parsedIdKelas = parseInt(params.get("id_kelas"), 10);
@@ -57,17 +69,29 @@ GUNA FILE   : Halaman report absensi pengajar (frontend/pengajar/absensi-report.
         }).join("");
 
         return "<tr><th>No</th><th>Kode Siswa</th><th>Nama</th>" + sessionHeaders +
-            "<th>Hadir</th><th>Persentase</th></tr>";
+            "<th>Hadir</th><th>Izin</th><th>Alpa</th><th>Belum diisi</th><th>Persentase</th></tr>";
     }
 
-    function getCellText(student, session) {
+    // Satu sel status siswa pada satu sesi. Bila ada catatan, sel diberi tanda * dan tooltip.
+    function buildCellHtml(student, session) {
         const record = student.kehadiran ? student.kehadiran[String(session.id_absensi)] : null;
 
         if (record) {
-            return STATUS_LABEL[record.status] || record.status;
+            const label = STATUS_LABEL[record.status] || record.status;
+            const notes = [];
+
+            if (record.catatan_siswa) notes.push("Siswa: " + record.catatan_siswa);
+            if (record.catatan_pengajar) notes.push("Pengajar: " + record.catatan_pengajar);
+
+            if (notes.length > 0) {
+                return "<td title=\"" + escapeAttr(notes.join(" | ")) + "\">" +
+                    PengajarCommon.escapeHtml(label) + " *</td>";
+            }
+
+            return "<td>" + PengajarCommon.escapeHtml(label) + "</td>";
         }
-        if (session.belum_dimulai) return "-";
-        return session.status === "terbuka" ? "Belum" : "Tidak hadir";
+
+        return "<td>" + (session.belum_dimulai ? "-" : "Belum diisi") + "</td>";
     }
 
     function formatPercentage(value) {
@@ -97,7 +121,7 @@ GUNA FILE   : Halaman report absensi pengajar (frontend/pengajar/absensi-report.
     function renderTable(payload) {
         const sessions = payload.sesi || [];
         const students = payload.siswa || [];
-        const columnCount = 5 + sessions.length;
+        const columnCount = 8 + sessions.length;
 
         headEl.innerHTML = buildHeaderHtml(sessions);
 
@@ -108,7 +132,7 @@ GUNA FILE   : Halaman report absensi pengajar (frontend/pengajar/absensi-report.
 
         bodyEl.innerHTML = students.map(function (student, index) {
             const cells = sessions.map(function (session) {
-                return "<td>" + PengajarCommon.escapeHtml(getCellText(student, session)) + "</td>";
+                return buildCellHtml(student, session);
             }).join("");
 
             return (
@@ -119,6 +143,9 @@ GUNA FILE   : Halaman report absensi pengajar (frontend/pengajar/absensi-report.
                 cells +
                 "<td>" + PengajarCommon.escapeHtml(student.jumlah_hadir) + " / " +
                     PengajarCommon.escapeHtml(payload.jumlah_sesi_dihitung || 0) + "</td>" +
+                "<td>" + PengajarCommon.escapeHtml(student.jumlah_izin || 0) + "</td>" +
+                "<td>" + PengajarCommon.escapeHtml(student.jumlah_alpa || 0) + "</td>" +
+                "<td>" + PengajarCommon.escapeHtml(student.jumlah_belum_diisi || 0) + "</td>" +
                 "<td>" + PengajarCommon.escapeHtml(formatPercentage(student.persentase)) + "</td>" +
                 "</tr>"
             );
@@ -132,7 +159,7 @@ GUNA FILE   : Halaman report absensi pengajar (frontend/pengajar/absensi-report.
     async function loadReport() {
         if (idKelas === null) {
             document.getElementById("reportSummary").textContent = "-";
-            bodyEl.innerHTML = "<tr><td colspan=\"5\">Report tidak dapat dibuka.</td></tr>";
+            bodyEl.innerHTML = "<tr><td colspan=\"8\">Report tidak dapat dibuka.</td></tr>";
             PengajarCommon.showMessage("reportMessage", "ID kelas tidak valid. Buka report dari tab Absensi di kelas.", "error");
             return;
         }
@@ -152,7 +179,7 @@ GUNA FILE   : Halaman report absensi pengajar (frontend/pengajar/absensi-report.
             renderTable(payload);
         } catch (error) {
             document.getElementById("reportSummary").textContent = "-";
-            bodyEl.innerHTML = "<tr><td colspan=\"5\">Gagal memuat data.</td></tr>";
+            bodyEl.innerHTML = "<tr><td colspan=\"8\">Gagal memuat data.</td></tr>";
             PengajarCommon.showMessage("reportMessage", error.message || "Gagal mengambil report absensi.", "error");
         }
     }

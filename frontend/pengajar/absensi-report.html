@@ -5,7 +5,8 @@ GUNA FILE   : Halaman report absensi satu kelas untuk pengajar (halaman sendiri)
               Dibuka dari tab Absensi di kelas-detail.html dengan format:
                   absensi-report.html?id_kelas=1
               Isi: tabel semua siswa kelas dengan satu kolom per sesi absensi
-              (Hadir / Tidak hadir / Belum / -), total hadir, dan persentase kehadiran.
+              (Hadir / Izin / Alpa / Belum diisi / -), hitungan hadir, izin, alpa, belum diisi,
+              dan persentase kehadiran.
               - Logika halaman : assets/js/pengajar-absensi-report.js
               - Backend        : GET backend/api/pengajar/absensi/report.php?id_kelas=
               Tampilan memakai assets/css/kelas-detail.css.
@@ -39,7 +40,7 @@ GUNA FILE   : Halaman report absensi satu kelas untuk pengajar (halaman sendiri)
         <section class="kelas-panel__section">
             <h2>Ringkasan</h2>
             <p id="reportSummary">Memuat data...</p>
-            <p><small>Sesi yang belum dimulai (terjadwal) tidak dihitung. Persentase = jumlah hadir dibagi jumlah sesi yang sudah dimulai.</small></p>
+            <p><small>Sesi yang belum dimulai (terjadwal) tidak dihitung. Persentase = jumlah hadir dibagi jumlah sesi yang sudah dimulai; izin dan alpa dihitung terpisah dan tidak mengubah pembagi. Tanda * berarti ada catatan (arahkan kursor ke sel).</small></p>
         </section>
 
         <section class="kelas-panel__section">
@@ -53,12 +54,15 @@ GUNA FILE   : Halaman report absensi satu kelas untuk pengajar (halaman sendiri)
                             <th>Kode Siswa</th>
                             <th>Nama</th>
                             <th>Hadir</th>
+                            <th>Izin</th>
+                            <th>Alpa</th>
+                            <th>Belum diisi</th>
                             <th>Persentase</th>
                         </tr>
                     </thead>
                     <tbody id="reportTableBody">
                         <tr>
-                            <td colspan="5">Memuat data...</td>
+                            <td colspan="8">Memuat data...</td>
                         </tr>
                     </tbody>
                 </table>

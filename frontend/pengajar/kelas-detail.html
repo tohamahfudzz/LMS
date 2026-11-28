@@ -75,12 +75,21 @@ GUNA FILE   : Halaman satu kelas untuk pengajar. Dua tab:
                         <input type="date" id="absensiTanggal" required>
                     </div>
                     <div class="form-field">
+                        <label for="absensiMode">Mode absensi</label>
+                        <select id="absensiMode">
+                            <option value="siswa">Siswa mengisi sendiri</option>
+                            <option value="manual">Manual (pengajar mengisi)</option>
+                        </select>
+                        <small id="absensiModeHint"></small>
+                        <small>Mode tidak dapat diubah setelah sesi dibuka.</small>
+                    </div>
+                    <div class="form-field">
                         <label for="absensiJamBuka">Waktu buka</label>
-                        <input type="time" id="absensiJamBuka" required>
+                        <input type="time" id="absensiJamBuka">
                     </div>
                     <div class="form-field">
                         <label for="absensiJamTutup">Waktu tutup</label>
-                        <input type="time" id="absensiJamTutup" required>
+                        <input type="time" id="absensiJamTutup">
                     </div>
                     <button type="submit" id="openAbsensiButton">Buka Absensi</button>
                 </form>
@@ -99,14 +108,15 @@ GUNA FILE   : Halaman satu kelas untuk pengajar. Dua tab:
                                 <th>Tanggal</th>
                                 <th>Waktu Buka</th>
                                 <th>Waktu Tutup</th>
+                                <th>Mode</th>
                                 <th>Status</th>
-                                <th>Hadir</th>
+                                <th>Hadir / Izin / Alpa</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="absensiTableBody">
                             <tr>
-                                <td colspan="7">Memuat data...</td>
+                                <td colspan="8">Memuat data...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -118,6 +128,11 @@ GUNA FILE   : Halaman satu kelas untuk pengajar. Dua tab:
                 <div id="attendanceMessage" class="message" role="alert" aria-live="polite" hidden></div>
                 <p id="attendanceMeta">-</p>
                 <p id="attendanceStat">-</p>
+                <p><small id="attendanceModeHint"></small></p>
+
+                <p>
+                    <button type="button" id="attendanceMarkAllButton">Tandai semua yang belum diisi: Hadir</button>
+                </p>
 
                 <div class="table-scroll">
                     <table border="1" cellpadding="6" cellspacing="0">
@@ -127,16 +142,21 @@ GUNA FILE   : Halaman satu kelas untuk pengajar. Dua tab:
                                 <th>Kode Siswa</th>
                                 <th>Nama</th>
                                 <th>Status</th>
-                                <th>Waktu Absen</th>
+                                <th>Catatan Siswa</th>
+                                <th>Catatan Pengajar</th>
+                                <th>Waktu Dicatat</th>
                             </tr>
                         </thead>
                         <tbody id="attendanceTableBody">
                             <tr>
-                                <td colspan="5">Pilih sesi di atas untuk melihat kehadiran.</td>
+                                <td colspan="7">Pilih sesi di atas untuk melihat kehadiran.</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+
+                <p><button type="button" id="attendanceSaveButton">Simpan Kehadiran</button></p>
+                <p><small>Hanya baris yang Anda ubah yang disimpan. Status yang diisi siswa sendiri bisa Anda timpa. Siswa yang belum dipilih statusnya tetap "Belum diisi".</small></p>
             </section>
         </section>
     </main>

@@ -3,12 +3,20 @@
 LOKASI FILE : frontend/assets/js/siswa-kelas-absensi.js
 GUNA FILE   : Tab Absensi pada halaman kelas siswa (frontend/siswa/kelas-detail.html).
               Siswa tidak perlu mengetik ID absensi: semua sesi kelas ini tampil
-              dalam tabel, dan tombol "Saya Hadir" muncul pada sesi yang sedang dibuka.
+              dalam tabel. Pada sesi mode 'siswa' yang sedang dibuka, siswa memilih
+              "Saya Hadir" (satu klik) atau "Izin" (wajib menulis alasan, lalu Kirim Izin).
+              Pada sesi mode 'manual', kehadiran diisi pengajar, jadi tidak ada tombol.
               - Daftar sesi + status kehadiran saya : GET  ../../backend/api/siswa/absensi/list.php?id_kelas=
-              - Tandai hadir                        : POST ../../backend/api/kehadiran/hadir.php
-                                                      Body: { id_absensi }
+              - Kirim kehadiran                     : POST ../../backend/api/kehadiran/hadir.php
+                                                      Body: { id_absensi, status, catatan }
+                                                      status 'hadir' atau 'izin'; catatan
+                                                      (alasan) wajib untuk 'izin'.
               Sesi yang waktu bukanya belum tiba ditandai "Terjadwal" dan belum bisa diisi.
+              Pilihan siswa tidak bisa diubah sendiri setelah dikirim; koreksi dilakukan
+              pengajar.
               Bergantung pada: siswa-common.js dan siswa-kelas-detail.js.
+              Perubahan: tombol Izin dengan alasan, label status sesuai data (bukan selalu
+                         "Hadir"), dan penanganan sesi mode manual.
 ================================================================================
 */
 
@@ -23,6 +31,12 @@ GUNA FILE   : Tab Absensi pada halaman kelas siswa (frontend/siswa/kelas-detail.
         hadir: "../../backend/api/kehadiran/hadir.php"
     };
 
+    const STATUS_LABEL = {
+        hadir: "Hadir",
+        izin: "Izin",
+        alpa: "Alpa"
+    };
+
     const tbody = document.getElementById("absensiTableBody");
 
     function getSessionStatus(item) {
@@ -31,14 +45,27 @@ GUNA FILE   : Tab Absensi pada halaman kelas siswa (frontend/siswa/kelas-detail.
     }
 
     function getAttendanceText(item) {
-        if (item.status_kehadiran) {
-            return "Hadir" + (item.waktu_absen ? " (" + item.waktu_absen + ")" : "");
+        if (!item.status_kehadiran) return "Belum diisi";
+
+        const label = STATUS_LABEL[item.status_kehadiran] || item.status_kehadiran;
+
+        // Pada sesi manual, waktu_absen hanya waktu pengajar mencatat, jadi tidak ditampilkan.
+        if (item.status_kehadiran === "hadir" && item.mode !== "manual" && item.waktu_absen) {
+            return label + " (" + item.waktu_absen + ")";
         }
-        return item.status === "terbuka" ? "Belum absen" : "Tidak hadir";
+        if (item.status_kehadiran === "izin" && item.catatan_siswa) {
+            return label + " (" + item.catatan_siswa + ")";
+        }
+        return label;
     }
 
     function buildActionHtml(item) {
         const idAbsensi = parseInt(item.id_absensi, 10);
+
+        // Sesi manual diisi sepenuhnya oleh pengajar.
+        if (item.mode === "manual") {
+            return item.status_kehadiran ? "-" : "Diisi oleh pengajar";
+        }
 
         if (item.status !== "terbuka" || item.status_kehadiran) return "-";
 
@@ -46,7 +73,19 @@ GUNA FILE   : Tab Absensi pada halaman kelas siswa (frontend/siswa/kelas-detail.
             return "Dimulai " + SiswaCommon.escapeHtml(item.waktu_buka);
         }
 
-        return "<button type=\"button\" class=\"btn-hadir\" data-id=\"" + idAbsensi + "\">Saya Hadir</button>";
+        return (
+            "<div class=\"absen-aksi\" data-id=\"" + idAbsensi + "\">" +
+            "<span class=\"absen-pilihan\">" +
+            "<button type=\"button\" class=\"btn-hadir\" data-id=\"" + idAbsensi + "\">Saya Hadir</button> " +
+            "<button type=\"button\" class=\"btn-izin-buka\">Izin</button>" +
+            "</span>" +
+            "<span class=\"absen-izin-form\" hidden>" +
+            "<input type=\"text\" class=\"input-alasan\" maxlength=\"255\" placeholder=\"Alasan izin\"> " +
+            "<button type=\"button\" class=\"btn-izin-kirim\" data-id=\"" + idAbsensi + "\">Kirim Izin</button> " +
+            "<button type=\"button\" class=\"btn-izin-batal\">Batal</button>" +
+            "</span>" +
+            "</div>"
+        );
     }
 
     async function loadAbsensiList() {
@@ -81,16 +120,20 @@ GUNA FILE   : Tab Absensi pada halaman kelas siswa (frontend/siswa/kelas-detail.
         }
     }
 
-    async function markPresent(idAbsensi, button) {
+    // Mengirim kehadiran ke server. status: 'hadir' atau 'izin'; catatan wajib untuk 'izin'.
+    async function sendAttendance(idAbsensi, status, catatan, container) {
         SiswaCommon.hideMessage("absensiMessage");
-        button.disabled = true;
-        button.textContent = "Memproses...";
+
+        // Cegah klik ganda selama permintaan berjalan.
+        container.querySelectorAll("button").forEach(function (button) {
+            button.disabled = true;
+        });
+
+        const body = { id_absensi: idAbsensi, status: status };
+        if (status === "izin") body.catatan = catatan;
 
         try {
-            const result = await apiRequest(API.hadir, {
-                method: "POST",
-                body: { id_absensi: idAbsensi }
-            });
+            const result = await apiRequest(API.hadir, { method: "POST", body: body });
             SiswaCommon.showMessage("absensiMessage", result.message || "Kehadiran berhasil dicatat.", "success");
         } catch (error) {
             SiswaCommon.showMessage("absensiMessage", error.message || "Gagal mencatat kehadiran.", "error");
@@ -100,12 +143,48 @@ GUNA FILE   : Tab Absensi pada halaman kelas siswa (frontend/siswa/kelas-detail.
         loadAbsensiList();
     }
 
-    tbody.addEventListener("click", function (event) {
-        const button = event.target.closest(".btn-hadir");
-        if (!button) return;
+    // Menampilkan atau menyembunyikan isian alasan izin pada baris yang sama.
+    function toggleIzinForm(container, showForm) {
+        container.querySelector(".absen-pilihan").hidden = showForm;
+        container.querySelector(".absen-izin-form").hidden = !showForm;
 
-        const idAbsensi = parseInt(button.getAttribute("data-id"), 10);
-        if (idAbsensi) markPresent(idAbsensi, button);
+        if (showForm) {
+            container.querySelector(".input-alasan").focus();
+        }
+    }
+
+    tbody.addEventListener("click", function (event) {
+        const container = event.target.closest(".absen-aksi");
+        if (!container) return;
+
+        const idAbsensi = parseInt(container.getAttribute("data-id"), 10);
+        if (!idAbsensi) return;
+
+        if (event.target.closest(".btn-hadir")) {
+            sendAttendance(idAbsensi, "hadir", "", container);
+            return;
+        }
+
+        if (event.target.closest(".btn-izin-buka")) {
+            toggleIzinForm(container, true);
+            return;
+        }
+
+        if (event.target.closest(".btn-izin-batal")) {
+            toggleIzinForm(container, false);
+            return;
+        }
+
+        if (event.target.closest(".btn-izin-kirim")) {
+            const alasan = container.querySelector(".input-alasan").value.trim();
+
+            if (alasan === "") {
+                SiswaCommon.showMessage("absensiMessage", "Alasan izin wajib diisi.", "error");
+                return;
+            }
+
+            sendAttendance(idAbsensi, "izin", alasan, container);
+        }
     });
 
     KelasPage.registerTab("absensi", loadAbsensiList);

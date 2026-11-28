@@ -9,12 +9,18 @@ GUNA FILE   : Daftar sesi absensi pada satu kelas yang diikuti siswa, lengkap de
               Method : GET
               Query  : ?id_kelas=1 (wajib)
               Role   : siswa (hanya kelas yang ia ikuti)
-              Respons: data = [ { id_absensi, tanggal, waktu_buka, waktu_tutup, status,
-                                  belum_dimulai, status_kehadiran, waktu_absen } ]
+              Respons: data = [ { id_absensi, tanggal, waktu_buka, waktu_tutup, status, mode,
+                                  belum_dimulai, status_kehadiran, waktu_absen,
+                                  catatan_siswa } ]
               - status           : 'terbuka' atau 'tertutup' (status sesi)
+              - mode             : 'siswa' (siswa mengisi sendiri) atau 'manual' (diisi
+                                   pengajar; tombol absen tidak perlu ditampilkan)
               - belum_dimulai    : true bila waktu_buka masih di masa depan
-              - status_kehadiran : status siswa pada sesi itu, null bila belum absen
+              - status_kehadiran : 'hadir', 'izin', atau 'alpa'; null bila belum dicatat
+              - catatan_siswa    : alasan izin yang ditulis siswa itu sendiri
+              catatan_pengajar sengaja TIDAK dikirim ke siswa (catatan internal pengajar).
               Mengisi kehadiran tetap lewat POST kehadiran/hadir.php.
+              Perubahan: menambah mode dan catatan_siswa ke respons.
 ================================================================================
 */
 
@@ -59,9 +65,9 @@ try {
     closeExpiredAbsensi($db, $idKelas);
 
     $statement = $db->prepare(
-        'SELECT a.id_absensi, a.tanggal, a.waktu_buka, a.waktu_tutup, a.status,
+        'SELECT a.id_absensi, a.tanggal, a.waktu_buka, a.waktu_tutup, a.status, a.mode,
                 (a.waktu_buka > NOW()) AS belum_dimulai,
-                kh.status AS status_kehadiran, kh.waktu_absen
+                kh.status AS status_kehadiran, kh.waktu_absen, kh.catatan_siswa
            FROM absensi a
            LEFT JOIN kehadiran kh
                   ON kh.id_absensi = a.id_absensi AND kh.id_siswa = :id_siswa
@@ -81,9 +87,11 @@ try {
             'waktu_buka' => $row['waktu_buka'],
             'waktu_tutup' => $row['waktu_tutup'],
             'status' => $row['status'],
+            'mode' => $row['mode'],
             'belum_dimulai' => (int) $row['belum_dimulai'] === 1,
             'status_kehadiran' => $row['status_kehadiran'],
             'waktu_absen' => $row['waktu_absen'],
+            'catatan_siswa' => $row['catatan_siswa'],
         ];
     }
 

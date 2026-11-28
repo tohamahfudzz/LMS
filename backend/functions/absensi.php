@@ -17,8 +17,22 @@ GUNA FILE   : Helper absensi.
               Dipakai oleh: absensi/open.php, absensi/close.php, kehadiran/hadir.php,
               pengajar/absensi/list.php, pengajar/absensi/report.php,
               siswa/absensi/list.php.
+
+              Konstanta (daftar nilai yang diizinkan, satu-satunya sumber kebenaran;
+              kolom kehadiran.status berupa varchar sehingga validasinya ada di PHP):
+                ABSENSI_MODE            : mode sesi, dikunci saat sesi dibuat (absensi.mode).
+                ABSENSI_STATUS_SISWA    : status yang boleh dipilih siswa sendiri.
+                ABSENSI_STATUS_PENGAJAR : status yang boleh dicatat pengajar.
+                ABSENSI_CATATAN_MAKS    : panjang maksimum catatan (sama dengan VARCHAR(255)).
+                Dipakai oleh: absensi/open.php, kehadiran/hadir.php,
+                pengajar/absensi/set_status.php.
 ================================================================================
 */
+
+const ABSENSI_MODE = ['siswa', 'manual'];
+const ABSENSI_STATUS_SISWA = ['hadir', 'izin'];
+const ABSENSI_STATUS_PENGAJAR = ['hadir', 'izin', 'alpa'];
+const ABSENSI_CATATAN_MAKS = 255;
 
 function closeExpiredAbsensi(PDO $db, ?int $idKelas = null): void
 {

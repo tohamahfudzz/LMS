@@ -11,10 +11,13 @@ GUNA FILE   : Daftar sesi absensi pada satu kelas milik pengajar yang login.
               Respons: data = {
                            jumlah_siswa : jumlah siswa di kelas,
                            sesi         : [ { id_absensi, tanggal, waktu_buka,
-                                              waktu_tutup, status, jumlah_hadir,
+                                              waktu_tutup, status, mode, jumlah_hadir,
+                                              jumlah_izin, jumlah_alpa,
                                               belum_dimulai } ]
                        }
-              jumlah_hadir menghitung baris kehadiran dengan status 'hadir'.
+              jumlah_hadir, jumlah_izin, dan jumlah_alpa menghitung baris kehadiran
+              dengan status 'hadir', 'izin', dan 'alpa' pada sesi itu.
+              mode bernilai 'siswa' atau 'manual' (dikunci saat sesi dibuat).
               belum_dimulai bernilai true bila waktu_buka masih di masa depan
               (sesi dijadwalkan; siswa belum bisa mengisi kehadiran).
 ================================================================================
@@ -68,12 +71,20 @@ try {
     $studentCount = (int) $studentStatement->fetchColumn();
 
     $sessionStatement = $db->prepare(
-        "SELECT a.id_absensi, a.tanggal, a.waktu_buka, a.waktu_tutup, a.status,
+        "SELECT a.id_absensi, a.tanggal, a.waktu_buka, a.waktu_tutup, a.status, a.mode,
                 (a.waktu_buka > NOW()) AS belum_dimulai,
                 (SELECT COUNT(*)
                    FROM kehadiran kh
                   WHERE kh.id_absensi = a.id_absensi
-                    AND kh.status = 'hadir') AS jumlah_hadir
+                    AND kh.status = 'hadir') AS jumlah_hadir,
+                (SELECT COUNT(*)
+                   FROM kehadiran kh
+                  WHERE kh.id_absensi = a.id_absensi
+                    AND kh.status = 'izin') AS jumlah_izin,
+                (SELECT COUNT(*)
+                   FROM kehadiran kh
+                  WHERE kh.id_absensi = a.id_absensi
+                    AND kh.status = 'alpa') AS jumlah_alpa
            FROM absensi a
           WHERE a.id_kelas = :id_kelas
             AND a.id_pengajar = :id_pengajar
@@ -92,7 +103,10 @@ try {
             'waktu_buka' => $row['waktu_buka'],
             'waktu_tutup' => $row['waktu_tutup'],
             'status' => $row['status'],
+            'mode' => $row['mode'],
             'jumlah_hadir' => (int) $row['jumlah_hadir'],
+            'jumlah_izin' => (int) $row['jumlah_izin'],
+            'jumlah_alpa' => (int) $row['jumlah_alpa'],
             'belum_dimulai' => (int) $row['belum_dimulai'] === 1,
         ];
     }

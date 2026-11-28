@@ -1,4 +1,28 @@
 <?php
+/*
+================================================================================
+LOKASI FILE : backend/api/pengajar/absensi/attendance.php
+GUNA FILE   : Daftar seluruh siswa satu sesi absensi beserta status kehadirannya,
+              untuk pengajar. Dipakai bagian "Kehadiran Siswa" di halaman kelas pengajar
+              (tampilan ceklis hadir/izin/alpa dan pengisian manual).
+              Method : GET
+              Query  : ?id_absensi=1 (wajib)
+              Role   : pengajar (hanya sesi yang ia buka)
+              Respons: data = {
+                  absensi  : { id_absensi, id_kelas, nama_kelas, tanggal, waktu_buka,
+                               waktu_tutup, status, mode },
+                  statistik: { jumlah_siswa, hadir, izin, sakit, alpa, belum_absen },
+                  siswa    : [ { id_siswa, kode_siswa, nama, id_kehadiran, waktu_absen,
+                                 status_kehadiran, catatan_siswa, catatan_pengajar } ]
+              }
+              - mode             : 'siswa' atau 'manual' (dikunci saat sesi dibuat)
+              - status_kehadiran : null bila belum dicatat ("Belum diisi")
+              - catatan_siswa    : alasan izin yang ditulis siswa sendiri (mode siswa)
+              - catatan_pengajar : catatan yang ditulis pengajar
+              Perubahan: menambah mode, catatan_siswa, dan catatan_pengajar ke respons.
+              Menyimpan perubahan status dilakukan lewat set_status.php.
+================================================================================
+*/
 
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
@@ -62,7 +86,8 @@ try {
             a.tanggal,
             a.waktu_buka,
             a.waktu_tutup,
-            a.status
+            a.status,
+            a.mode
         FROM absensi a
         INNER JOIN kelas k
             ON a.id_kelas = k.id_kelas
@@ -111,7 +136,9 @@ try {
 
             kh.id_kehadiran,
             kh.waktu_absen,
-            kh.status AS status_kehadiran
+            kh.status AS status_kehadiran,
+            kh.catatan_siswa,
+            kh.catatan_pengajar
 
         FROM kelas_siswa ks
 
@@ -205,7 +232,8 @@ try {
                 "tanggal" => $absensi['tanggal'],
                 "waktu_buka" => $absensi['waktu_buka'],
                 "waktu_tutup" => $absensi['waktu_tutup'],
-                "status" => $absensi['status']
+                "status" => $absensi['status'],
+                "mode" => $absensi['mode']
             ],
 
             "statistik" => [
